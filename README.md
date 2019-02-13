@@ -25,4 +25,4 @@ headers = mapOf( // will override values up the cascade with provided
     "C" to "D"
 )
 ```
-This behaviour can be achieved using operator overriding.
+This behaviour can be achieved using operator overriding and property delegate (for overriding setValue operator).
