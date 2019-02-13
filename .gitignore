@@ -1,3 +1,18 @@
+# Gradle
+.gradle/
+
+# Idea
+.idea/
+
+# Idea project
+*.iml
+
+# Build files
+build/
+
+# Local properties
+local.properties
+
 # Compiled class file
 *.class
 

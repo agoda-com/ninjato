@@ -1,0 +1,66 @@
+apply plugin: 'maven-publish'
+apply plugin: 'org.jetbrains.dokka'
+
+dokka {
+    moduleName = art()
+    outputFormat = 'gfm'
+    outputDirectory = "$rootDir/docs/"
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: dokka) {
+    classifier = 'javadoc'
+    from dokka.outputDirectory + "/${art()}"
+}
+
+group = fleksora.group
+version = fleksora.version
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            artifactId = art()
+
+            pom {
+                name = fleksora.name
+                description = fleksora.desc
+                url = fleksora.url
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                scm {
+                    connection = fleksora.git
+                    developerConnection = fleksora.git
+                    url = fleksora.url
+                }
+            }
+
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+
+    repositories {
+        maven {
+            def release = "https://api.bintray.com/maven/agoda/maven/boots/;publish=1"
+            def snapshot = "http://oss.jfrog.org/artifactory/oss-snapshot-local/"
+
+            url = fleksora.version.endsWith('SNAPSHOT') ? snapshot : release
+
+            credentials {
+                username System.getenv('MAVEN_USER')
+                password System.getenv('MAVEN_PASSWORD')
+            }
+        }
+    }
+}
