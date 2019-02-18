@@ -52,10 +52,36 @@ interceptors += ResponseInterceptor()
 interceptors -= RequestInterceptors()
 interceptors -= ResponseInterceptor()
 
-// Override
+// override
 interceptors = RequestInterceptors()
 interceptors = listOf(RequestInterceptor(), ResponseInterceptor())
 ```
+
+#### RetryPolicy
+Current implementation is done in a way where you have to wrap your policy around the actual call, which is not the most
+optimized way. I suggest to simplify it to a small interface/function that simply takes a `Request` and `Throwable` in and
+returns `Pair<Boolean, Long>`. If `true`, the framework will retry to execute the call after given milliseconds or immediately
+if the second value is `0L`.
+```kotlin
+interface RetryPolicy {
+    fun retry(request: Request, throwable: Throwable): Pair<Boolean, Long>
+}
+```
+
+#### FallbackPolicy
+Current implementation is done using the `Interceptor` interface, which means that fallback policy does not know why the
+request has failed and is very restricted in the behaviour. I suggest to introduce separate interface/function for the
+fallback policy that will be invoked if the request has failed and the retry policy has returned `true`.
+```kotlin
+interface FallbackPolicy {
+    fun fallback(request: Request, throwable: Throwable): Request
+}
+```
+
+#### Default implementation of retries and fallback
+Framework should provide basic implementations of `RetryPolicy` and `FallbackPolicy`. I suggest the following: `NoRetryPolicy`
+which will always return `false to 0L` as default and `SimpleRetryPolicy(val retries: Int, val delay: Long)` as an option.
+As for fallbacks `NoFallbackPolicy` which will always forward the passed instance of request should do.
 
 #### Body
 For the request body, if we want to achieve support of auto-serializing and deserializing as well as support of different
@@ -63,6 +89,66 @@ protocols, we should keep body aligned with the standard of HTTP clients:
 ```kotlin
 class Body {
     val mediaType: String
+    val contentLength: Long
     val body: Array<Byte>
 }
 ```
+
+#### Request
+Request entity can be pretty much reused as is in our v1 version with slight changes:
+ - Remove `id` and `requestId` properties (`requestId` can be added in child class, `AgodaRequest` for example)
+ - Remove url manipulation functions (url will be set in the DSL)
+ - Make constructor empty
+ - All properties should be `var`
+ - Replace current `String` body with `Body` class
+
+#### Response
+Response entity can be pretty much reused as is in our v1 version with slights changes:
+ - Make the class `open`
+ - Make constructor empty
+ - All properties should be `var`
+ - Replace current `String` body with `Body` class
+ 
+#### Request.Factory
+To add possibility to extend `Request` entity and enrich it with use-case specific properties and/or logic, framework
+needs a factory that will return instances of `Request` which can be manipulated further in interceptors:
+```kotlin
+open class Request {
+    open class Factory {
+        fun create(): Request = Request()
+    }
+}
+
+// usage example
+class RequestInterceptor {
+    fun intercept(request: Request): Request {
+        if (request is AgodaRequest) {
+            request.headers["request_id"] = request.id
+        }
+    }
+}
+```
+
+#### Response.Factory
+To add possibility to extend `Resposne` entity and enrich it with use-case specific properties and/or logic, framework
+needs a factory that will return instances of `Response` which can be manipulated further in interceptors:
+```kotlin
+open class Response {
+    open class Factory {
+        fun create(): Response = Response()
+    }
+}
+
+// usage example
+class ResponseInterceptor {
+    fun intercept(response: Response): Response {
+        if (response is AgodaResponse) {
+            response.token = response.headers["auth_token"]
+        }
+    }
+}
+```
+
+#### DslReceiver
+In order to reduce boilerplate code in the framework itself, there should be `DslReceiver` interface with default implementations
+of functions and properties to grant 
