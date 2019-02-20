@@ -149,6 +149,61 @@ class ResponseInterceptor {
 }
 ```
 
-#### DslReceiver
-In order to reduce boilerplate code in the framework itself, there should be `DslReceiver` interface with default implementations
-of functions and properties to grant 
+#### Commons (help with the naming)
+In order to reduce boilerplate code in the framework itself, there should be `Commons` interface with default implementations
+of functions and properties to grant the access to the common parts of the library's DSL to all cascade components: `HttpClient`, 
+`Api` and `Call`. In general it should just add properties of the entities that can be enriched or overridden in the cascade:
+```kotlin
+interface Commons {
+    val headers: Headers
+    val interceptors: Interceptors
+    var retryPolicy: RetryPolicy
+    var fallbackPolicy: FallbackPolicy
+}
+```
+
+#### HttpClient
+This entity should implement the `Commons` interface and provide a function to actually execute Http calls. Current version
+can be reused with simplifications:
+```kotlin
+abstract class HttpClient : Commons {
+    internal var logger: Logger?
+    
+    abstract fun execute(request: Request): Response
+}
+
+// Builder pattern
+fun provideHttpClient(dependencies: ...): HttpClient {
+    return HttpClient.build(OkHttpFleksoraClient(okHttpClient)) {
+        logger = AndroidLogger()
+    }
+}
+```
+
+#### Api
+This entity is much more interesting. It should differ very much from the current implementation. First of all, empty constructor
+so that we don't have to expose any component outside of the DI function where instance is created through some sort of
+the builder pattern. Second, there is no need for any abstract properties you need to override except `baseUrl`:
+```kotlin
+abstract class Api : Commons {
+    abstract val baseUrl: String
+    
+    internal var serializer: Serializer?
+    internal var logger: Logger?
+    
+    inline fun get()
+    inline fun put()
+    inline fun post()
+    inline fun patch()
+    inline fun delete()
+    inline fun head()
+}
+
+fun provideApi(dependencies: ...): Api {
+    return Api.build(AgodaApi()) {
+        httpClient = providedClient
+        serializer = AgodaSerializer()
+        logger = AndroidLogger()
+    }
+}
+```
