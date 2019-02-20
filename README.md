@@ -207,3 +207,21 @@ fun provideApi(dependencies: ...): Api {
     }
 }
 ```
+
+#### Calls
+The main logic part. Call is an inline function which will do all the framework's logic of applying enrichments, removal and
+overridings of headers, interceptors, retry and fallback strategies, as well as requiring endpoint url and body (if possible):
+```kotlin
+private inline fun <reified I, reified O> call(method: Request.Method, builder: Call<I>.() -> Unit): O
+
+// Usage in Api
+inline fun <reified I, reified O> get(builder: Call<I>.() -> Unit): O = call(Request.Method.Get, builder)
+```
+The `Call` itself is entity that helps build the final `Request` entity:
+```kotlin
+class Call<T> : Commons {
+    lateinit var endpointUrl: String
+    lateinit var body: T
+    lateinit var serializer: Serializer?
+}
+```
