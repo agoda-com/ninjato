@@ -159,6 +159,9 @@ interface Commons {
     val interceptors: Interceptors
     var retryPolicy: RetryPolicy
     var fallbackPolicy: FallbackPolicy
+    
+    fun requestInterceptor(lambda: (Request) -> Request) {}
+    fun responseInterceptor(lambda: (Response) -> Response) {}
 }
 ```
 
@@ -240,3 +243,40 @@ open class Request {
 
 #### Serializer
 TBD
+
+#### Summary
+```kotlin
+/// Dsl usage example
+class SearchApi(client: HttpClient) : Api(client) {
+    override val baseUrl = "https://search.api.com"
+    
+    init {
+        headers += "search_token" to "exampletoken"
+        
+        requestInterceptor {
+            if (it.url.contains("bangkok")) {
+                it.url.replace(baseUrl, "https://localsearch.api.com")
+            }
+        }
+    }
+    
+    fun search(query: String): SearchResult = get {
+        endpointUrl = "/search?query=$query"
+    }
+    
+    fun saveSearch(query: String): Unit = post {
+        endpointUrl = "/save"
+        body = SaveRequest(query)
+        
+        retryPolicy { request, throwable ->
+            if (throwable is ErrorCode) {
+                if (throwable.code == ErrorCode.NotAuthorized) {
+                    false to 0L            
+                }
+            }
+            
+            if (request.retry > 3) false to 0L else true to 500L
+        }
+    }
+}
+```
