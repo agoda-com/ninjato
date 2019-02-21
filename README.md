@@ -176,6 +176,8 @@ abstract class HttpClient : Commons {
 fun provideHttpClient(dependencies: ...): HttpClient {
     return HttpClient.build(OkHttpFleksoraClient(okHttpClient)) {
         logger = AndroidLogger()
+        requestFactory = AgodaRequestFactory()
+        responseFactory = AgodaResponseFactory()
     }
 }
 ```
@@ -212,16 +214,29 @@ fun provideApi(dependencies: ...): Api {
 The main logic part. Call is an inline function which will do all the framework's logic of applying enrichments, removal and
 overridings of headers, interceptors, retry and fallback strategies, as well as requiring endpoint url and body (if possible):
 ```kotlin
-private inline fun <reified I, reified O> call(method: Request.Method, builder: Call<I>.() -> Unit): O
+private inline fun <reified T> call(method: Request.Method, builder: Request.Builder.() -> Unit): T
 
 // Usage in Api
-inline fun <reified I, reified O> get(builder: Call<I>.() -> Unit): O = call(Request.Method.Get, builder)
+inline fun <reified T> get(builder: Request.Builder.() -> Unit): T = call(Request.Method.Get, builder)
+inline fun <reified T> post(builder: Request.BuilderWithBody.() -> Unit): T = call(Request.Method.Post, builder)
 ```
-The `Call` itself is entity that helps build the final `Request` entity:
+The call itself is basically a request builder with or without body that helps build the final `Request` entity:
 ```kotlin
-class Call<T> : Commons {
-    lateinit var endpointUrl: String
-    lateinit var body: T
-    lateinit var serializer: Serializer?
+open class Request {
+    open class Builder : Commons {
+        var endpointUrl: String? = null
+        var fullUrl: String? = null
+        
+        open fun build(): Request {}
+    }
+    
+    open class BuilderWithBody(serializer: Serializer) : Builder {
+        var body: Any? by BodyDelegate(serializer) // Delegate is used to override setValue operator with inline reified function
+        
+        override fun build(): Request {}
+    }
 }
 ```
+
+#### Serializer
+TBD
