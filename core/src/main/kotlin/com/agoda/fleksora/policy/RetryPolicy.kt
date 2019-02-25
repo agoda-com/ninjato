@@ -1,3 +1,3 @@
 package com.agoda.fleksora.policy
 
-abstract class RetryPolicy : Policy<Pair<Boolean, Long>>
+abstract class RetryPolicy : Policy<Retry>
