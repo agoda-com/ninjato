@@ -8,6 +8,7 @@ import com.agoda.fleksora.intercept.RequestInterceptor
 import com.agoda.fleksora.intercept.ResponseInterceptor
 import com.agoda.fleksora.policy.FallbackPolicy
 import com.agoda.fleksora.policy.RetryPolicy
+import java.util.*
 
 interface Commons {
     val headers: Headers
@@ -17,12 +18,14 @@ interface Commons {
 
     fun requestInterceptor(interceptor: (Request) -> Request) {
         interceptors += object : RequestInterceptor() {
+            override val id = UUID.randomUUID().toString()
             override fun intercept(instance: Request) = interceptor(instance)
         }
     }
 
     fun responseInterceptor(interceptor: (Response) -> Response) {
         interceptors += object : ResponseInterceptor() {
+            override val id = UUID.randomUUID().toString()
             override fun intercept(instance: Response) = interceptor(instance)
         }
     }
