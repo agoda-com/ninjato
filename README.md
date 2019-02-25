@@ -280,3 +280,126 @@ class SearchApi(client: HttpClient) : Api(client) {
     }
 }
 ```
+
+#### Full Spec
+```kotlin
+// HttpClient configuration
+HttpClient.build(AgodaOkHttpClient()) {
+    logger = AgodaLogger()
+    
+    headers += "A" to "B"
+    headers = mapOf("A" to "B")
+    headers -= "A" // There is actually no logical point of doing that, but functionality will be provided via Commmons interface
+    
+    interceptors += RequestInterceptor()
+    interceptors += ResponseInterceptor()
+    interceptors = listOf(RequestInterceptor(), ResponseInterceptor())
+    
+    requestInterceptor {
+        // Intercept here
+    }
+    
+    responseInterceptor {
+        // Intercept here
+    }
+    
+    retryPolicy = AgodaRetryPolicy()
+    
+    retryPolicy {
+        true to 1000L
+    }
+    
+    fallbackPolicy = AgodaFallbackPolicy()
+    
+    fallbackPolicy {
+        request.apply { baseUrl = BaseUrls[random()] }
+    }
+}
+
+// Api configuration
+Api.build(FlightsSearchApi()) {
+    logger = AndroidLogger()
+    
+    httpClient = client
+    serializerFactory = factory
+    
+    // Following configuration can be applied in the Api class' init block
+    headers += "A" to "B"
+    headers = mapOf("A" to "B")
+    headers -= "A" // There is actually no logical point of doing that, but functionality will be provided via Commmons interface
+    
+    interceptors += RequestInterceptor()
+    interceptors += ResponseInterceptor()
+    interceptors = listOf(RequestInterceptor(), ResponseInterceptor())
+    
+    requestInterceptor {
+        // Intercept here
+    }
+    
+    responseInterceptor {
+        // Intercept here
+    }
+    
+    retryPolicy = AgodaRetryPolicy()
+    
+    retryPolicy {
+        true to 1000L
+    }
+    
+    fallbackPolicy = AgodaFallbackPolicy()
+    
+    fallbackPolicy {
+        request.apply { baseUrl = BaseUrls[random()] }
+    }
+}
+
+// Api definition
+class FlightsSearchApi : Api {
+    override val baseUrl: String
+        get() = baseUrlProvider.get()
+        
+    // OR
+    
+    override val baseUrl = "https://search.agoda.com/"
+}
+
+// Call definition
+class FlightsSearchApi : Api {
+    fun search(query: String, context: SearchContext): SearchResult = post<NetworkSearchResult> {
+        endpointUrl = "v2/search?query=$query"
+        // OR
+        fullUrl = "https://search2.agoda.com/search?query=$query"
+        
+        body = context
+        
+        headers += "A" to "B"
+        headers = mapOf("A" to "B")
+        headers -= "A" // There is actually no logical point of doing that, but functionality will be provided via Commmons interface
+        
+        interceptors += RequestInterceptor()
+        interceptors += ResponseInterceptor()
+        interceptors = listOf(RequestInterceptor(), ResponseInterceptor())
+        
+        requestInterceptor {
+            // Intercept here
+        }
+        
+        responseInterceptor {
+            // Intercept here
+        }
+        
+        retryPolicy = AgodaRetryPolicy()
+        
+        retryPolicy {
+            true to 1000L
+        }
+        
+        fallbackPolicy = AgodaFallbackPolicy()
+        
+        fallbackPolicy {
+            request.apply { baseUrl = BaseUrls[random()] }
+        }
+    }.map { SearchResultMapper().map(it) }
+}
+
+```
