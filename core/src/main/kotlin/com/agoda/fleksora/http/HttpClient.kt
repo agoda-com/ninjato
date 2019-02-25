@@ -4,9 +4,9 @@ import com.agoda.fleksora.dsl.Commons
 import com.agoda.fleksora.log.Logger
 
 abstract class HttpClient : Commons {
-    internal var logger: Logger? = null
-    internal var requestFactory: Request.Factory? = null
-    internal var responseFactory: Response.Factory? = null
+    protected var logger: Logger? = null
+    protected var requestFactory: Request.Factory? = null
+    protected var responseFactory: Response.Factory? = null
 
     abstract fun execute(request: Request): Response
 
