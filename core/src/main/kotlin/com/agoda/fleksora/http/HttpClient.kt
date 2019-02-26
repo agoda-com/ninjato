@@ -21,12 +21,12 @@ abstract class HttpClient : Commons {
 
     abstract fun execute(request: Request): Response
 
-    open class Builder {
+    open class Configurator {
         var logger: Logger? = null
         var requestFactory: Request.Factory? = null
         var responseFactory: Response.Factory? = null
 
-        open fun build(instance: HttpClient) = instance.also {
+        open fun configure(instance: HttpClient) = instance.also {
             it.logger = logger
             it.requestFactory = requestFactory
             it.responseFactory = responseFactory
@@ -34,6 +34,7 @@ abstract class HttpClient : Commons {
     }
 
     companion object {
-        fun build(instance: HttpClient, builder: HttpClient.Builder.() -> Unit) = Builder().apply(builder).build(instance)
+        fun configure(instance: HttpClient, configurator: HttpClient.Configurator.() -> Unit)
+                = Configurator().apply(configurator).configure(instance)
     }
 }
