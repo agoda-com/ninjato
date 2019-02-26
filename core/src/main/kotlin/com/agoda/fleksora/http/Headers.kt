@@ -25,6 +25,13 @@ open class Headers {
         }
     }
 
+    infix fun override(header: Pair<String, String>) {
+        with(overridden) {
+            clear()
+            put(header.first, listOf(header.second))
+        }
+    }
+
     private fun add(map: MutableMap<String, MutableList<String>>, header: Pair<String, String>) {
         if (map[header.first] != null) {
             map[header.first]?.add(header.second)
