@@ -20,18 +20,18 @@ interface BodyConverter<in I, out O> {
         operator fun getValue(thisRef: Request.Configurator.WithBody, property: KProperty<*>) = body
 
         inline operator fun <reified T> setValue(thisRef: Request.Configurator.WithBody, property: KProperty<*>, value: T) {
-            var converter: BodyConverter<T, Body>? = null
+            body = when (value) {
+                is String -> Body(value)
+                is ByteArray -> Body(value.toString())
+                else -> {
+                    var converter: BodyConverter<T, Body>? = null
 
-            factories.resolve().firstOrNull {
-                converter = it.requestConverter(reifiedType<T>()) as? BodyConverter<T, Body>
-                converter != null
-            }?.let {
-                body = converter!!.convert(value)
-            } ?: run {
-                body = when (value) {
-                    is String -> Body(value)
-                    is ByteArray -> Body(value.toString())
-                    else -> throw UnsupportedOperationException("Couldn't convert provided body. Did you registered " +
+                    factories.resolve().firstOrNull {
+                        converter = it.requestConverter(reifiedType<T>()) as? BodyConverter<T, Body>
+                        converter != null
+                    }?.let {
+                        converter!!.convert(value)
+                    } ?: throw UnsupportedOperationException("Couldn't convert provided body. Did you registered " +
                             "BodyConverter.Factory that provides serializer for ${T::class.java.simpleName} type?")
                 }
             }
