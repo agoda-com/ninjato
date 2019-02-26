@@ -1,9 +1,17 @@
 package com.agoda.fleksora.http
 
 open class Response {
+    lateinit var request: Request
 
-    open class Factory {
+    var time: Long = 0
+    var code: Int = 200
+    val headers: MutableMap<String, MutableList<String>> = mutableMapOf()
+    var body: Body? = null
 
+    val isSuccess: Boolean
+        get() = code == 200
+
+    abstract class Factory {
+        abstract fun create(): Response
     }
-
 }

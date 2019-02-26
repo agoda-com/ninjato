@@ -1,10 +1,13 @@
 package com.agoda.fleksora.http
 
-open class Headers {
-    protected val added: MutableMap<String, MutableList<String>> = mutableMapOf()
-    protected val removed: MutableMap<String, MutableList<String>> = mutableMapOf()
-    protected val removedAll: MutableList<String> = mutableListOf()
-    protected val overridden: MutableMap<String, List<String>> = mutableMapOf()
+class Headers {
+    internal var parent: Headers? = null
+
+    private val added: MutableMap<String, MutableList<String>> = mutableMapOf()
+    private val removed: MutableMap<String, MutableList<String>> = mutableMapOf()
+    private val removedAll: MutableList<String> = mutableListOf()
+    private val overridden: MutableMap<String, MutableList<String>> = mutableMapOf()
+    private val set: MutableMap<String, MutableList<String>> = mutableMapOf()
 
     operator fun plusAssign(header: Pair<String, String>) {
         add(added, header)
@@ -18,18 +21,28 @@ open class Headers {
         removedAll.add(header)
     }
 
-    infix fun override(headers: Map<String, List<String>>) {
-        with(overridden) {
+    infix fun override(header: Pair<String, List<String>>) {
+        overridden[header.first] = header.second.toMutableList()
+    }
+
+    infix fun set(headers: Map<String, List<String>>) {
+        with(set) {
             clear()
-            putAll(headers)
+            putAll(headers.mapValues { it.value.toMutableList() })
         }
     }
 
-    infix fun override(header: Pair<String, String>) {
-        with(overridden) {
-            clear()
-            put(header.first, listOf(header.second))
-        }
+    internal fun resolve(): MutableMap<String, MutableList<String>> {
+        if (set.isNotEmpty()) return set
+
+        val headers = parent?.resolve() ?: mutableMapOf()
+
+        added.forEach { entry -> entry.value.forEach { add(headers, entry.key to it) } }
+        removed.forEach { entry -> entry.value.forEach { remove(headers, entry.key to it) } }
+        removedAll.forEach { headers.remove(it) }
+        overridden.forEach { headers[it.key] = it.value }
+
+        return headers
     }
 
     private fun add(map: MutableMap<String, MutableList<String>>, header: Pair<String, String>) {
@@ -38,5 +51,9 @@ open class Headers {
         } else {
             map[header.first] = mutableListOf(header.second)
         }
+    }
+
+    private fun remove(map: MutableMap<String, MutableList<String>>, header: Pair<String, String>) {
+        map[header.first]?.remove(header.second)
     }
 }

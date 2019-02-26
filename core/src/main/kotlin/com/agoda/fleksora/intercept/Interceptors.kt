@@ -1,9 +1,11 @@
 package com.agoda.fleksora.intercept
 
-open class Interceptors {
-    protected val added: MutableList<Interceptor<*>> = mutableListOf()
-    protected val removed: MutableList<Interceptor<*>> = mutableListOf()
-    protected val overridden: MutableList<Interceptor<*>> = mutableListOf()
+class Interceptors {
+    internal var parent: Interceptors? = null
+
+    private val added: MutableList<Interceptor<*>> = mutableListOf()
+    private val removed: MutableList<Interceptor<*>> = mutableListOf()
+    private val overridden: MutableList<Interceptor<*>> = mutableListOf()
 
     operator fun plusAssign(interceptor: RequestInterceptor) {
         added.add(interceptor)
@@ -21,7 +23,7 @@ open class Interceptors {
         removed.add(interceptor)
     }
 
-    infix fun override(interceptors: List<Interceptor<*>>) {
+    infix fun set(interceptors: List<Interceptor<*>>) {
         interceptors.forEach { verify(it) }
 
         with(overridden) {
@@ -30,18 +32,8 @@ open class Interceptors {
         }
     }
 
-    infix fun override(interceptor: RequestInterceptor) {
-        with(overridden) {
-            clear()
-            add(interceptor)
-        }
-    }
-
-    infix fun override(interceptor: ResponseInterceptor) {
-        with(overridden) {
-            clear()
-            add(interceptor)
-        }
+    internal fun resolve(): MutableList<Interceptor<*>> {
+        TODO()
     }
 
     private fun verify(interceptor: Interceptor<*>) {
