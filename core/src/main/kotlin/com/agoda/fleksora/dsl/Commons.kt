@@ -7,12 +7,16 @@ import com.agoda.fleksora.intercept.Interceptors
 import com.agoda.fleksora.intercept.RequestInterceptor
 import com.agoda.fleksora.intercept.ResponseInterceptor
 import com.agoda.fleksora.policy.FallbackPolicy
+import com.agoda.fleksora.policy.Retry
 import com.agoda.fleksora.policy.RetryPolicy
+import com.agoda.fleksora.serial.SerializerFactories
 import java.util.*
 
 interface Commons {
     val headers: Headers
     val interceptors: Interceptors
+    val serializerFactories: SerializerFactories
+
     var retryPolicy: RetryPolicy?
     var fallbackPolicy: FallbackPolicy?
 
@@ -30,7 +34,7 @@ interface Commons {
         }
     }
 
-    fun retryPolicy(policy: (Request, Throwable) -> Pair<Boolean, Long>) {
+    fun retryPolicy(policy: (Request, Throwable) -> Retry) {
         retryPolicy = object : RetryPolicy() {
             override fun evaluate(request: Request, throwable: Throwable) = policy(request, throwable)
         }
