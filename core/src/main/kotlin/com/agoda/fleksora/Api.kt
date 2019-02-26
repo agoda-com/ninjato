@@ -21,4 +21,19 @@ abstract class Api : Commons {
     protected var logger: Logger? = null
 
     abstract val baseUrl: String
+
+    open class Configurator {
+        var logger: Logger? = null
+        var httpClient: HttpClient? = null
+
+        open fun configure(instance: Api) = instance.also {
+            it.client = httpClient!!
+            it.logger = logger
+        }
+    }
+
+    companion object {
+        fun configure(instance: Api, builder: Api.Configurator.() -> Unit)
+                = Configurator().apply(builder).configure(instance)
+    }
 }
