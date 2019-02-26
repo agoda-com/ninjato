@@ -30,6 +30,20 @@ open class Interceptors {
         }
     }
 
+    infix fun override(interceptor: RequestInterceptor) {
+        with(overridden) {
+            clear()
+            add(interceptor)
+        }
+    }
+
+    infix fun override(interceptor: ResponseInterceptor) {
+        with(overridden) {
+            clear()
+            add(interceptor)
+        }
+    }
+
     private fun verify(interceptor: Interceptor<*>) {
         if (interceptor !is RequestInterceptor && interceptor !is ResponseInterceptor) {
             throw IllegalArgumentException("Provided interceptor does not extend RequestInterceptor and ResponseInterceptor!")
