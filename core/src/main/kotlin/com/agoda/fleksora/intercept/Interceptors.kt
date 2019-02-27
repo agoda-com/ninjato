@@ -32,6 +32,7 @@ class Interceptors {
         }
     }
 
+    @PublishedApi
     internal fun resolve(): MutableList<Interceptor<*>> {
         TODO()
     }

@@ -32,6 +32,7 @@ class Headers {
         }
     }
 
+    @PublishedApi
     internal fun resolve(): MutableMap<String, MutableList<String>> {
         if (set.isNotEmpty()) return set
 
