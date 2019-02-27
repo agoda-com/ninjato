@@ -5,7 +5,7 @@ class Interceptors {
 
     private val added: MutableList<Interceptor<*>> = mutableListOf()
     private val removed: MutableList<Interceptor<*>> = mutableListOf()
-    private val overridden: MutableList<Interceptor<*>> = mutableListOf()
+    private val set: MutableList<Interceptor<*>> = mutableListOf()
 
     operator fun plusAssign(interceptor: RequestInterceptor) {
         added.add(interceptor)
@@ -26,7 +26,7 @@ class Interceptors {
     infix fun set(interceptors: List<Interceptor<*>>) {
         interceptors.forEach { verify(it) }
 
-        with(overridden) {
+        with(set) {
             clear()
             addAll(interceptors)
         }
@@ -34,7 +34,10 @@ class Interceptors {
 
     @PublishedApi
     internal fun resolve(): MutableList<Interceptor<*>> {
-        TODO()
+        return if (set.isNotEmpty()) set else (parent?.resolve() ?: mutableListOf()).apply {
+            addAll(added)
+            removeAll(removed)
+        }
     }
 
     private fun verify(interceptor: Interceptor<*>) {

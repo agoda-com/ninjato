@@ -11,8 +11,6 @@ class ConverterFactories {
 
     @PublishedApi
     internal fun resolve(): MutableList<BodyConverter.Factory> {
-        val factories = parent?.resolve() ?: mutableListOf()
-        factories.addAll(added)
-        return factories
+        return (parent?.resolve() ?: mutableListOf()).apply { addAll(added) }
     }
 }

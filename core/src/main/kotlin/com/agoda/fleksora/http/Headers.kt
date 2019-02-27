@@ -34,16 +34,12 @@ class Headers {
 
     @PublishedApi
     internal fun resolve(): MutableMap<String, MutableList<String>> {
-        if (set.isNotEmpty()) return set
-
-        val headers = parent?.resolve() ?: mutableMapOf()
-
-        added.forEach { entry -> entry.value.forEach { add(headers, entry.key to it) } }
-        removed.forEach { entry -> entry.value.forEach { remove(headers, entry.key to it) } }
-        removedAll.forEach { headers.remove(it) }
-        overridden.forEach { headers[it.key] = it.value }
-
-        return headers
+        return if (set.isNotEmpty()) set else (parent?.resolve() ?: mutableMapOf()).apply {
+            added.forEach { entry -> entry.value.forEach { add(this, entry.key to it) } }
+            removed.forEach { entry -> entry.value.forEach { remove(this, entry.key to it) } }
+            removedAll.forEach { remove(it) }
+            overridden.forEach { put(it.key, it.value) }
+        }
     }
 
     private fun add(map: MutableMap<String, MutableList<String>>, header: Pair<String, String>) {
