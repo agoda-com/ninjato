@@ -64,6 +64,7 @@ abstract class Api : Commons {
     }
 
     @PublishedApi
+    @Suppress("UNCHECKED_CAST")
     internal inline fun <reified T> call(method: Method, configurator: Request.Configurator): T {
 
         var request = client.request()

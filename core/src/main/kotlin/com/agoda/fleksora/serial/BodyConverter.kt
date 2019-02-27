@@ -14,6 +14,7 @@ interface BodyConverter<in I, out O> {
         fun responseConverter(type: Type): BodyConverter<Body, *>?
     }
 
+    @Suppress("UNCHECKED_CAST")
     class Delegate(val factories: ConverterFactories) {
         var body: Body? = null
 
