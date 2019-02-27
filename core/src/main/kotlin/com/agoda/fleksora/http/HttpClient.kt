@@ -21,6 +21,9 @@ abstract class HttpClient : Commons {
 
     abstract fun execute(request: Request): Response
 
+    @PublishedApi
+    internal fun request() = requestFactory?.create() ?: Request()
+
     open class Configurator {
         var logger: Logger? = null
         var requestFactory: Request.Factory? = null
