@@ -1,6 +1,7 @@
 package com.agoda.fleksora.http
 
 class Headers {
+    @PublishedApi
     internal var parent: Headers? = null
 
     private val added: MutableMap<String, MutableList<String>> = mutableMapOf()

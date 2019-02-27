@@ -1,9 +1,10 @@
 package com.agoda.fleksora.serial
 
 class ConverterFactories {
+    @PublishedApi
     internal var parent: ConverterFactories? = null
 
-    protected val added: MutableList<BodyConverter.Factory> = mutableListOf()
+    private val added: MutableList<BodyConverter.Factory> = mutableListOf()
 
     operator fun plusAssign(factory: BodyConverter.Factory) {
         added.add(factory)

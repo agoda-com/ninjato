@@ -1,6 +1,7 @@
 package com.agoda.fleksora.intercept
 
 class Interceptors {
+    @PublishedApi
     internal var parent: Interceptors? = null
 
     private val added: MutableList<Interceptor<*>> = mutableListOf()
