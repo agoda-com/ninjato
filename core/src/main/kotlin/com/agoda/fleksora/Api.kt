@@ -78,9 +78,9 @@ abstract class Api : Commons {
         val requestInterceptors: List<RequestInterceptor>
         val responseInterceptors: List<ResponseInterceptor>
 
-        configurator.interceptors.resolve().let {
-            requestInterceptors = it.filter { it is RequestInterceptor } as List<RequestInterceptor>
-            responseInterceptors = it.filter { it is ResponseInterceptor } as List<ResponseInterceptor>
+        configurator.interceptors.resolve().let { interceptors ->
+            requestInterceptors = interceptors.filter { it is RequestInterceptor } as List<RequestInterceptor>
+            responseInterceptors = interceptors.filter { it is ResponseInterceptor } as List<ResponseInterceptor>
         }
 
         while (true) {
