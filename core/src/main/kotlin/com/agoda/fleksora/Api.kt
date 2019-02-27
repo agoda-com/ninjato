@@ -122,6 +122,8 @@ abstract class Api : Commons {
                 } ?: client.fallbackPolicy?.let {
                     request = it.evaluate(request, throwable)
                 }
+
+                request.retries++
             }
         }
     }
