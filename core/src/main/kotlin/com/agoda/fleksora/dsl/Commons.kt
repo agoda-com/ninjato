@@ -9,7 +9,7 @@ import com.agoda.fleksora.intercept.ResponseInterceptor
 import com.agoda.fleksora.policy.FallbackPolicy
 import com.agoda.fleksora.policy.Retry
 import com.agoda.fleksora.policy.RetryPolicy
-import com.agoda.fleksora.serial.ConverterFactories
+import com.agoda.fleksora.converter.ConverterFactories
 import java.util.*
 
 interface Commons {

@@ -10,8 +10,8 @@ import com.agoda.fleksora.policy.FallbackPolicy
 import com.agoda.fleksora.policy.Retry
 import com.agoda.fleksora.policy.RetryPolicy
 import com.agoda.fleksora.reflect.TypeReference.Companion.reifiedType
-import com.agoda.fleksora.serial.BodyConverter
-import com.agoda.fleksora.serial.ConverterFactories
+import com.agoda.fleksora.converter.BodyConverter
+import com.agoda.fleksora.converter.ConverterFactories
 
 abstract class Api : Commons {
     override val headers = Headers()

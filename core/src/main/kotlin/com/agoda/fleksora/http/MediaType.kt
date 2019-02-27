@@ -2,12 +2,12 @@ package com.agoda.fleksora.http
 
 import java.nio.charset.Charset
 
-open class MediaType(val id: String, val charset: Charset? = null) {
+open class MediaType(val id: String, val charset: Charset = Charsets.UTF_8) {
 
-    object Plain : MediaType("text/plain")
-    object Html : MediaType("text/html")
-    object JavaScript : MediaType("text/javascript")
-    object Css : MediaType("text/css")
-    object Json : MediaType("application/json")
+    class Plain(charset: Charset = Charsets.UTF_8) : MediaType("text/plain", charset)
+    class Html(charset: Charset = Charsets.UTF_8) : MediaType("text/html", charset)
+    class JavaScript(charset: Charset = Charsets.UTF_8) : MediaType("text/javascript", charset)
+    class Css(charset: Charset = Charsets.UTF_8) : MediaType("text/css", charset)
+    class Json(charset: Charset = Charsets.UTF_8) : MediaType("application/json", charset)
 
 }

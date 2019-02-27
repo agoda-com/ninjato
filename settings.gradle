@@ -1,3 +1,4 @@
 rootProject.name = 'fleksora'
 
 include ':core'
+include ':converters:gson'

@@ -5,7 +5,7 @@ import com.agoda.fleksora.intercept.Interceptors
 import com.agoda.fleksora.log.Logger
 import com.agoda.fleksora.policy.FallbackPolicy
 import com.agoda.fleksora.policy.RetryPolicy
-import com.agoda.fleksora.serial.ConverterFactories
+import com.agoda.fleksora.converter.ConverterFactories
 
 abstract class HttpClient : Commons {
     override val headers = Headers()

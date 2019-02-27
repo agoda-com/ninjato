@@ -1,4 +1,4 @@
-package com.agoda.fleksora.serial
+package com.agoda.fleksora.converter
 
 import com.agoda.fleksora.http.Body
 import com.agoda.fleksora.http.Request
