@@ -1,6 +1,5 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
-apply plugin: 'jacoco'
 
 apply from: "$rootDir/gradle/scripts/dependencies.gradle"
 
@@ -20,15 +19,6 @@ dependencies {
     testImplementation libraries.mockitoKotlin
     testImplementation libraries.kotlinTest
 }
-
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        html.enabled false
-    }
-}
-
-check.dependsOn jacocoTestReport
 
 String art() { 'converter-gson' }
 
