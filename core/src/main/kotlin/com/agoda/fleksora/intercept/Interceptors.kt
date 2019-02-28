@@ -1,49 +1,67 @@
 package com.agoda.fleksora.intercept
 
+import com.agoda.fleksora.http.Request
+import com.agoda.fleksora.http.Response
+import java.util.*
+
 class Interceptors {
     @PublishedApi
     internal var parent: Interceptors? = null
 
-    private val added: MutableList<Interceptor<*>> = mutableListOf()
-    private val removed: MutableList<Interceptor<*>> = mutableListOf()
-    private val set: MutableList<Interceptor<*>> = mutableListOf()
+    val add = Aggregator()
+    val remove = Aggregator()
+    val set = Aggregator()
 
     operator fun plusAssign(interceptor: RequestInterceptor) {
-        added.add(interceptor)
+        add { interceptor.id to interceptor }
     }
 
     operator fun plusAssign(interceptor: ResponseInterceptor) {
-        added.add(interceptor)
+        add { interceptor.id to interceptor }
     }
 
     operator fun minusAssign(interceptor: RequestInterceptor) {
-        removed.add(interceptor)
+        remove { interceptor.id to interceptor }
     }
 
     operator fun minusAssign(interceptor: ResponseInterceptor) {
-        removed.add(interceptor)
+        remove { interceptor.id to interceptor }
     }
 
-    infix fun set(interceptors: List<Interceptor<*>>) {
-        interceptors.forEach { verify(it) }
+    fun request(interceptor: (Request) -> Request) {
+        add { UUID.randomUUID().toString() to object : RequestInterceptor() {
+            override fun intercept(instance: Request) = interceptor(instance)
+        } }
+    }
 
-        with(set) {
-            clear()
-            addAll(interceptors)
+    fun response(interceptor: (Response) -> Response) {
+        add { UUID.randomUUID().toString() to object : ResponseInterceptor() {
+            override fun intercept(instance: Response) = interceptor(instance)
+        } }
+    }
+
+    operator fun invoke(receiver: Interceptors.() -> Unit) {
+        this.apply(receiver)
+    }
+
+    class Aggregator {
+        internal val aggregation: MutableSet<Interceptor<*>> = mutableSetOf()
+
+        infix fun String.to(value: Interceptor<*>) {
+            aggregation.add(value.also { it.id = this })
+        }
+
+        operator fun invoke(receiver: Aggregator.() -> Unit) {
+            this.apply(receiver)
         }
     }
 
     @PublishedApi
-    internal fun resolve(): MutableList<Interceptor<*>> {
-        return if (set.isNotEmpty()) set else (parent?.resolve() ?: mutableListOf()).apply {
-            addAll(added)
-            removeAll(removed)
+    internal fun resolve(): MutableSet<Interceptor<*>> {
+        return if (set.aggregation.isNotEmpty()) set.aggregation else (parent?.resolve() ?: mutableSetOf()).apply {
+            addAll(add.aggregation)
+            removeAll(remove.aggregation)
         }
     }
 
-    private fun verify(interceptor: Interceptor<*>) {
-        if (interceptor !is RequestInterceptor && interceptor !is ResponseInterceptor) {
-            throw IllegalArgumentException("Provided interceptor does not extend RequestInterceptor and ResponseInterceptor!")
-        }
-    }
 }

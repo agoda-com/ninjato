@@ -10,6 +10,10 @@ class ConverterFactories {
         added.add(factory)
     }
 
+    operator fun plusAssign(factories: List<BodyConverter.Factory>) {
+        added.addAll(factories)
+    }
+
     @PublishedApi
     internal fun resolve(): MutableList<BodyConverter.Factory> {
         return (parent?.resolve() ?: mutableListOf()).apply { addAll(added) }
