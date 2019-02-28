@@ -1,4 +1,4 @@
-package com.agoda.fleksora.serial
+package com.agoda.fleksora.converter
 
 class ConverterFactories {
     @PublishedApi
