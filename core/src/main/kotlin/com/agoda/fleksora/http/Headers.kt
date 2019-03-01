@@ -1,57 +1,57 @@
 package com.agoda.fleksora.http
 
+import com.agoda.fleksora.misc.add
+import com.agoda.fleksora.misc.addAll
+import com.agoda.fleksora.misc.removeAll
+
 class Headers {
     @PublishedApi
     internal var parent: Headers? = null
 
-    private val added: MutableMap<String, MutableList<String>> = mutableMapOf()
-    private val removed: MutableMap<String, MutableList<String>> = mutableMapOf()
-    private val removedAll: MutableList<String> = mutableListOf()
-    private val overridden: MutableMap<String, MutableList<String>> = mutableMapOf()
-    private val set: MutableMap<String, MutableList<String>> = mutableMapOf()
+    val add = Aggregator()
+    val override = Aggregator()
+    val remove = Aggregator()
+    val set = Aggregator()
 
     operator fun plusAssign(header: Pair<String, String>) {
-        add(added, header)
+        add { header.first to header.second }
     }
 
     operator fun minusAssign(header: Pair<String, String>) {
-        add(removed, header)
+        remove { header.first to header.second }
     }
 
     operator fun minusAssign(header: String) {
-        removedAll.add(header)
+        remove { header to "" }
     }
 
-    infix fun override(header: Pair<String, List<String>>) {
-        overridden[header.first] = header.second.toMutableList()
+    operator fun invoke(receiver: Headers.() -> Unit) {
+        this.apply(receiver)
     }
 
-    infix fun set(headers: Map<String, List<String>>) {
-        with(set) {
-            clear()
-            putAll(headers.mapValues { it.value.toMutableList() })
+    class Aggregator {
+        internal val aggregation: MutableMap<String, MutableList<String>> = mutableMapOf()
+
+        infix fun String.to(value: String) {
+            aggregation.add(Pair(this, value))
+        }
+
+        infix fun String.to(value: List<String>) {
+            aggregation.addAll(Pair(this, value))
+        }
+
+        operator fun invoke(receiver: Aggregator.() -> Unit) {
+            this.apply(receiver)
         }
     }
 
     @PublishedApi
     internal fun resolve(): MutableMap<String, MutableList<String>> {
-        return if (set.isNotEmpty()) set else (parent?.resolve() ?: mutableMapOf()).apply {
-            added.forEach { entry -> entry.value.forEach { add(this, entry.key to it) } }
-            removed.forEach { entry -> entry.value.forEach { remove(this, entry.key to it) } }
-            removedAll.forEach { remove(it) }
-            overridden.forEach { put(it.key, it.value) }
+        return if (set.aggregation.isNotEmpty()) set.aggregation else (parent?.resolve() ?: mutableMapOf()).apply {
+            addAll(add.aggregation)
+            putAll(override.aggregation)
+            removeAll(add.aggregation.filter { !it.value.contains("") })
+            remove.aggregation.filter { it.value.contains("") }.keys.forEach { remove(it) }
         }
-    }
-
-    private fun add(map: MutableMap<String, MutableList<String>>, header: Pair<String, String>) {
-        if (map[header.first] != null) {
-            map[header.first]?.add(header.second)
-        } else {
-            map[header.first] = mutableListOf(header.second)
-        }
-    }
-
-    private fun remove(map: MutableMap<String, MutableList<String>>, header: Pair<String, String>) {
-        map[header.first]?.remove(header.second)
     }
 }
