@@ -14,6 +14,9 @@ open class Request {
     var endpointUrl: String = ""
     var fullUrl: String = ""
 
+    val url: String
+        get() = if (fullUrl.isNotBlank()) fullUrl else baseUrl + endpointUrl
+
     val headers: MutableMap<String, MutableList<String>> = mutableMapOf()
     var body: Body? = null
 

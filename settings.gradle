@@ -2,3 +2,4 @@ rootProject.name = 'fleksora'
 
 include ':core'
 include ':converters:converter-gson'
+include ':clients:client-okhttp'
