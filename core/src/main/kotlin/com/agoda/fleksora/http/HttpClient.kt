@@ -38,8 +38,8 @@ abstract class HttpClient : Commons {
             logger?.log(
                     Level.Info,
                     "Configuring HttpClient -> $instance\n" +
-                    "RequestFactory -> $requestFactory\n" +
-                    "ResponseFactory -> $responseFactory"
+                            "RequestFactory -> $requestFactory\n" +
+                            "ResponseFactory -> $responseFactory"
             )
         }
     }

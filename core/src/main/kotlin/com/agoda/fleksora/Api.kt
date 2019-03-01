@@ -12,6 +12,9 @@ import com.agoda.fleksora.policy.RetryPolicy
 import com.agoda.fleksora.reflect.TypeReference.Companion.reifiedType
 import com.agoda.fleksora.converter.BodyConverter
 import com.agoda.fleksora.converter.ConverterFactories
+import com.agoda.fleksora.exception.FleksoraException
+import com.agoda.fleksora.log.Level
+import com.agoda.fleksora.policy.Policy
 
 abstract class Api : Commons {
     override val headers = Headers()
@@ -66,6 +69,7 @@ abstract class Api : Commons {
     @PublishedApi
     @Suppress("UNCHECKED_CAST")
     internal inline fun <reified T> call(method: Method, configurator: Request.Configurator): T {
+        logger?.log(Level.Verbose, "Executing a new call...")
 
         var request = client.request()
 
@@ -76,19 +80,43 @@ abstract class Api : Commons {
 
         configurator.configure(request)
 
+        logger?.log(Level.Verbose, "New call url is ${request.url}")
+
         val requestInterceptors: List<RequestInterceptor>
         val responseInterceptors: List<ResponseInterceptor>
 
         configurator.interceptors.resolve().let { interceptors ->
             requestInterceptors = interceptors.filter { it is RequestInterceptor } as List<RequestInterceptor>
             responseInterceptors = interceptors.filter { it is ResponseInterceptor } as List<ResponseInterceptor>
+
+            logger?.let {
+                if (interceptors.size > requestInterceptors.size + responseInterceptors.size) {
+                    it.log(
+                            Level.Warning,
+                            "Amount of resolved interceptors for request with url ${request.url} is less than actual provided amount.\n" +
+                            "Have you added interceptors that do not extend RequestInterceptor and ResponseInterceptor?"
+                    )
+                }
+            }
         }
 
         while (true) {
             try {
-                requestInterceptors.forEach { request = it.intercept(request) }
+                logger?.log(Level.Debug, "Invoking request interceptors for request with url ${request.url}")
+                requestInterceptors.forEach {
+                    logger?.log(Level.Debug, "Invoking $it RequestInterceptor for request with url ${request.url}" )
+                    request = it.intercept(request)
+                }
+
+                logger?.log(Level.Debug, "Passing request with url ${request.url} to HttpClient")
                 var response = client.execute(request)
-                responseInterceptors.forEach { response = it.intercept(response) }
+                logger?.log(Level.Debug, "HttpClient returned response for request with url ${request.url} -> $response")
+
+                logger?.log(Level.Debug, "Invoking response")
+                responseInterceptors.forEach {
+                    logger?.log(Level.Debug, "Invoking $it ResponseInterceptor for request with url ${request.url}")
+                    response = it.intercept(response)
+                }
 
                 return when (T::class) {
                     Unit::class -> Unit as T
@@ -97,32 +125,54 @@ abstract class Api : Commons {
                     else -> {
                         var converter: BodyConverter<Body, T>? = null
 
+                        logger?.log(Level.Debug, "Request with url ${request.url} requires BodyConverter, trying to require instance")
                         configurator.converterFactories.resolve().firstOrNull {
                             converter = it.responseConverter(reifiedType<T>()) as? BodyConverter<Body, T>
                             converter != null
                         }?.let {
+                            logger?.log(Level.Debug, "BodyConverter has been found for request with url ${request.url} -> $converter")
                             converter!!.convert(response.body!!)
-                        } ?: throw UnsupportedOperationException("Couldn't convert response body. Did you registered " +
-                                "BodyConverter.Factory that provides serializer for ${T::class.java.simpleName} type?")
+                        } ?: throw FleksoraException(
+                                request.url,
+                                UnsupportedOperationException("Couldn't convert response body. Did you registered " +
+                                        "BodyConverter.Factory that provides serializer for ${T::class.java.simpleName} type?"
+                                )
+                        )
                     }
                 }
             } catch (throwable: Throwable) {
+                logger?.log(Level.Error, "Problem has occurred while serving request with url ${request.url}", throwable)
+
+                if (throwable is FleksoraException) throw throwable
+
                 configurator.retryPolicy?.let {
+                    logPolicy("retry", request.url, it)
                     evaluateRetry(it, request, throwable)
                 } ?: retryPolicy?.let {
+                    logPolicy("retry", request.url, it)
                     evaluateRetry(it, request, throwable)
                 } ?: client.retryPolicy?.let {
+                    logPolicy("retry", request.url, it)
                     evaluateRetry(it, request, throwable)
                 } ?: throw throwable
 
                 // If we got here, it means that retry policy has requested retry attempt
                 configurator.fallbackPolicy?.let {
+                    logPolicy("fallback", request.url, it)
                     request = it.evaluate(request, throwable)
                 } ?: fallbackPolicy?.let {
+                    logPolicy("fallback", request.url, it)
                     request = it.evaluate(request, throwable)
                 } ?: client.fallbackPolicy?.let {
+                    logPolicy("fallback", request.url, it)
                     request = it.evaluate(request, throwable)
                 }
+
+                logger?.log(
+                        Level.Debug,
+                        "Request with url ${request.url} has been scheduled for retry\n" +
+                                "State after evaluating fallback policies -> $request"
+                )
 
                 request.retries++
             }
@@ -139,6 +189,11 @@ abstract class Api : Commons {
         }
     }
 
+    @PublishedApi
+    internal fun logPolicy(type: String, url: String, policy: Policy<*>) {
+        logger?.log(Level.Debug, "Evaluating $type policy for request with url $url -> $policy")
+    }
+
     open class Configurator {
         lateinit var httpClient: HttpClient
         var logger: Logger? = null
@@ -152,6 +207,12 @@ abstract class Api : Commons {
                 interceptors.parent = client.interceptors
                 converterFactories.parent = client.converterFactories
             }
+
+            logger?.log(
+                    Level.Info,
+                    "Configuring Api -> $instance\n" +
+                            "HttpClient -> $httpClient\n"
+            )
         }
     }
 

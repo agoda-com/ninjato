@@ -1,5 +1,6 @@
 package com.agoda.fleksora.converter
 
+import com.agoda.fleksora.exception.FleksoraException
 import com.agoda.fleksora.http.Body
 import com.agoda.fleksora.http.Request
 import com.agoda.fleksora.reflect.TypeReference.Companion.reifiedType
@@ -32,8 +33,13 @@ interface BodyConverter<in I, out O> {
                         converter != null
                     }?.let {
                         converter!!.convert(value)
-                    } ?: throw UnsupportedOperationException("Couldn't convert provided body. Did you registered " +
-                            "BodyConverter.Factory that provides serializer for ${T::class.java.simpleName} type?")
+                    } ?: throw FleksoraException(
+                            thisRef.fullUrl ?: thisRef.endpointUrl,
+                            UnsupportedOperationException(
+                                    "Couldn't convert provided body. Did you registered " +
+                                    "BodyConverter.Factory that provides serializer for ${T::class.java.simpleName} type?"
+                            )
+                    )
                 }
             }
         }
