@@ -4,6 +4,7 @@ import com.agoda.fleksora.http.Body
 import com.agoda.fleksora.http.HttpClient
 import com.agoda.fleksora.http.Request
 import com.agoda.fleksora.http.Response
+import com.agoda.fleksora.log.Level
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -21,11 +22,15 @@ class FleksoraOkHttpClient(private val client: OkHttpClient) : HttpClient() {
 
         val okRequest = builder.build()
 
+        logger?.log(Level.Debug, "Converting request to okhttp3.Request -> $okRequest")
+
         val start = System.currentTimeMillis()
         val okResponse = client.newCall(okRequest).execute()
         val end = System.currentTimeMillis()
 
         return (responseFactory?.create() ?: Response()).also {
+            logger?.log(Level.Debug, "Converting okhttp3.Response to respones -> $okResponse")
+
             it.request = request
             it.time = end - start
             it.code = okResponse.code()

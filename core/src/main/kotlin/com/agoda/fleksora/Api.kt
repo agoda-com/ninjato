@@ -143,7 +143,7 @@ abstract class Api : Commons {
         lateinit var httpClient: HttpClient
         var logger: Logger? = null
 
-        open fun configure(instance: Api) = instance.also {
+        internal fun configure(instance: Api) = instance.also {
             it.client = httpClient
             it.logger = logger
 

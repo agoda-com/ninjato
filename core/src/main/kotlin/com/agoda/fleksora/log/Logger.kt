@@ -7,12 +7,4 @@ package com.agoda.fleksora.log
 interface Logger {
     fun log(level: Level, message: String)
     fun log(level: Level, message: String, throwable: Throwable)
-
-    enum class Level {
-        VERBOSE,
-        DEBUG,
-        INFO,
-        WARNING,
-        ERROR
-    }
 }
