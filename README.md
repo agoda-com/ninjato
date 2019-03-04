@@ -1,5 +1,5 @@
-# fleksora
-Flexible Kotlin-Style open RESTful API
+# ninjato
+Flexible inline HTTP client for Android and Kotlin
 
 ## DSL contract
 
@@ -177,7 +177,7 @@ abstract class HttpClient : Commons {
 
 // Builder pattern
 fun provideHttpClient(dependencies: ...): HttpClient {
-    return HttpClient.build(OkHttpFleksoraClient(okHttpClient)) {
+    return HttpClient.build(NinjatoOkHttpClient(okHttpClient)) {
         logger = AndroidLogger()
         requestFactory = AgodaRequestFactory()
         responseFactory = AgodaResponseFactory()

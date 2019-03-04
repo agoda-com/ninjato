@@ -8,14 +8,14 @@ ext.versions = [
         junit           : '4.12',
         mockito         : '2.21.0',
         mockitoKotlin   : '1.6.0',
-        fleksora        : '0.0.1'
+        ninjato         : '0.0.1'
 ]
 
 ext.androidVersions = [
         compileSdk      : 28,
         minSdk          : 1,
         targetSdk       : 28,
-        fleksora        : 1
+        ninjato         : 1
 ]
 
 ext.gradlePlugins = [
@@ -36,11 +36,11 @@ ext.libraries = [
         mockitoKotlin   : "com.nhaarman:mockito-kotlin:$versions.mockitoKotlin",
 ]
 
-ext.fleksora = [
-        name            : 'fleksora',
-        desc            : 'Flexible Kotlin-Style open RESTful API',
-        url             : 'https://github.com/agoda-com/fleksora',
-        git             : 'https://github.com/agoda-com/fleksora.git',
-        group           : 'com.agoda.fleksora',
+ext.ninjato = [
+        name            : 'ninjato',
+        desc            : 'Flexible inline HTTP client for Android and Kotlin',
+        url             : 'https://github.com/agoda-com/ninjato',
+        git             : 'https://github.com/agoda-com/ninjato.git',
+        group           : 'com.agoda.ninjato',
         version         : '0.0.1'
 ]
