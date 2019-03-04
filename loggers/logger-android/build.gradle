@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion androidVersions.minSdk
         targetSdkVersion androidVersions.targetSdk
-        versionCode androidVersions.fleksora
-        versionName versions.fleksora
+        versionCode androidVersions.ninjato
+        versionName versions.ninjato
     }
 
     sourceSets {

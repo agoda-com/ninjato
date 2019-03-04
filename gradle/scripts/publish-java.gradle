@@ -17,8 +17,8 @@ task javadocJar(type: Jar, dependsOn: dokka) {
     from dokka.outputDirectory + "/${art()}"
 }
 
-group = fleksora.group
-version = fleksora.version
+group = ninjato.group
+version = ninjato.version
 
 publishing {
     publications {
@@ -26,9 +26,9 @@ publishing {
             artifactId = art()
 
             pom {
-                name = fleksora.name
-                description = fleksora.desc
-                url = fleksora.url
+                name = ninjato.name
+                description = ninjato.desc
+                url = ninjato.url
 
                 licenses {
                     license {
@@ -38,9 +38,9 @@ publishing {
                 }
 
                 scm {
-                    connection = fleksora.git
-                    developerConnection = fleksora.git
-                    url = fleksora.url
+                    connection = ninjato.git
+                    developerConnection = ninjato.git
+                    url = ninjato.url
                 }
             }
 
@@ -55,7 +55,7 @@ publishing {
             def release = "https://nexus.default.svc.agoda.mobi/repository/maven-releases/"
             def snapshot = "https://nexus.default.svc.agoda.mobi/repository/maven-snapshots/"
 
-            url = fleksora.version.endsWith('SNAPSHOT') ? snapshot : release
+            url = ninjato.version.endsWith('SNAPSHOT') ? snapshot : release
 
             credentials {
                 username System.getenv('MAVEN_USER')
