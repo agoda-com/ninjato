@@ -9,7 +9,10 @@ buildscript {
 
     dependencies {
         classpath gradlePlugins.kotlin
+        classpath gradlePlugins.android
+        classpath gradlePlugins.androidMaven
         classpath gradlePlugins.dokka
+        classpath gradlePlugins.dokkaAndroid
     }
 
 }
