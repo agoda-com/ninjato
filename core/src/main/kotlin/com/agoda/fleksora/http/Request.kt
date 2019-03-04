@@ -37,20 +37,16 @@ open class Request {
         var endpointUrl: String? = null
         var fullUrl: String? = null
 
-        open fun configure(instance: Request) = instance.let {
+        @PublishedApi
+        internal open fun configure(instance: Request) = instance.also {
             it.endpointUrl = endpointUrl ?: ""
             it.fullUrl = fullUrl ?: ""
             it.headers.putAll(headers.resolve())
-            instance
         }
 
         class WithBody : Configurator() {
             var body: Any? by BodyConverter.Delegate(converterFactories)
-
-            override fun configure(instance: Request) = super.configure(instance).let {
-                it.body = body as Body?
-                instance
-            }
+            override fun configure(instance: Request) = super.configure(instance).also { it.body = body as Body? }
         }
     }
 }

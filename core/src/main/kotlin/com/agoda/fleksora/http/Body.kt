@@ -6,7 +6,6 @@ open class Body(
         private val body: ByteArray,
         val mediaType: MediaType = MediaType.Plain()
 ) {
-
     constructor(body: String, mediaType: MediaType = MediaType.Plain()) : this(body.toByteArray(mediaType.charset), mediaType)
 
     val contentLength: Int

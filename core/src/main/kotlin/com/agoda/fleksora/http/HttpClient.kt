@@ -6,6 +6,7 @@ import com.agoda.fleksora.log.Logger
 import com.agoda.fleksora.policy.FallbackPolicy
 import com.agoda.fleksora.policy.RetryPolicy
 import com.agoda.fleksora.converter.ConverterFactories
+import com.agoda.fleksora.log.Level
 
 abstract class HttpClient : Commons {
     override val headers = Headers()
@@ -29,10 +30,17 @@ abstract class HttpClient : Commons {
         var requestFactory: Request.Factory? = null
         var responseFactory: Response.Factory? = null
 
-        open fun configure(instance: HttpClient) = instance.also {
+        internal fun configure(instance: HttpClient) = instance.also {
             it.logger = logger
             it.requestFactory = requestFactory
             it.responseFactory = responseFactory
+
+            logger?.log(
+                    Level.Info,
+                    "Configuring HttpClient -> $instance\n" +
+                            "RequestFactory -> $requestFactory\n" +
+                            "ResponseFactory -> $responseFactory"
+            )
         }
     }
 
