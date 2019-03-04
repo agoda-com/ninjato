@@ -284,73 +284,94 @@ class SearchApi(client: HttpClient) : Api(client) {
 #### Full Spec
 ```kotlin
 // HttpClient configuration
-HttpClient.build(AgodaOkHttpClient()) {
+HttpClient.configure(AgodaOkHttpClient()) {
     logger = AgodaLogger()
-    
+    requestFactory = AgodaRequestFactory()
+    responseFactory = AgodaResponseFactory()
+}.also {
+    //**********COMMONS START************//
     headers += "A" to "B"
-    headers = mapOf("A" to "B")
+    headers -= "A" to "B"
     headers -= "A" // There is actually no logical point of doing that, but functionality will be provided via Commmons interface
+    
+    headers {
+        add {
+            "A" to "B"
+            "B" to "C"
+        }
+        
+        remove {
+            "A" to "B"
+            "B" to "" // removes all headers of B
+        }
+        
+        override {
+            "A" to "B"
+            "B" to listOf("A", "B") // Works for all operations (add, remove, override, set)
+        }
+        
+        set {
+            "A" to "B"
+            "B" to listOf("A", "B")
+        }
+    }
     
     interceptors += RequestInterceptor()
     interceptors += ResponseInterceptor()
-    interceptors = listOf(RequestInterceptor(), ResponseInterceptor())
+    interceptors -= RequestInterceptor()
+    interceptors -= ResponseInterceptor()
     
-    requestInterceptor {
-        // Intercept here
+    interceptors {
+        request { request -> // Generates RequestInterceptor from passed lambda with generated id
+            // Intercept here
+        }
+        
+        response { response -> // Generates ResponseInterceptor from passed lambda with generated id 
+            // Intercept here        
+        }
+        
+        add {
+            "REQUEST" to RequestInterceptor()
+            "RESPONSE" to ResponseInterceptor()
+        }
+        
+        remove {
+            "REQUEST" to RequestInterceptor()
+            "RESPONSE" to ResponseInterceptor()
+        }
+        
+        set {
+            "REQUEST" to RequestInterceptor()
+        }
     }
     
-    responseInterceptor {
-        // Intercept here
-    }
+    converterFactories += AgodaGsonConverterFactory()
+    converterFactories += listOf(GsonConverterFactory())
     
     retryPolicy = AgodaRetryPolicy()
     
-    retryPolicy {
-        true to 1000L
+    retryPolicy { request, throwable ->
+        when (throwable) {
+            is IOException -> Retry.DoNotRetry
+            is TimeoutException -> Retry.WithoutDelay
+            is SocketException -> Retry.WithDelay(500L)
+        }
     }
     
     fallbackPolicy = AgodaFallbackPolicy()
     
-    fallbackPolicy {
+    fallbackPolicy { request, throwable ->
         request.apply { baseUrl = BaseUrls[random()] }
     }
+    //**********COMMONS END************//
 }
 
 // Api configuration
-Api.build(FlightsSearchApi()) {
-    logger = AndroidLogger()
-    
+Api.configure(FlightsSearchApi()) {
     httpClient = client
-    serializerFactory = factory
-    
-    // Following configuration can be applied in the Api class' init block
-    headers += "A" to "B"
-    headers = mapOf("A" to "B")
-    headers -= "A" // There is actually no logical point of doing that, but functionality will be provided via Commmons interface
-    
-    interceptors += RequestInterceptor()
-    interceptors += ResponseInterceptor()
-    interceptors = listOf(RequestInterceptor(), ResponseInterceptor())
-    
-    requestInterceptor {
-        // Intercept here
-    }
-    
-    responseInterceptor {
-        // Intercept here
-    }
-    
-    retryPolicy = AgodaRetryPolicy()
-    
-    retryPolicy {
-        true to 1000L
-    }
-    
-    fallbackPolicy = AgodaFallbackPolicy()
-    
-    fallbackPolicy {
-        request.apply { baseUrl = BaseUrls[random()] }
-    }
+    logger = AndroidLogger()
+}.also {
+    //**********COMMONS************//
 }
 
 // Api definition
@@ -361,6 +382,10 @@ class FlightsSearchApi : Api {
     // OR
     
     override val baseUrl = "https://search.agoda.com/"
+    
+    init {
+        //**********COMMONS************//
+    }
 }
 
 // Call definition
@@ -372,34 +397,7 @@ class FlightsSearchApi : Api {
         
         body = context
         
-        headers += "A" to "B"
-        headers = mapOf("A" to "B")
-        headers -= "A" // There is actually no logical point of doing that, but functionality will be provided via Commmons interface
-        
-        interceptors += RequestInterceptor()
-        interceptors += ResponseInterceptor()
-        interceptors = listOf(RequestInterceptor(), ResponseInterceptor())
-        
-        requestInterceptor {
-            // Intercept here
-        }
-        
-        responseInterceptor {
-            // Intercept here
-        }
-        
-        retryPolicy = AgodaRetryPolicy()
-        
-        retryPolicy {
-            true to 1000L
-        }
-        
-        fallbackPolicy = AgodaFallbackPolicy()
-        
-        fallbackPolicy {
-            request.apply { baseUrl = BaseUrls[random()] }
-        }
+        //**********COMMONS************//
     }.map { SearchResultMapper().map(it) }
 }
-
 ```
