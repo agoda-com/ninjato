@@ -10,7 +10,7 @@ sourceSets {
 
 dependencies {
     implementation libraries.kotlin
-    implementation libraries.okhttp3
+    api libraries.okhttp3
 
     implementation project(':core')
 

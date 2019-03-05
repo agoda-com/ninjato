@@ -1,0 +1,48 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+apply from: "$rootDir/gradle/scripts/dependencies.gradle"
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        applicationId "com.agoda.ninjato.sample"
+        minSdkVersion 14
+        targetSdkVersion 28
+        versionCode 1
+        versionName "0.1"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+    }
+}
+
+dependencies {
+    implementation libraries.kotlin
+    implementation libraries.coroutineCore
+    implementation libraries.coroutineAndroid
+    implementation libraries.recycler
+
+    implementation project(':core')
+    implementation project(':clients:client-okhttp')
+    implementation project(':converters:converter-gson')
+    implementation project(':loggers:logger-android')
+
+    testImplementation libraries.junit
+    testImplementation libraries.mockito
+    testImplementation libraries.mockitoKotlin
+    testImplementation libraries.kotlinTest
+    testImplementation libraries.retrofit
+    testImplementation libraries.retrofitGson
+}

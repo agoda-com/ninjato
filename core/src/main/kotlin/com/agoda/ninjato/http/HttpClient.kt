@@ -25,19 +25,23 @@ abstract class HttpClient : Commons {
     @PublishedApi
     internal fun request() = requestFactory?.create() ?: Request()
 
-    open class Configurator {
+    operator fun invoke(receiver: HttpClient.() -> Unit) {
+        apply(receiver)
+    }
+
+    open class Configurator(private val client: HttpClient) : Commons by client {
         var logger: Logger? = null
         var requestFactory: Request.Factory? = null
         var responseFactory: Response.Factory? = null
 
-        internal fun configure(instance: HttpClient) = instance.also {
+        internal fun configure() = client.also {
             it.logger = logger
             it.requestFactory = requestFactory
             it.responseFactory = responseFactory
 
             logger?.log(
                     Level.Info,
-                    "Configuring HttpClient -> $instance\n" +
+                    "Configuring HttpClient -> $it\n" +
                             "RequestFactory -> $requestFactory\n" +
                             "ResponseFactory -> $responseFactory"
             )
@@ -45,7 +49,7 @@ abstract class HttpClient : Commons {
     }
 
     companion object {
-        fun configure(instance: HttpClient, configurator: Configurator.() -> Unit)
-                = Configurator().apply(configurator).configure(instance)
+        fun <T: HttpClient> configure(instance: T, receiver: Configurator.() -> Unit)
+                = Configurator(instance).apply(receiver).configure() as T
     }
 }

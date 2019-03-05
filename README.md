@@ -288,7 +288,7 @@ HttpClient.configure(AgodaOkHttpClient()) {
     logger = AgodaLogger()
     requestFactory = AgodaRequestFactory()
     responseFactory = AgodaResponseFactory()
-}.also {
+
     //**********COMMONS START************//
     headers += "A" to "B"
     headers -= "A" to "B"
@@ -368,9 +368,9 @@ HttpClient.configure(AgodaOkHttpClient()) {
 
 // Api configuration
 Api.configure(FlightsSearchApi()) {
-    httpClient = client
     logger = AndroidLogger()
-}.also {
+    httpClient = client
+
     //**********COMMONS************//
 }
 

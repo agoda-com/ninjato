@@ -3,8 +3,11 @@ ext.versions = [
         android         : '3.3.1',
         androidMaven    : '3.6.2',
         dokka           : '0.9.17',
-        okhttp3         : '3.13.1',
+        coroutines      : '1.1.0',
+        okhttp3         : '3.12.0',
         gson            : '2.8.5',
+        retrofit        : '2.5.0',
+        recycler        : '1.0.0',
         junit           : '4.12',
         mockito         : '2.21.0',
         mockitoKotlin   : '1.6.0',
@@ -28,12 +31,17 @@ ext.gradlePlugins = [
 
 ext.libraries = [
         kotlin          : "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin",
+        coroutineCore   : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines",
+        coroutineAndroid: "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines",
         gson            : "com.google.code.gson:gson:$versions.gson",
         okhttp3         : "com.squareup.okhttp3:okhttp:$versions.okhttp3",
+        retrofit        : "com.squareup.retrofit2:retrofit:$versions.retrofit",
+        retrofitGson    : "com.squareup.retrofit2:converter-gson:$versions.retrofit",
+        recycler        : "androidx.recyclerview:recyclerview:$versions.recycler",
         kotlinTest      : "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin",
         junit           : "junit:junit:$versions.junit",
         mockito         : "org.mockito:mockito-core:$versions.mockito",
-        mockitoKotlin   : "com.nhaarman:mockito-kotlin:$versions.mockitoKotlin",
+        mockitoKotlin   : "com.nhaarman:mockito-kotlin:$versions.mockitoKotlin"
 ]
 
 ext.ninjato = [

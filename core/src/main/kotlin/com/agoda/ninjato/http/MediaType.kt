@@ -9,5 +9,5 @@ open class MediaType(val id: String, val charset: Charset = Charsets.UTF_8) {
     class Css(charset: Charset = Charsets.UTF_8) : MediaType("text/css", charset)
     class Json(charset: Charset = Charsets.UTF_8) : MediaType("application/json", charset)
 
-    override fun toString() = "$id; charset=${charset.name()}"
+    override fun toString() = "$id;charset=${charset.name().toLowerCase()}"
 }

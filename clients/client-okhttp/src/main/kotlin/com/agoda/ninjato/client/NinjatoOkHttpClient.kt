@@ -10,14 +10,15 @@ import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 
 class NinjatoOkHttpClient(private val client: OkHttpClient) : HttpClient() {
-
     override fun execute(request: Request): Response {
         val builder = okhttp3.Request.Builder()
                 .url(request.url)
                 .method(request.method.name, request.body?.let { RequestBody.create(MediaType.parse(it.mediaType.toString()), it.asByteArray) })
 
-        request.headers.forEach { key, values ->
-            values.forEach { builder.addHeader(key, it) }
+        for((key, value) in request.headers) {
+            value.forEach {
+                builder.addHeader(key, it)
+            }
         }
 
         val okRequest = builder.build()
@@ -48,5 +49,4 @@ class NinjatoOkHttpClient(private val client: OkHttpClient) : HttpClient() {
             }
         }
     }
-
 }

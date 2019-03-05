@@ -11,6 +11,8 @@ import com.agoda.ninjato.policy.RetryPolicy
 import com.agoda.ninjato.reflect.TypeReference.Companion.reifiedType
 import com.agoda.ninjato.converter.BodyConverter
 import com.agoda.ninjato.converter.ConverterFactories
+import com.agoda.ninjato.exception.BodyMissingException
+import com.agoda.ninjato.exception.HttpException
 import com.agoda.ninjato.exception.NinjatoException
 import com.agoda.ninjato.http.*
 import com.agoda.ninjato.log.Level
@@ -80,6 +82,12 @@ abstract class Api : Commons {
 
         configurator.configure(request)
 
+        with(request) {
+            if (method.requiresBody && body == null) {
+                throw BodyMissingException(url, method.name)
+            }
+        }
+
         logger?.log(Level.Verbose, "New call url is ${request.url}")
 
         val requestInterceptors: List<RequestInterceptor>
@@ -116,6 +124,10 @@ abstract class Api : Commons {
                 responseInterceptors.forEach {
                     logger?.log(Level.Debug, "Invoking $it ResponseInterceptor for request with url ${request.url}")
                     response = it.intercept(response)
+                }
+
+                if (!response.isSuccess) {
+                    throw HttpException(request.url, response.code)
                 }
 
                 return when (T::class) {
@@ -194,15 +206,19 @@ abstract class Api : Commons {
         logger?.log(Level.Debug, "Evaluating $type policy for request with url $url -> $policy")
     }
 
-    open class Configurator {
+    operator fun invoke(receiver: Api.() -> Unit) {
+        apply(receiver)
+    }
+
+    open class Configurator(private val api: Api) : Commons by api {
         lateinit var httpClient: HttpClient
         var logger: Logger? = null
 
-        internal fun configure(instance: Api) = instance.also {
+        internal fun configure() = api.also {
             it.client = httpClient
             it.logger = logger
 
-            with(instance) {
+            with(it) {
                 headers.parent = client.headers
                 interceptors.parent = client.interceptors
                 converterFactories.parent = client.converterFactories
@@ -210,14 +226,14 @@ abstract class Api : Commons {
 
             logger?.log(
                     Level.Info,
-                    "Configuring Api -> $instance\n" +
+                    "Configuring Api -> $it\n" +
                             "HttpClient -> $httpClient\n"
             )
         }
     }
 
     companion object {
-        fun configure(instance: Api, builder: Configurator.() -> Unit)
-                = Configurator().apply(builder).configure(instance)
+        fun <T: Api> configure(instance: T, receiver: Configurator.() -> Unit)
+                = Configurator(instance).apply(receiver).configure() as T
     }
 }

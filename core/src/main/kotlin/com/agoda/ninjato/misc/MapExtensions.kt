@@ -17,7 +17,7 @@ fun MutableMap<String, MutableList<String>>.addAll(pair: Pair<String, List<Strin
 }
 
 fun MutableMap<String, MutableList<String>>.addAll(map: Map<String, List<String>>) {
-    map.forEach { key, value -> addAll(key to value) }
+    for ((key, value) in map) addAll(key to value)
 }
 
 fun MutableMap<String, MutableList<String>>.remove(pair: Pair<String, String>) {
@@ -29,5 +29,5 @@ fun MutableMap<String, MutableList<String>>.removeAll(pair: Pair<String, List<St
 }
 
 fun MutableMap<String, MutableList<String>>.removeAll(map: Map<String, List<String>>) {
-    map.forEach { key, value -> removeAll(key to value) }
+    for ((key, value) in map) removeAll(key to value)
 }
