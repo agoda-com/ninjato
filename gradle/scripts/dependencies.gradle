@@ -12,6 +12,10 @@ ext.versions = [
         androidTest     : '1.1.0',
         mockito         : '2.21.0',
         mockitoKotlin   : '1.6.0',
+        rxjava          : '1.3.8',
+        rxjava2         : '2.2.7',
+        rxandroid       : '1.2.1',
+        rxandroid2      : '2.1.1',
         ninjato         : '0.0.1'
 ]
 
@@ -45,7 +49,11 @@ ext.libraries = [
         androidRunner   : "androidx.test:runner:$versions.androidTest",
         androidRules    : "androidx.test:rules:$versions.androidTest",
         mockito         : "org.mockito:mockito-core:$versions.mockito",
-        mockitoKotlin   : "com.nhaarman:mockito-kotlin:$versions.mockitoKotlin"
+        mockitoKotlin   : "com.nhaarman:mockito-kotlin:$versions.mockitoKotlin",
+        rxjava          : "io.reactivex:rxjava:$versions.rxjava",
+        rxjava2         : "io.reactivex:rxjava2:$versions.rxjava2",
+        rxandroid       : "io.reactivex:rxandroid:$versions.rxandroid",
+        rxandroid2      : "io.reactivex:rxjava2:rxandroid:$versions.rxandroid2"
 ]
 
 ext.ninjato = [
