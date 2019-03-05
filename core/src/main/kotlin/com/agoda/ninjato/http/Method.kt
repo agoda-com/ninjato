@@ -1,11 +1,11 @@
 package com.agoda.ninjato.http
 
 sealed class Method(val name: String, val requiresBody: Boolean) {
-    object Get : Method("get", false)
-    object Head : Method("head", false)
-    object Post : Method("post", true)
-    object Put : Method("put", true)
-    object Delete : Method("delete", false)
-    object Options : Method("options", false)
-    object Patch : Method("patch", true)
+    object Get : Method("GET", false)
+    object Head : Method("HEAD", false)
+    object Post : Method("POST", true)
+    object Put : Method("PUT", true)
+    object Delete : Method("DELETE", false)
+    object Options : Method("OPTIONS", false)
+    object Patch : Method("PATCH", true)
 }

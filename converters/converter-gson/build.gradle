@@ -10,7 +10,7 @@ sourceSets {
 
 dependencies {
     implementation libraries.kotlin
-    implementation libraries.gson
+    api libraries.gson
 
     implementation project(':core')
 

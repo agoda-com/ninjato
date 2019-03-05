@@ -11,6 +11,8 @@ import com.agoda.ninjato.policy.RetryPolicy
 import com.agoda.ninjato.reflect.TypeReference.Companion.reifiedType
 import com.agoda.ninjato.converter.BodyConverter
 import com.agoda.ninjato.converter.ConverterFactories
+import com.agoda.ninjato.exception.BodyMissingException
+import com.agoda.ninjato.exception.HttpException
 import com.agoda.ninjato.exception.NinjatoException
 import com.agoda.ninjato.http.*
 import com.agoda.ninjato.log.Level
@@ -80,6 +82,12 @@ abstract class Api : Commons {
 
         configurator.configure(request)
 
+        with(request) {
+            if (method.requiresBody && body == null) {
+                throw BodyMissingException(url, method.name)
+            }
+        }
+
         logger?.log(Level.Verbose, "New call url is ${request.url}")
 
         val requestInterceptors: List<RequestInterceptor>
@@ -116,6 +124,10 @@ abstract class Api : Commons {
                 responseInterceptors.forEach {
                     logger?.log(Level.Debug, "Invoking $it ResponseInterceptor for request with url ${request.url}")
                     response = it.intercept(response)
+                }
+
+                if (!response.isSuccess) {
+                    throw HttpException(request.url, response.code)
                 }
 
                 return when (T::class) {
@@ -194,6 +206,10 @@ abstract class Api : Commons {
         logger?.log(Level.Debug, "Evaluating $type policy for request with url $url -> $policy")
     }
 
+    operator fun invoke(receiver: Api.() -> Unit) {
+        apply(receiver)
+    }
+
     open class Configurator {
         lateinit var httpClient: HttpClient
         var logger: Logger? = null
@@ -217,7 +233,10 @@ abstract class Api : Commons {
     }
 
     companion object {
-        fun configure(instance: Api, builder: Configurator.() -> Unit)
-                = Configurator().apply(builder).configure(instance)
+        fun <T: Api> configure(instance: T, receiver: Configurator.(T) -> Unit): T {
+            val configurator = Configurator()
+            receiver.invoke(configurator, instance)
+            return configurator.configure(instance) as T
+        }
     }
 }

@@ -50,7 +50,7 @@ class Headers {
         return if (set.aggregation.isNotEmpty()) set.aggregation else (parent?.resolve() ?: mutableMapOf()).apply {
             addAll(add.aggregation)
             putAll(override.aggregation)
-            removeAll(add.aggregation.filter { !it.value.contains("") })
+            removeAll(remove.aggregation.filter { !it.value.contains("") })
             remove.aggregation.filter { it.value.contains("") }.keys.forEach { remove(it) }
         }
     }

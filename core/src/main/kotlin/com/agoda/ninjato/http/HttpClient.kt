@@ -25,6 +25,10 @@ abstract class HttpClient : Commons {
     @PublishedApi
     internal fun request() = requestFactory?.create() ?: Request()
 
+    operator fun invoke(receiver: HttpClient.() -> Unit) {
+        apply(receiver)
+    }
+
     open class Configurator {
         var logger: Logger? = null
         var requestFactory: Request.Factory? = null
@@ -45,7 +49,10 @@ abstract class HttpClient : Commons {
     }
 
     companion object {
-        fun configure(instance: HttpClient, configurator: Configurator.() -> Unit)
-                = Configurator().apply(configurator).configure(instance)
+        fun <T: HttpClient> configure(instance: T, receiver: Configurator.(T) -> Unit): T {
+            val configurator = Configurator()
+            receiver.invoke(configurator, instance)
+            return configurator.configure(instance) as T
+        }
     }
 }
