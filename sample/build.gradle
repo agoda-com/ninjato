@@ -13,6 +13,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "0.1"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -24,7 +25,7 @@ android {
 
     sourceSets {
         main.java.srcDirs += "src/main/kotlin"
-        test.java.srcDirs += "src/test/kotlin"
+        androidTest.java.srcDirs += "src/androidTest/kotlin"
     }
 }
 
@@ -39,10 +40,13 @@ dependencies {
     implementation project(':converters:converter-gson')
     implementation project(':loggers:logger-android')
 
-    testImplementation libraries.junit
-    testImplementation libraries.mockito
-    testImplementation libraries.mockitoKotlin
-    testImplementation libraries.kotlinTest
-    testImplementation libraries.retrofit
-    testImplementation libraries.retrofitGson
+    androidTestImplementation libraries.junit
+    androidTestImplementation libraries.androidRunner
+    androidTestImplementation libraries.androidRules
+    androidTestImplementation libraries.mockito
+    androidTestImplementation libraries.mockitoKotlin
+    androidTestImplementation libraries.kotlinTest
+    androidTestImplementation libraries.retrofit
+    androidTestImplementation libraries.retrofitGson
+    androidTestImplementation libraries.okhttp3Mock
 }
