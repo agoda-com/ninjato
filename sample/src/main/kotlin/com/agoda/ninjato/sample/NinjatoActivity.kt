@@ -26,13 +26,11 @@ class NinjatoActivity : Activity() {
     val api: ForecastApi = configure(ForecastApiImpl()) {
         httpClient = NinjatoOkHttpClient(OkHttpClient())
 
-        it {
-            converterFactories += GsonBodyConverterFactory(
-                    GsonBuilder()
-                            .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                            .create()
-            )
-        }
+        converterFactories += GsonBodyConverterFactory(
+                GsonBuilder()
+                        .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                        .create()
+        )
     }
 
     val job = Job()

@@ -210,15 +210,15 @@ abstract class Api : Commons {
         apply(receiver)
     }
 
-    open class Configurator {
+    open class Configurator(private val api: Api) : Commons by api {
         lateinit var httpClient: HttpClient
         var logger: Logger? = null
 
-        internal fun configure(instance: Api) = instance.also {
+        internal fun configure() = api.also {
             it.client = httpClient
             it.logger = logger
 
-            with(instance) {
+            with(it) {
                 headers.parent = client.headers
                 interceptors.parent = client.interceptors
                 converterFactories.parent = client.converterFactories
@@ -226,17 +226,14 @@ abstract class Api : Commons {
 
             logger?.log(
                     Level.Info,
-                    "Configuring Api -> $instance\n" +
+                    "Configuring Api -> $it\n" +
                             "HttpClient -> $httpClient\n"
             )
         }
     }
 
     companion object {
-        fun <T: Api> configure(instance: T, receiver: Configurator.(T) -> Unit): T {
-            val configurator = Configurator()
-            receiver.invoke(configurator, instance)
-            return configurator.configure(instance) as T
-        }
+        fun <T: Api> configure(instance: T, receiver: Configurator.() -> Unit)
+                = Configurator(instance).apply(receiver).configure() as T
     }
 }
