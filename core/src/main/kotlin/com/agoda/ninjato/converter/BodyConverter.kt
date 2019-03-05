@@ -1,6 +1,6 @@
 package com.agoda.ninjato.converter
 
-import com.agoda.ninjato.exception.NinjatoException
+import com.agoda.ninjato.exception.MissingConverterException
 import com.agoda.ninjato.http.Body
 import com.agoda.ninjato.http.Request
 import com.agoda.ninjato.reflect.TypeReference.Companion.reifiedType
@@ -23,23 +23,22 @@ interface BodyConverter<in I, out O> {
 
         inline operator fun <reified T> setValue(thisRef: Request.Configurator.WithBody, property: KProperty<*>, value: T) {
             body = when (value) {
+                is Body -> value
                 is String -> Body(value)
                 is ByteArray -> Body(value.toString())
                 else -> {
-                    var converter: BodyConverter<T, Body>? = null
+                    var converted: Body? = null
 
-                    factories.resolve().firstOrNull {
-                        converter = it.requestConverter(reifiedType<T>()) as? BodyConverter<T, Body>
-                        converter != null
-                    }?.let {
-                        converter!!.convert(value)
-                    } ?: throw NinjatoException(
-                            thisRef.fullUrl ?: thisRef.endpointUrl,
-                            UnsupportedOperationException(
-                                    "Couldn't convert provided body. Did you registered " +
-                                            "BodyConverter.Factory that provides serializer for ${T::class.java.simpleName} type?"
-                            )
-                    )
+                    for (factory in factories.resolve()) {
+                        val converter = factory.requestConverter(reifiedType<T>()) as? BodyConverter<T, Body>
+
+                        if (converter != null) {
+                            converted = converter.convert(value)
+                            break
+                        }
+                    }
+
+                    converted ?: throw MissingConverterException(thisRef.fullUrl ?: thisRef.endpointUrl!!, T::class.java.simpleName)
                 }
             }
         }

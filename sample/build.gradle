@@ -38,7 +38,6 @@ dependencies {
     implementation project(':core')
     implementation project(':clients:client-okhttp')
     implementation project(':converters:converter-gson')
-    implementation project(':loggers:logger-android')
 
     androidTestImplementation libraries.junit
     androidTestImplementation libraries.androidRunner
