@@ -24,9 +24,7 @@ class NinjatoTest {
     @JvmField
     val rule = RepeatRule()
 
-    private val api = Api.configure(NinjatoApi()) {
-        httpClient = NinjatoOkHttpClient(OkHttpClient())
-
+    private val api = NinjatoApi(NinjatoOkHttpClient(OkHttpClient())) {
         converterFactories += GsonBodyConverterFactory(
                 GsonBuilder()
                         .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)

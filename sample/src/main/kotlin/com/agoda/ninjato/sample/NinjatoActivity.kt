@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.agoda.ninjato.Api.Companion.configure
 import com.agoda.ninjato.sample.api.ForecastApi
 import com.agoda.ninjato.sample.api.ForecastApiImpl
 import com.agoda.ninjato.client.NinjatoOkHttpClient
@@ -24,9 +23,7 @@ import okhttp3.OkHttpClient
 class NinjatoActivity : Activity() {
     private val recycler by lazy { findViewById<RecyclerView>(R.id.recycler) }
 
-    private val api: ForecastApi = configure(ForecastApiImpl()) {
-        httpClient = NinjatoOkHttpClient(OkHttpClient())
-
+    private val api: ForecastApi = ForecastApiImpl(NinjatoOkHttpClient(OkHttpClient())) {
         converterFactories += GsonBodyConverterFactory(
                 GsonBuilder()
                         .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)

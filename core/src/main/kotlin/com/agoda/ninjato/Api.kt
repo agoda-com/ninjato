@@ -15,7 +15,10 @@ import com.agoda.ninjato.exception.HttpException
 import com.agoda.ninjato.exception.MissingConverterException
 import com.agoda.ninjato.http.*
 
-abstract class Api : Commons {
+abstract class Api(
+        @PublishedApi internal val client: HttpClient,
+        config: Api.() -> Unit = {}
+) : Commons {
     override val headers = Headers()
     override val interceptors = Interceptors()
     override val converterFactories = ConverterFactories()
@@ -23,10 +26,9 @@ abstract class Api : Commons {
     override var retryPolicy: RetryPolicy? = null
     override var fallbackPolicy: FallbackPolicy? = null
 
-    @PublishedApi
-    internal lateinit var client: HttpClient
-
     abstract val baseUrl: String
+
+    init { config(this) }
 
     inline fun <reified T> get(configurator: Request.Configurator.() -> Unit): T = prepare(Method.Get, configurator)
     inline fun <reified T> head(configurator: Request.Configurator.() -> Unit): T = prepare(Method.Head, configurator)
@@ -98,7 +100,11 @@ abstract class Api : Commons {
                     response = interceptor.intercept(response)
                 }
 
-                if (!response.isSuccess) {
+                // We are throwing exception only if non-response return type is implied
+                // Since in non-response case we can't inform the user that something happened
+                // with his request and most probably response body transformation will not go as
+                // planned and we might result in another exception
+                if (!response.isSuccess && T::class != Response::class) {
                     throw HttpException(request.url, response.code)
                 }
 
@@ -151,21 +157,5 @@ abstract class Api : Commons {
 
     operator fun invoke(receiver: Api.() -> Unit) {
         apply(receiver)
-    }
-
-    open class Configurator(private val api: Api) : Commons by api {
-        lateinit var httpClient: HttpClient
-
-        internal fun configure() = api.also {
-            it.client = httpClient
-            it.headers.parent = httpClient.headers
-            it.interceptors.parent = httpClient.interceptors
-            it.converterFactories.parent = httpClient.converterFactories
-        }
-    }
-
-    companion object {
-        fun <T: Api> configure(instance: T, receiver: Configurator.() -> Unit)
-                = Configurator(instance).apply(receiver).configure() as T
     }
 }

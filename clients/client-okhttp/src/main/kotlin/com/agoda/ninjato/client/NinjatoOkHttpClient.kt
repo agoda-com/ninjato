@@ -8,7 +8,12 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 
-class NinjatoOkHttpClient(private val client: OkHttpClient) : HttpClient() {
+class NinjatoOkHttpClient(
+        private val client: OkHttpClient,
+        requestFactory: Request.Factory? = null,
+        responseFactory: Response.Factory? = null,
+        receiver: HttpClient.() -> Unit = {}
+) : HttpClient(requestFactory, responseFactory, receiver) {
     override fun execute(request: Request): Response {
         val builder = okhttp3.Request.Builder()
                 .url(request.url)
