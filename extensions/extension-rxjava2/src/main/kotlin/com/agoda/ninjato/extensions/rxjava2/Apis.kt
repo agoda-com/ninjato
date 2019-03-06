@@ -6,7 +6,7 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 
-inline fun <A : Api, reified T> A.completable(noinline receiver: A.() -> T): Completable = Completable.fromCallable { receiver() }
+inline fun <A : Api, reified T> A.completable(noinline receiver: A.() -> Unit): Completable = Completable.fromCallable { receiver() }
 
 inline fun <A : Api, reified T> A.single(noinline receiver: A.() -> T): Single<T> = Single.fromCallable { receiver() }
 
