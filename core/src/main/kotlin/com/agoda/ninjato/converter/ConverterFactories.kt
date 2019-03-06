@@ -1,10 +1,12 @@
 package com.agoda.ninjato.converter
 
+import java.util.*
+
 class ConverterFactories {
     @PublishedApi
     internal var parent: ConverterFactories? = null
 
-    private val added: MutableList<BodyConverter.Factory> = mutableListOf()
+    private val added: MutableList<BodyConverter.Factory> = LinkedList()
 
     operator fun plusAssign(factory: BodyConverter.Factory) {
         added.add(factory)
@@ -16,6 +18,6 @@ class ConverterFactories {
 
     @PublishedApi
     internal fun resolve(): MutableList<BodyConverter.Factory> {
-        return (parent?.resolve() ?: mutableListOf()).apply { addAll(added) }
+        return (parent?.resolve() ?: LinkedList()).apply { addAll(0, added) }
     }
 }
