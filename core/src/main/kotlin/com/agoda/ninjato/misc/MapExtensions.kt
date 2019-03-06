@@ -1,6 +1,6 @@
 package com.agoda.ninjato.misc
 
-fun MutableMap<String, MutableList<String>>.add(pair: Pair<String, String>) {
+internal fun MutableMap<String, MutableList<String>>.add(pair: Pair<String, String>) {
     if (this[pair.first] != null) {
         this[pair.first]?.add(pair.second)
     } else {
@@ -8,7 +8,7 @@ fun MutableMap<String, MutableList<String>>.add(pair: Pair<String, String>) {
     }
 }
 
-fun MutableMap<String, MutableList<String>>.addAll(pair: Pair<String, List<String>>) {
+internal fun MutableMap<String, MutableList<String>>.addAll(pair: Pair<String, List<String>>) {
     if (this[pair.first] != null) {
         this[pair.first]?.addAll(pair.second)
     } else {
@@ -16,18 +16,18 @@ fun MutableMap<String, MutableList<String>>.addAll(pair: Pair<String, List<Strin
     }
 }
 
-fun MutableMap<String, MutableList<String>>.addAll(map: Map<String, List<String>>) {
+internal fun MutableMap<String, MutableList<String>>.addAll(map: Map<String, List<String>>) {
     for ((key, value) in map) addAll(key to value)
 }
 
-fun MutableMap<String, MutableList<String>>.remove(pair: Pair<String, String>) {
+internal fun MutableMap<String, MutableList<String>>.remove(pair: Pair<String, String>) {
     this[pair.first]?.remove(pair.second)
 }
 
-fun MutableMap<String, MutableList<String>>.removeAll(pair: Pair<String, List<String>>) {
+internal fun MutableMap<String, MutableList<String>>.removeAll(pair: Pair<String, List<String>>) {
     pair.second.forEach { remove(pair.first to it) }
 }
 
-fun MutableMap<String, MutableList<String>>.removeAll(map: Map<String, List<String>>) {
+internal fun MutableMap<String, MutableList<String>>.removeAll(map: Map<String, List<String>>) {
     for ((key, value) in map) removeAll(key to value)
 }

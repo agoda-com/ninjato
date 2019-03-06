@@ -75,7 +75,7 @@ abstract class Api(
         configurator.configure(request)
 
         if (request.method.requiresBody && request.body == null) {
-            throw MissingBodyException(request.url, method.name)
+            throw MissingBodyException(request)
         }
 
         val requestInterceptors = mutableListOf<RequestInterceptor>()
@@ -105,7 +105,7 @@ abstract class Api(
                 // with his request and most probably response body transformation will not go as
                 // planned and we might result in another exception
                 if (!response.isSuccess && T::class != Response::class) {
-                    throw HttpException(request.url, response.code)
+                    throw HttpException(request, response)
                 }
 
                 return when (T::class) {

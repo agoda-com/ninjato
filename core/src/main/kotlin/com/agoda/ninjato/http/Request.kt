@@ -4,7 +4,6 @@ import com.agoda.ninjato.dsl.Commons
 import com.agoda.ninjato.intercept.Interceptors
 import com.agoda.ninjato.policy.FallbackPolicy
 import com.agoda.ninjato.policy.RetryPolicy
-import com.agoda.ninjato.converter.BodyConverter
 import com.agoda.ninjato.converter.ConverterFactories
 
 open class Request {
@@ -45,7 +44,7 @@ open class Request {
         }
 
         class WithBody : Configurator() {
-            var body: Any? by BodyConverter.Delegate(converterFactories)
+            var body: Any? by Body.Delegate(converterFactories)
             override fun configure(instance: Request) = super.configure(instance).also { it.body = body as Body? }
         }
     }
