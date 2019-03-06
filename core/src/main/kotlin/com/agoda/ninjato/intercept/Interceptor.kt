@@ -5,7 +5,12 @@ package com.agoda.ninjato.intercept
  * is executed and after [response][com.agoda.ninjato.http.Response] is retrieved.
  */
 interface Interceptor<T> {
+    /**
+     * Key identifier of the interceptor.
+     * This property is introduced to support removals on the lower levels of the DSL cascade of aggregation.
+     */
     var id: String
+
     /**
      * Intercepting function. Has the chance to modify the provided value or return a new one of the same type.
      *
