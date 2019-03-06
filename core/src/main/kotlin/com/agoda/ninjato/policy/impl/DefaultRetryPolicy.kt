@@ -10,7 +10,7 @@ class DefaultRetryPolicy(
         private val retryDelay: Long
 ) : RetryPolicy() {
     override fun evaluate(request: Request, throwable: Throwable) = if (request.retries < retryCount) {
-        WithDelay(retryDelay)
+        WithDelay { Thread.sleep(retryDelay) }
     } else {
         DoNotRetry
     }

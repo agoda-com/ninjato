@@ -8,24 +8,22 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.agoda.ninjato.Api.Companion.configure
 import com.agoda.ninjato.sample.api.ForecastApi
 import com.agoda.ninjato.sample.api.ForecastApiImpl
 import com.agoda.ninjato.client.NinjatoOkHttpClient
 import com.agoda.ninjato.converter.GsonBodyConverterFactory
+import com.agoda.ninjato.sample.data.City
 import com.agoda.ninjato.sample.data.Forecast
+import com.agoda.ninjato.sample.data.ForecastRequest
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 
 class NinjatoActivity : Activity() {
+    private val recycler by lazy { findViewById<RecyclerView>(R.id.recycler) }
 
-    val recycler by lazy { findViewById<RecyclerView>(R.id.recycler) }
-
-    val api: ForecastApi = configure(ForecastApiImpl()) {
-        httpClient = NinjatoOkHttpClient(OkHttpClient())
-
+    private val api: ForecastApi = ForecastApiImpl(NinjatoOkHttpClient(OkHttpClient())) {
         converterFactories += GsonBodyConverterFactory(
                 GsonBuilder()
                         .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -33,8 +31,8 @@ class NinjatoActivity : Activity() {
         )
     }
 
-    val job = Job()
-    val scope = CoroutineScope(Dispatchers.Main + job)
+    private val job = Job()
+    private val scope = CoroutineScope(Dispatchers.Main + job)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +44,7 @@ class NinjatoActivity : Activity() {
         super.onStart()
 
         scope.launch {
-            val forecast = async(Dispatchers.IO) { api.getForecast(100, 200, listOf("Bangkok")) }
+            val forecast = async(Dispatchers.IO) { api.getForecast(ForecastRequest(100, 200, listOf(City("Bangkok")))) }
             recycler.adapter = ForecastAdapter(forecast.await().response)
         }
     }

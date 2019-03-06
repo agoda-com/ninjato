@@ -2,23 +2,24 @@ package com.agoda.ninjato.http
 
 import com.agoda.ninjato.dsl.Commons
 import com.agoda.ninjato.intercept.Interceptors
-import com.agoda.ninjato.log.Logger
 import com.agoda.ninjato.policy.FallbackPolicy
 import com.agoda.ninjato.policy.RetryPolicy
 import com.agoda.ninjato.converter.ConverterFactories
-import com.agoda.ninjato.log.Level
 
-abstract class HttpClient : Commons {
+abstract class HttpClient(
+        protected var requestFactory: Request.Factory? = null,
+        protected var responseFactory: Response.Factory? = null,
+        receiver: (HttpClient.() -> Unit) = {}
+) : Commons {
+
+    init { receiver.invoke(this) }
+
     override val headers = Headers()
     override val interceptors = Interceptors()
     override val converterFactories = ConverterFactories()
 
     override var retryPolicy: RetryPolicy? = null
     override var fallbackPolicy: FallbackPolicy? = null
-
-    protected var logger: Logger? = null
-    protected var requestFactory: Request.Factory? = null
-    protected var responseFactory: Response.Factory? = null
 
     abstract fun execute(request: Request): Response
 
@@ -27,29 +28,5 @@ abstract class HttpClient : Commons {
 
     operator fun invoke(receiver: HttpClient.() -> Unit) {
         apply(receiver)
-    }
-
-    open class Configurator(private val client: HttpClient) : Commons by client {
-        var logger: Logger? = null
-        var requestFactory: Request.Factory? = null
-        var responseFactory: Response.Factory? = null
-
-        internal fun configure() = client.also {
-            it.logger = logger
-            it.requestFactory = requestFactory
-            it.responseFactory = responseFactory
-
-            logger?.log(
-                    Level.Info,
-                    "Configuring HttpClient -> $it\n" +
-                            "RequestFactory -> $requestFactory\n" +
-                            "ResponseFactory -> $responseFactory"
-            )
-        }
-    }
-
-    companion object {
-        fun <T: HttpClient> configure(instance: T, receiver: Configurator.() -> Unit)
-                = Configurator(instance).apply(receiver).configure() as T
     }
 }

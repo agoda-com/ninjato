@@ -284,11 +284,7 @@ class SearchApi(client: HttpClient) : Api(client) {
 #### Full Spec
 ```kotlin
 // HttpClient configuration
-HttpClient.configure(AgodaOkHttpClient()) {
-    logger = AgodaLogger()
-    requestFactory = AgodaRequestFactory()
-    responseFactory = AgodaResponseFactory()
-
+AgodaOkHttpClient(requestFactory, responseFactory) {
     //**********COMMONS START************//
     headers += "A" to "B"
     headers -= "A" to "B"
@@ -367,25 +363,16 @@ HttpClient.configure(AgodaOkHttpClient()) {
 }
 
 // Api configuration
-Api.configure(FlightsSearchApi()) {
-    logger = AndroidLogger()
-    httpClient = client
-
+FlightsSearchApi(client) {
     //**********COMMONS************//
 }
 
 // Api definition
-class FlightsSearchApi : Api {
+class FlightsSearchApi(client: HttpClient, config: Api.() -> Unit = {}) : Api(client, config) {
     override val baseUrl: String
         get() = baseUrlProvider.get()
-        
     // OR
-    
     override val baseUrl = "https://search.agoda.com/"
-    
-    init {
-        //**********COMMONS************//
-    }
 }
 
 // Call definition

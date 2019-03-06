@@ -9,6 +9,7 @@ ext.versions = [
         retrofit        : '2.5.0',
         recycler        : '1.0.0',
         junit           : '4.12',
+        androidTest     : '1.1.0',
         mockito         : '2.21.0',
         mockitoKotlin   : '1.6.0',
         ninjato         : '0.0.1'
@@ -35,11 +36,14 @@ ext.libraries = [
         coroutineAndroid: "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines",
         gson            : "com.google.code.gson:gson:$versions.gson",
         okhttp3         : "com.squareup.okhttp3:okhttp:$versions.okhttp3",
+        okhttp3Mock     : "com.squareup.okhttp3:mockwebserver:$versions.okhttp3",
         retrofit        : "com.squareup.retrofit2:retrofit:$versions.retrofit",
         retrofitGson    : "com.squareup.retrofit2:converter-gson:$versions.retrofit",
         recycler        : "androidx.recyclerview:recyclerview:$versions.recycler",
         kotlinTest      : "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin",
         junit           : "junit:junit:$versions.junit",
+        androidRunner   : "androidx.test:runner:$versions.androidTest",
+        androidRules    : "androidx.test:rules:$versions.androidTest",
         mockito         : "org.mockito:mockito-core:$versions.mockito",
         mockitoKotlin   : "com.nhaarman:mockito-kotlin:$versions.mockitoKotlin"
 ]
