@@ -13,6 +13,11 @@ dependencies {
     implementation libraries.rxjava
 
     implementation project(':core')
+
+    testImplementation libraries.junit
+    testImplementation libraries.mockito
+    testImplementation libraries.mockitoKotlin
+    testImplementation libraries.kotlinTest
 }
 
 String art() { 'extension-rxjava' }

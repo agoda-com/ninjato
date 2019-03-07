@@ -5,7 +5,7 @@ import rx.Completable
 import rx.Observable
 import rx.Single
 
-inline fun <A : Api, reified T> A.completable(crossinline receiver: A.() -> Unit): Completable = Completable.fromCallable { receiver() }
+inline fun <A : Api> A.completable(crossinline receiver: A.() -> Unit): Completable = Completable.fromCallable { receiver() }
 
 inline fun <A : Api, reified T> A.single(crossinline receiver: A.() -> T): Single<T> = Single.fromCallable { receiver() }
 
