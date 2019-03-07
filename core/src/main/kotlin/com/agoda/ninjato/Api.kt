@@ -2,8 +2,6 @@ package com.agoda.ninjato
 
 import com.agoda.ninjato.dsl.Commons
 import com.agoda.ninjato.intercept.Interceptors
-import com.agoda.ninjato.intercept.RequestInterceptor
-import com.agoda.ninjato.intercept.ResponseInterceptor
 import com.agoda.ninjato.policy.FallbackPolicy
 import com.agoda.ninjato.policy.Retry
 import com.agoda.ninjato.policy.RetryPolicy
@@ -78,15 +76,8 @@ abstract class Api(
             throw MissingBodyException(request.url, method.name)
         }
 
-        val requestInterceptors = mutableListOf<RequestInterceptor>()
-        val responseInterceptors = mutableListOf<ResponseInterceptor>()
-
-        val interceptors = configurator.interceptors.resolve()
-
-        if (interceptors.isNotEmpty()) {
-            requestInterceptors.addAll(interceptors.filter { it is RequestInterceptor } as List<RequestInterceptor>)
-            responseInterceptors.addAll(interceptors.filter { it is ResponseInterceptor } as List<ResponseInterceptor>)
-        }
+        val requestInterceptors = configurator.interceptors.resolveRequest()
+        val responseInterceptors = configurator.interceptors.resolveResponse()
 
         while (true) {
             try {
