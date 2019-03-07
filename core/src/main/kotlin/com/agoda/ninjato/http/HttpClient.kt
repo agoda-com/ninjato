@@ -15,7 +15,7 @@ import com.agoda.ninjato.converter.ConverterFactories
  *
  * @param requestFactory factory for building [request][Request] entities. `null` by default.
  * @param responseFactory factory for building [response][Response] entities. `null` by default.
- * @param config lambda with receiver that allows to configure created instance on the fly.
+ * @param config tail lambda with receiver that allows to configure created instance on the fly.
  */
 abstract class HttpClient(
         protected var requestFactory: Request.Factory? = null,
