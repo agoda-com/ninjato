@@ -12,7 +12,7 @@ class ConverterFactories {
         added.add(factory)
     }
 
-    operator fun plusAssign(factories: List<BodyConverter.Factory>) {
+    operator fun plusAssign(factories: Iterable<BodyConverter.Factory>) {
         added.addAll(factories)
     }
 
