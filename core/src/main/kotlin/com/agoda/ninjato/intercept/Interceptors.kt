@@ -7,6 +7,9 @@ import java.util.*
 /**
  * DSL context for aggregating [interceptors][Interceptor].
  * Supports additions of single and arrays of request and response interceptors.
+ *
+ * When resolving all the aggregations across the DSL cascade, keep in mind,
+ * that interceptors that were defined on the lowest level will come first.
  */
 class Interceptors {
     @PublishedApi
