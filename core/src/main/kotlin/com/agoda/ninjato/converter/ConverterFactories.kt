@@ -1,8 +1,10 @@
 package com.agoda.ninjato.converter
 
+import java.util.*
+
 /**
  * DSL context for aggregating [converter factories][BodyConverter.Factory].
- * Supports additions of single factory and list of factories.
+ * Supports additions of single factory and iterables of factories.
  *
  * When resolving all the aggregations across the DSL cascade, keep in mind,
  * that factories that were defined on the lowest level will come first.
@@ -12,7 +14,7 @@ class ConverterFactories {
     @PublishedApi
     internal var parent: ConverterFactories? = null
 
-    private val added: MutableList<BodyConverter.Factory> = mutableListOf()
+    private val added: MutableList<BodyConverter.Factory> = LinkedList()
 
     /**
      * Adds provided factory to the aggregation.
@@ -28,12 +30,12 @@ class ConverterFactories {
      *
      * @param factories list of factories to add
      */
-    operator fun plusAssign(factories: List<BodyConverter.Factory>) {
+    operator fun plusAssign(factories: Iterable<BodyConverter.Factory>) {
         added.addAll(factories)
     }
 
     @PublishedApi
     internal fun resolve(): MutableList<BodyConverter.Factory> {
-        return (parent?.resolve() ?: mutableListOf()).apply { addAll(added) }
+        return (parent?.resolve() ?: LinkedList()).apply { addAll(0, added) }
     }
 }

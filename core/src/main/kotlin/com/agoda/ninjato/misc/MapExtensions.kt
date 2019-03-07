@@ -8,7 +8,7 @@ internal fun MutableMap<String, MutableList<String>>.add(pair: Pair<String, Stri
     }
 }
 
-internal fun MutableMap<String, MutableList<String>>.addAll(pair: Pair<String, List<String>>) {
+internal fun MutableMap<String, MutableList<String>>.addAll(pair: Pair<String, Iterable<String>>) {
     if (this[pair.first] != null) {
         this[pair.first]?.addAll(pair.second)
     } else {
@@ -16,18 +16,6 @@ internal fun MutableMap<String, MutableList<String>>.addAll(pair: Pair<String, L
     }
 }
 
-internal fun MutableMap<String, MutableList<String>>.addAll(map: Map<String, List<String>>) {
+internal fun MutableMap<String, MutableList<String>>.addAll(map: Map<String, Iterable<String>>) {
     for ((key, value) in map) addAll(key to value)
-}
-
-internal fun MutableMap<String, MutableList<String>>.remove(pair: Pair<String, String>) {
-    this[pair.first]?.remove(pair.second)
-}
-
-internal fun MutableMap<String, MutableList<String>>.removeAll(pair: Pair<String, List<String>>) {
-    pair.second.forEach { remove(pair.first to it) }
-}
-
-internal fun MutableMap<String, MutableList<String>>.removeAll(map: Map<String, List<String>>) {
-    for ((key, value) in map) removeAll(key to value)
 }

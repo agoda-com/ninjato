@@ -287,35 +287,17 @@ class SearchApi(client: HttpClient) : Api(client) {
 AgodaOkHttpClient(requestFactory, responseFactory) {
     //**********COMMONS START************//
     headers += "A" to "B"
-    headers -= "A" to "B"
-    headers -= "A" // There is actually no logical point of doing that, but functionality will be provided via Commmons interface
     
     headers {
-        add {
-            "A" to "B"
-            "B" to "C"
-        }
-        
-        remove {
-            "A" to "B"
-            "B" to "" // removes all headers of B
-        }
-        
-        override {
-            "A" to "B"
-            "B" to listOf("A", "B") // Works for all operations (add, remove, override, set)
-        }
-        
-        set {
-            "A" to "B"
-            "B" to listOf("A", "B")
-        }
+        "A" to "B"
+        "B" to arrayOf("C")
     }
     
     interceptors += RequestInterceptor()
     interceptors += ResponseInterceptor()
-    interceptors -= RequestInterceptor()
-    interceptors -= ResponseInterceptor()
+    
+    interceptors += arrayOf(RequestInterceptor1(), RequestInterceptor2())
+    interceptors += arrayOf(ResponseInterceptor1(), ResponseInterceptor2())
     
     interceptors {
         request { request -> // Generates RequestInterceptor from passed lambda with generated id
@@ -325,24 +307,10 @@ AgodaOkHttpClient(requestFactory, responseFactory) {
         response { response -> // Generates ResponseInterceptor from passed lambda with generated id 
             // Intercept here        
         }
-        
-        add {
-            "REQUEST" to RequestInterceptor()
-            "RESPONSE" to ResponseInterceptor()
-        }
-        
-        remove {
-            "REQUEST" to RequestInterceptor()
-            "RESPONSE" to ResponseInterceptor()
-        }
-        
-        set {
-            "REQUEST" to RequestInterceptor()
-        }
     }
     
     converterFactories += AgodaGsonConverterFactory()
-    converterFactories += listOf(GsonConverterFactory())
+    converterFactories += arrayOf(GsonConverterFactory())
     
     retryPolicy = AgodaRetryPolicy()
     

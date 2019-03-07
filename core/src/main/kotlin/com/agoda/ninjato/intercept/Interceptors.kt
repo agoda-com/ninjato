@@ -6,16 +6,14 @@ import java.util.*
 
 /**
  * DSL context for aggregating [interceptors][Interceptor].
- * Supports additions and removals of single interceptor as well as setting with ignoring of
- * higher levels of the cascade.
+ * Supports additions of single and arrays of request and response interceptors.
  */
 class Interceptors {
     @PublishedApi
     internal var parent: Interceptors? = null
 
-    val add = Aggregator()
-    val remove = Aggregator()
-    val set = Aggregator()
+    private val request = LinkedList<RequestInterceptor>()
+    private val response = LinkedList<ResponseInterceptor>()
 
     /**
      * Adds provided request interceptor to the aggregation.
@@ -23,7 +21,16 @@ class Interceptors {
      * @param interceptor request interceptor to add
      */
     operator fun plusAssign(interceptor: RequestInterceptor) {
-        add { interceptor.id to interceptor }
+        request.add(interceptor)
+    }
+
+    /**
+     * Adds provided request interceptors to the aggregation.
+     *
+     * @param interceptors request interceptors to add
+     */
+    operator fun plusAssign(interceptors: Array<out RequestInterceptor>) {
+        request.addAll(interceptors)
     }
 
     /**
@@ -32,73 +39,49 @@ class Interceptors {
      * @param interceptor response interceptor to add
      */
     operator fun plusAssign(interceptor: ResponseInterceptor) {
-        add { interceptor.id to interceptor }
+        response.add(interceptor)
     }
 
     /**
-     * Removes provided request interceptor from the aggregation.
+     * Adds provided response interceptors to the aggregation.
      *
-     * @param interceptor request interceptor to remove
+     * @param interceptors response interceptors to add
      */
-    operator fun minusAssign(interceptor: RequestInterceptor) {
-        remove { interceptor.id to interceptor }
-    }
-
-    /**
-     * Removes provided response interceptor from the aggregation.
-     *
-     * @param interceptor response interceptor to remove
-     */
-    operator fun minusAssign(interceptor: ResponseInterceptor) {
-        remove { interceptor.id to interceptor }
+    operator fun plusAssign(interceptors: Array<out ResponseInterceptor>) {
+        response.addAll(interceptors)
     }
 
     /**
      * Adds anonymous object of request interceptor to the aggregation.
      *
-     * @param id key identifier of the interceptor
      * @param interceptor lambda with interception logic
      */
-    fun request(id: String, interceptor: (Request) -> Request) {
-        add { id to object : RequestInterceptor() {
+    fun request(interceptor: (Request) -> Request) {
+        request.add(object : RequestInterceptor() {
             override fun intercept(instance: Request) = interceptor(instance)
-        } }
+        })
     }
 
     /**
      * Adds anonymous object of response interceptor to the aggregation.
      *
-     * @param id key identifier of the interceptor
      * @param interceptor lambda with interception logic
      */
-    fun response(id: String, interceptor: (Response) -> Response) {
-        add { id to object : ResponseInterceptor() {
+    fun response(interceptor: (Response) -> Response) {
+        response.add(object : ResponseInterceptor() {
             override fun intercept(instance: Response) = interceptor(instance)
-        } }
+        })
     }
 
     operator fun invoke(receiver: Interceptors.() -> Unit) {
         this.apply(receiver)
     }
 
-    class Aggregator {
-        internal val aggregation: MutableSet<Interceptor<*>> = mutableSetOf()
-
-        infix fun String.to(value: Interceptor<*>) {
-            aggregation.add(value.also { it.id = this })
-        }
-
-        operator fun invoke(receiver: Aggregator.() -> Unit) {
-            this.apply(receiver)
-        }
-    }
+    @PublishedApi
+    internal fun resolveRequest(): MutableList<RequestInterceptor>
+            = parent?.resolveRequest()?.also { it.addAll(0, request) } ?: request
 
     @PublishedApi
-    internal fun resolve(): MutableSet<Interceptor<*>> {
-        return if (set.aggregation.isNotEmpty()) set.aggregation else (parent?.resolve() ?: mutableSetOf()).apply {
-            addAll(add.aggregation)
-            removeAll(remove.aggregation)
-        }
-    }
-
+    internal fun resolveResponse(): MutableList<ResponseInterceptor>
+            = parent?.resolveResponse()?.also { it.addAll(0, response) } ?: response
 }
