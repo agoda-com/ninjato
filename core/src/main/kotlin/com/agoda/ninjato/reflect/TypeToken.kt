@@ -2,6 +2,6 @@ package com.agoda.ninjato.reflect
 
 import java.lang.reflect.Type
 
-interface TypeToken {
+internal interface TypeToken {
     val type: Type
 }

@@ -1,6 +1,6 @@
 package com.agoda.ninjato.misc
 
-fun MutableMap<String, MutableList<String>>.add(pair: Pair<String, String>) {
+internal fun MutableMap<String, MutableList<String>>.add(pair: Pair<String, String>) {
     if (this[pair.first] != null) {
         this[pair.first]?.add(pair.second)
     } else {
@@ -8,7 +8,7 @@ fun MutableMap<String, MutableList<String>>.add(pair: Pair<String, String>) {
     }
 }
 
-fun MutableMap<String, MutableList<String>>.addAll(pair: Pair<String, Iterable<String>>) {
+internal fun MutableMap<String, MutableList<String>>.addAll(pair: Pair<String, Iterable<String>>) {
     if (this[pair.first] != null) {
         this[pair.first]?.addAll(pair.second)
     } else {
@@ -16,6 +16,6 @@ fun MutableMap<String, MutableList<String>>.addAll(pair: Pair<String, Iterable<S
     }
 }
 
-fun MutableMap<String, MutableList<String>>.addAll(map: Map<String, Iterable<String>>) {
+internal fun MutableMap<String, MutableList<String>>.addAll(map: Map<String, Iterable<String>>) {
     for ((key, value) in map) addAll(key to value)
 }

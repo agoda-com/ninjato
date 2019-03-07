@@ -13,6 +13,13 @@ import com.agoda.ninjato.exception.HttpException
 import com.agoda.ninjato.exception.MissingConverterException
 import com.agoda.ninjato.http.*
 
+/**
+ * Main class of the library.
+ * Provides access to the DSL of call functions.
+ *
+ * @param client http client to forward calls to.
+ * @param config tail lambda with receiver that allows to configure created instance on the fly.
+ */
 abstract class Api(
         @PublishedApi internal val client: HttpClient,
         config: Api.() -> Unit = {}
@@ -28,12 +35,53 @@ abstract class Api(
 
     init { config(this) }
 
+    /**
+     * Executes the GET request with the provided configuration.
+     *
+     * @param configurator the configuration of a [Request]
+     */
     inline fun <reified T> get(configurator: Request.Configurator.() -> Unit): T = prepare(Method.Get, configurator)
+
+    /**
+     * Executes the HEAD request with the provided configuration.
+     *
+     * @param configurator the configuration of a [Request]
+     */
     inline fun <reified T> head(configurator: Request.Configurator.() -> Unit): T = prepare(Method.Head, configurator)
+
+    /**
+     * Executes the POST request with the provided configuration.
+     *
+     * @param configurator the configuration of a [Request]
+     */
     inline fun <reified T> post(configurator: Request.Configurator.WithBody.() -> Unit): T = prepareWithBody(Method.Post, configurator)
+
+    /**
+     * Executes the PUT request with the provided configuration.
+     *
+     * @param configurator the configuration of a [Request]
+     */
     inline fun <reified T> put(configurator: Request.Configurator.WithBody.() -> Unit): T = prepareWithBody(Method.Put, configurator)
+
+    /**
+     * Executes the DELETE request with the provided configuration.
+     *
+     * @param configurator the configuration of a [Request]
+     */
     inline fun <reified T> delete(configurator: Request.Configurator.WithBody.() -> Unit): T = prepareWithBody(Method.Delete, configurator)
+
+    /**
+     * Executes the OPTIONS request with the provided configuration.
+     *
+     * @param configurator the configuration of a [Request]
+     */
     inline fun <reified T> options(configurator: Request.Configurator.WithBody.() -> Unit): T = prepareWithBody(Method.Options, configurator)
+
+    /**
+     * Executes the PATCH request with the provided configuration.
+     *
+     * @param configurator the configuration of a [Request]
+     */
     inline fun <reified T> patch(configurator: Request.Configurator.WithBody.() -> Unit): T = prepareWithBody(Method.Patch, configurator)
 
     @PublishedApi
@@ -73,7 +121,7 @@ abstract class Api(
         configurator.configure(request)
 
         if (request.method.requiresBody && request.body == null) {
-            throw MissingBodyException(request.url, method.name)
+            throw MissingBodyException(request)
         }
 
         val requestInterceptors = configurator.interceptors.resolveRequest()
@@ -96,7 +144,7 @@ abstract class Api(
                 // with his request and most probably response body transformation will not go as
                 // planned and we might result in another exception
                 if (!response.isSuccess && T::class != Response::class) {
-                    throw HttpException(request.url, response.code)
+                    throw HttpException(request, response)
                 }
 
                 return when (T::class) {
