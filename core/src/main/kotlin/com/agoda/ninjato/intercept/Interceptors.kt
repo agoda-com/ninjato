@@ -21,7 +21,7 @@ class Interceptors {
     /**
      * Adds provided request interceptor to the aggregation.
      *
-     * @param interceptor request interceptor to add
+     * @param interceptor request interceptor to add.
      */
     operator fun plusAssign(interceptor: RequestInterceptor) {
         request.add(interceptor)
@@ -30,7 +30,7 @@ class Interceptors {
     /**
      * Adds provided request interceptors to the aggregation.
      *
-     * @param interceptors request interceptors to add
+     * @param interceptors request interceptors to add.
      */
     operator fun plusAssign(interceptors: Array<out RequestInterceptor>) {
         request.addAll(interceptors)
@@ -39,7 +39,7 @@ class Interceptors {
     /**
      * Adds provided response interceptor to the aggregation.
      *
-     * @param interceptor response interceptor to add
+     * @param interceptor response interceptor to add.
      */
     operator fun plusAssign(interceptor: ResponseInterceptor) {
         response.add(interceptor)
@@ -48,7 +48,7 @@ class Interceptors {
     /**
      * Adds provided response interceptors to the aggregation.
      *
-     * @param interceptors response interceptors to add
+     * @param interceptors response interceptors to add.
      */
     operator fun plusAssign(interceptors: Array<out ResponseInterceptor>) {
         response.addAll(interceptors)
@@ -57,7 +57,7 @@ class Interceptors {
     /**
      * Adds anonymous object of request interceptor to the aggregation.
      *
-     * @param interceptor lambda with interception logic
+     * @param interceptor lambda with interception logic.
      */
     fun request(interceptor: (Request) -> Request) {
         request.add(object : RequestInterceptor() {
@@ -68,7 +68,7 @@ class Interceptors {
     /**
      * Adds anonymous object of response interceptor to the aggregation.
      *
-     * @param interceptor lambda with interception logic
+     * @param interceptor lambda with interception logic.
      */
     fun response(interceptor: (Response) -> Response) {
         response.add(object : ResponseInterceptor() {

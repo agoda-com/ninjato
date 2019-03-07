@@ -19,7 +19,7 @@ class ConverterFactories {
     /**
      * Adds provided factory to the aggregation.
      *
-     * @param factory factory to add
+     * @param factory factory to add.
      */
     operator fun plusAssign(factory: BodyConverter.Factory) {
         added.add(factory)
@@ -28,7 +28,7 @@ class ConverterFactories {
     /**
      * Adds provided factories to the aggregation.
      *
-     * @param factories list of factories to add
+     * @param factories list of factories to add.
      */
     operator fun plusAssign(factories: Iterable<BodyConverter.Factory>) {
         added.addAll(factories)
