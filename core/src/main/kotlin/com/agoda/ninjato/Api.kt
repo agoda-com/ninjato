@@ -133,7 +133,7 @@ abstract class Api(
                     request = interceptor.intercept(request)
                 }
 
-                var response = client.execute(request)
+                var response = client.execute(request).also { it.request = request }
 
                 for (interceptor in responseInterceptors) {
                     response = interceptor.intercept(response)
