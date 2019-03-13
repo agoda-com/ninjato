@@ -19,7 +19,7 @@ class Body(
         private val body: ByteArray,
         val mediaType: MediaType = MediaType.Plain()
 ) {
-       constructor(body: String, mediaType: MediaType = MediaType.Plain()) : this(body.toByteArray(mediaType.charset), mediaType)
+    constructor(body: String, mediaType: MediaType = MediaType.Plain()) : this(body.toByteArray(mediaType.charset), mediaType)
 
     /**
      * Amount of bytes in the body's value
