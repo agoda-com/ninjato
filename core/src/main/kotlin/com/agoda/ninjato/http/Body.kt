@@ -49,13 +49,13 @@ class Body(
     internal class Delegate(val factories: ConverterFactories) {
         var body: Body? = null
 
-        operator fun getValue(thisRef: Request.Configurator.WithBody, property: KProperty<*>) = body
+        operator fun getValue(thisRef: Any, property: KProperty<*>) = body
 
-        inline operator fun <reified T> setValue(thisRef: Request.Configurator.WithBody, property: KProperty<*>, value: T) {
+        inline operator fun <reified T> setValue(thisRef: Any, property: KProperty<*>, value: T) {
             body = when (value) {
                 is Body -> value
                 is String -> Body(value)
-                is ByteArray -> Body(value.toString())
+                is ByteArray -> Body(value)
                 else -> {
                     var converted: Body? = null
 
@@ -68,7 +68,11 @@ class Body(
                         }
                     }
 
-                    converted ?: throw MissingConverterException(thisRef.fullUrl ?: thisRef.endpointUrl!!, T::class.java.simpleName)
+                    converted ?: throw MissingConverterException(
+                            if (thisRef is Request.Configurator.WithBody) thisRef.fullUrl ?: thisRef.endpointUrl!!
+                            else "unknown",
+                            T::class.java.simpleName
+                    )
                 }
             }
         }
