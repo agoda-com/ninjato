@@ -45,6 +45,12 @@ class ApiTest {
                 "A" to "B"
             }
 
+            parameters += "a" to "test param"
+
+            parameters {
+                "b" to "c"
+            }
+
             interceptors {
                 request {
                     assert(endpointUrl == "/getResponse")
@@ -62,7 +68,7 @@ class ApiTest {
 
         // Assert
         assert(response.request.endpointUrl == "/getResponse")
-        assert(response.request.url == "http://127.0.0.1:8080/getResponse")
+        assert(response.request.url == "http://127.0.0.1:8080/getResponse?a=test+param&b=c")
         assert(response.code == 200)
         assert(response.request.headers["A"] == listOf("B"))
         assert(response.isSuccess)
