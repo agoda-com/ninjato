@@ -358,6 +358,11 @@ class FlightsSearchApi : Api {
         fullUrl = "https://search2.agoda.com/search?query=$query"
         
         body = context
+        // OR
+        body = formUrlEncoded {
+            "A" to "B"
+            "B" to "C"
+        }
         
         //**********COMMONS************//
     }.map { SearchResultMapper().map(it) }
