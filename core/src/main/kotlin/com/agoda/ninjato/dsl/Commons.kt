@@ -7,6 +7,7 @@ import com.agoda.ninjato.policy.FallbackPolicy
 import com.agoda.ninjato.policy.Retry
 import com.agoda.ninjato.policy.RetryPolicy
 import com.agoda.ninjato.converter.ConverterFactories
+import com.agoda.ninjato.http.Parameters
 
 /**
  * The main DSL entry of the library.
@@ -23,6 +24,7 @@ import com.agoda.ninjato.converter.ConverterFactories
  */
 interface Commons {
     val headers: Headers
+    val parameters: Parameters
     val interceptors: Interceptors
     val converterFactories: ConverterFactories
 

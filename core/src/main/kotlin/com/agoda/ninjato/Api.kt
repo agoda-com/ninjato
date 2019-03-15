@@ -25,6 +25,7 @@ abstract class Api(
         config: Api.() -> Unit = {}
 ) : Commons {
     override val headers = Headers()
+    override val parameters = Parameters()
     override val interceptors = Interceptors()
     override val converterFactories = ConverterFactories()
 
@@ -90,6 +91,7 @@ abstract class Api(
 
         config.let {
             it.headers.parent = headers
+            it.parameters.parent = parameters
             it.interceptors.parent = interceptors
             it.converterFactories.parent = converterFactories
         }
@@ -103,6 +105,7 @@ abstract class Api(
 
         config.let {
             it.headers.parent = headers
+            it.parameters.parent = parameters
             it.interceptors.parent = interceptors
             it.converterFactories.parent = converterFactories
         }

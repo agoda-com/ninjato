@@ -26,6 +26,7 @@ abstract class HttpClient(
     init { config.invoke(this) }
 
     override val headers = Headers()
+    override val parameters = Parameters()
     override val interceptors = Interceptors()
     override val converterFactories = ConverterFactories()
 
