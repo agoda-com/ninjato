@@ -13,6 +13,7 @@ class RequestTest {
             endpointUrl = "/test"
             fullUrl = "https://127.0.0.1/fullTest"
             headers { "A" to "B" }
+            parameters { "a" to "test param !"}
         }
 
         // Act
@@ -20,7 +21,7 @@ class RequestTest {
 
         // Assert
         assert(request.endpointUrl == "/test")
-        assert(request.url == "https://127.0.0.1/fullTest")
+        assert(request.url == "https://127.0.0.1/fullTest?a=test+param+%21")
         assert(request.headers["A"]!!.contains("B"))
     }
 

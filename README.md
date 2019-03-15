@@ -293,6 +293,13 @@ AgodaOkHttpClient(requestFactory, responseFactory) {
         "B" to arrayOf("C")
     }
     
+    parameters += "A" to "B" // Url encoded parameters
+    
+    parameters {
+        "A" to "B"
+        "B" to "C"
+    }
+    
     interceptors += RequestInterceptor()
     interceptors += ResponseInterceptor()
     
@@ -346,7 +353,7 @@ class FlightsSearchApi(client: HttpClient, config: Api.() -> Unit = {}) : Api(cl
 // Call definition
 class FlightsSearchApi : Api {
     fun search(query: String, context: SearchContext): SearchResult = post<NetworkSearchResult> {
-        endpointUrl = "v2/search?query=$query"
+        endpointUrl = "v2/search?query=$query" // Everything specified in parameters across dsl cascade will be added to the url
         // OR
         fullUrl = "https://search2.agoda.com/search?query=$query"
         

@@ -5,6 +5,8 @@ import com.agoda.ninjato.intercept.Interceptors
 import com.agoda.ninjato.policy.FallbackPolicy
 import com.agoda.ninjato.policy.RetryPolicy
 import com.agoda.ninjato.converter.ConverterFactories
+import com.agoda.ninjato.misc.toUrlEncoded
+import java.lang.StringBuilder
 
 /**
  * Base http entity of the library.
@@ -24,9 +26,14 @@ open class Request {
      * [endpointUrl].
      */
     val url: String
-        get() = if (fullUrl.isNotBlank()) fullUrl else baseUrl + endpointUrl
+        get() = StringBuilder().apply {
+            append(if (fullUrl.isNotBlank()) fullUrl else baseUrl + endpointUrl)
+            append(parameters.toUrlEncoded(!contains('?'), contains('?')))
+        }.toString()
 
     val headers: MutableMap<String, MutableList<String>> = mutableMapOf()
+    val parameters: MutableMap<String, String> = LinkedHashMap()
+
     var body: Body? = null
 
     var retries = 0
@@ -45,6 +52,7 @@ open class Request {
      */
     open class Configurator : Commons {
         override val headers = Headers()
+        override val parameters = Parameters()
         override val interceptors = Interceptors()
         override val converterFactories = ConverterFactories()
 
@@ -59,6 +67,7 @@ open class Request {
             it.endpointUrl = endpointUrl ?: ""
             it.fullUrl = fullUrl ?: ""
             it.headers.putAll(headers.resolve())
+            it.parameters.putAll(parameters.resolve())
         }
 
         /**
