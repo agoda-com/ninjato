@@ -28,6 +28,7 @@ Provides access to the DSL of call functions.
 | [fallbackPolicy](fallback-policy.md) | `open var fallbackPolicy: `[`FallbackPolicy`](../../com.agoda.ninjato.policy/-fallback-policy/index.md)`?` |
 | [headers](headers.md) | `open val headers: `[`Headers`](../../com.agoda.ninjato.http/-headers/index.md) |
 | [interceptors](interceptors.md) | `open val interceptors: `[`Interceptors`](../../com.agoda.ninjato.intercept/-interceptors/index.md) |
+| [parameters](parameters.md) | `open val parameters: `[`Parameters`](../../com.agoda.ninjato.http/-parameters/index.md) |
 | [retryPolicy](retry-policy.md) | `open var retryPolicy: `[`RetryPolicy`](../../com.agoda.ninjato.policy/-retry-policy/index.md)`?` |
 
 ### Functions

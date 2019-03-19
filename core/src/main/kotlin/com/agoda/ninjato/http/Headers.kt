@@ -22,8 +22,13 @@ class Headers {
         values.add(header)
     }
 
-    operator fun invoke(receiver: Headers.() -> Unit) {
-        this.apply(receiver)
+    /**
+     * Adds provided cookie to the aggregation.
+     *
+     * @param receiver tail lambda with cookie configuration.
+     */
+    fun cookie(receiver: Cookies.() -> Unit) {
+        values.add(Pair(COOKIE, Cookies().apply(receiver).resolve()))
     }
 
     /**
@@ -44,7 +49,15 @@ class Headers {
         values.addAll(Pair(this, value))
     }
 
+    operator fun invoke(receiver: Headers.() -> Unit) {
+        this.apply(receiver)
+    }
+
     @PublishedApi
     internal fun resolve(): MutableMap<String, MutableList<String>>
             = parent?.resolve()?.also { it.addAll(values) } ?: values
+
+    companion object {
+        private const val COOKIE = "Cookie"
+    }
 }

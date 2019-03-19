@@ -18,6 +18,7 @@ Media type of the [request](../-request/index.md) or [response](../-response/ind
 | Name | Summary |
 |---|---|
 | [Css](-css/index.md) | `class Css : `[`MediaType`](./index.md)<br>Represents the `text/css` content type. |
+| [FormUrlEncoded](-form-url-encoded/index.md) | `class FormUrlEncoded : `[`MediaType`](./index.md)<br>Represents the `application/x-www-form-urlencoded` content type. |
 | [Html](-html/index.md) | `class Html : `[`MediaType`](./index.md)<br>Represents the `text/html` content type. |
 | [JavaScript](-java-script/index.md) | `class JavaScript : `[`MediaType`](./index.md)<br>Represents the `text/javascript` content type. |
 | [Json](-json/index.md) | `class Json : `[`MediaType`](./index.md)<br>Represents the `application/json` content type. |
@@ -47,6 +48,7 @@ Media type of the [request](../-request/index.md) or [response](../-response/ind
 | Name | Summary |
 |---|---|
 | [Css](-css/index.md) | `class Css : `[`MediaType`](./index.md)<br>Represents the `text/css` content type. |
+| [FormUrlEncoded](-form-url-encoded/index.md) | `class FormUrlEncoded : `[`MediaType`](./index.md)<br>Represents the `application/x-www-form-urlencoded` content type. |
 | [Html](-html/index.md) | `class Html : `[`MediaType`](./index.md)<br>Represents the `text/html` content type. |
 | [JavaScript](-java-script/index.md) | `class JavaScript : `[`MediaType`](./index.md)<br>Represents the `text/javascript` content type. |
 | [Json](-json/index.md) | `class Json : `[`MediaType`](./index.md)<br>Represents the `application/json` content type. |

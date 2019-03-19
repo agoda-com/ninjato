@@ -34,7 +34,7 @@ abstract class Api(
 
     abstract val baseUrl: String
 
-    init { config(this) }
+    init { this.apply(config) }
 
     /**
      * Executes the GET request with the provided configuration.

@@ -7,5 +7,6 @@ com.agoda.ninjato.dsl
 com.agoda.ninjato.exception
 com.agoda.ninjato.http
 com.agoda.ninjato.intercept
+com.agoda.ninjato.misc
 com.agoda.ninjato.policy
 com.agoda.ninjato.policy.impl

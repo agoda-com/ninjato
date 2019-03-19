@@ -25,6 +25,7 @@ This makes the DSL cascade: all the values are aggregated across all three level
 | [fallbackPolicy](fallback-policy.md) | `abstract var fallbackPolicy: `[`FallbackPolicy`](../../com.agoda.ninjato.policy/-fallback-policy/index.md)`?` |
 | [headers](headers.md) | `abstract val headers: `[`Headers`](../../com.agoda.ninjato.http/-headers/index.md) |
 | [interceptors](interceptors.md) | `abstract val interceptors: `[`Interceptors`](../../com.agoda.ninjato.intercept/-interceptors/index.md) |
+| [parameters](parameters.md) | `abstract val parameters: `[`Parameters`](../../com.agoda.ninjato.http/-parameters/index.md) |
 | [retryPolicy](retry-policy.md) | `abstract var retryPolicy: `[`RetryPolicy`](../../com.agoda.ninjato.policy/-retry-policy/index.md)`?` |
 
 ### Functions

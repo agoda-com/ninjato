@@ -16,6 +16,13 @@ class HeadersTest {
             "C" to listOf("D", "E")
         }
 
+        headers {
+            cookie {
+                "a" to "b"
+                isSecure = true
+            }
+        }
+
         // Act
         val resolved = headers.resolve()
 
@@ -24,6 +31,7 @@ class HeadersTest {
         assert(resolved["B"]!![0] == "C")
         assert(resolved["C"]!![0] == "D")
         assert(resolved["C"]!![1] == "E")
+        assert(resolved["Cookie"]!![0] == "a=b; Secure")
     }
 
     @Test

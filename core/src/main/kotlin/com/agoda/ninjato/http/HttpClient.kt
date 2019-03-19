@@ -23,8 +23,6 @@ abstract class HttpClient(
         config: (HttpClient.() -> Unit) = {}
 ) : Commons {
 
-    init { config.invoke(this) }
-
     override val headers = Headers()
     override val parameters = Parameters()
     override val interceptors = Interceptors()
@@ -32,6 +30,8 @@ abstract class HttpClient(
 
     override var retryPolicy: RetryPolicy? = null
     override var fallbackPolicy: FallbackPolicy? = null
+
+    init { this.apply(config) }
 
     /**
      * Executes generated requests[Request] and returns [responses][Response] in synchronous manner.

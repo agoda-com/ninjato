@@ -291,6 +291,16 @@ AgodaOkHttpClient(requestFactory, responseFactory) {
     headers {
         "A" to "B"
         "B" to arrayOf("C")
+        
+        cookie {
+            "A" to "B"
+            expires = Date().seconds
+            maxAge = 3600
+            path = "/hotels"
+            domain = "agoda.com"
+            isSecure = true
+            isHttpOnly = true
+        }
     }
     
     parameters += "A" to "B" // Url encoded parameters
