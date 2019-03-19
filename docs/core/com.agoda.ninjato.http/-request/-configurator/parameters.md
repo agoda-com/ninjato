@@ -2,7 +2,7 @@
 
 # parameters
 
-`open val parameters: `[`Parameters`](../../-parameters/index.md)
+`val parameters: `[`Parameters`](../../-parameters/index.md)
 
 Overrides [Commons.parameters](../../../com.agoda.ninjato.dsl/-commons/parameters.md)
 

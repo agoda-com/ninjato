@@ -2,7 +2,7 @@
 
 # headers
 
-`open val headers: `[`Headers`](../-headers/index.md)
+`val headers: `[`Headers`](../-headers/index.md)
 
 Overrides [Commons.headers](../../com.agoda.ninjato.dsl/-commons/headers.md)
 

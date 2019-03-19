@@ -2,7 +2,7 @@
 
 # retryPolicy
 
-`open var retryPolicy: `[`RetryPolicy`](../../../com.agoda.ninjato.policy/-retry-policy/index.md)`?`
+`var retryPolicy: `[`RetryPolicy`](../../../com.agoda.ninjato.policy/-retry-policy/index.md)`?`
 
 Overrides [Commons.retryPolicy](../../../com.agoda.ninjato.dsl/-commons/retry-policy.md)
 

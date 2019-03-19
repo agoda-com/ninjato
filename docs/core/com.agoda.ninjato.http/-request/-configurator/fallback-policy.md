@@ -2,7 +2,7 @@
 
 # fallbackPolicy
 
-`open var fallbackPolicy: `[`FallbackPolicy`](../../../com.agoda.ninjato.policy/-fallback-policy/index.md)`?`
+`var fallbackPolicy: `[`FallbackPolicy`](../../../com.agoda.ninjato.policy/-fallback-policy/index.md)`?`
 
 Overrides [Commons.fallbackPolicy](../../../com.agoda.ninjato.dsl/-commons/fallback-policy.md)
 
