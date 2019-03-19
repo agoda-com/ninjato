@@ -21,17 +21,17 @@ abstract class HttpClient(
         protected var requestFactory: Request.Factory? = null,
         protected var responseFactory: Response.Factory? = null,
         config: (HttpClient.() -> Unit) = {}
-) : Commons {  
+) : Commons {
 
-    override val headers = Headers()
-    override val parameters = Parameters()
-    override val interceptors = Interceptors()
-    override val converterFactories = ConverterFactories()
+    final override val headers = Headers()
+    final override val parameters = Parameters()
+    final override val interceptors = Interceptors()
+    final override val converterFactories = ConverterFactories()
 
-    override var retryPolicy: RetryPolicy? = null
-    override var fallbackPolicy: FallbackPolicy? = null
-        
-    init { config.invoke(this) }
+    final override var retryPolicy: RetryPolicy? = null
+    final override var fallbackPolicy: FallbackPolicy? = null
+
+    init { this.apply(config) }
 
     /**
      * Executes generated requests[Request] and returns [responses][Response] in synchronous manner.

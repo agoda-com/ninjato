@@ -28,4 +28,5 @@ DSL context for configuring the [Request](../../index.md) with [Body](../../../-
 | [fullUrl](../full-url.md) | `var fullUrl: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
 | [headers](../headers.md) | `open val headers: `[`Headers`](../../../-headers/index.md) |
 | [interceptors](../interceptors.md) | `open val interceptors: `[`Interceptors`](../../../../com.agoda.ninjato.intercept/-interceptors/index.md) |
+| [parameters](../parameters.md) | `open val parameters: `[`Parameters`](../../../-parameters/index.md) |
 | [retryPolicy](../retry-policy.md) | `open var retryPolicy: `[`RetryPolicy`](../../../../com.agoda.ninjato.policy/-retry-policy/index.md)`?` |

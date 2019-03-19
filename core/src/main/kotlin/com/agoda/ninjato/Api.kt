@@ -24,17 +24,24 @@ abstract class Api(
         @PublishedApi internal val client: HttpClient,
         config: Api.() -> Unit = {}
 ) : Commons {
-    override val headers = Headers()
-    override val parameters = Parameters()
-    override val interceptors = Interceptors()
-    override val converterFactories = ConverterFactories()
+    final override val headers = Headers()
+    final override val parameters = Parameters()
+    final override val interceptors = Interceptors()
+    final override val converterFactories = ConverterFactories()
 
-    override var retryPolicy: RetryPolicy? = null
-    override var fallbackPolicy: FallbackPolicy? = null
+    final override var retryPolicy: RetryPolicy? = null
+    final override var fallbackPolicy: FallbackPolicy? = null
 
     abstract val baseUrl: String
 
-    init { config(this) }
+    init {
+        this.apply(config)
+
+        headers.parent = client.headers
+        parameters.parent = client.parameters
+        interceptors.parent = client.interceptors
+        converterFactories.parent = client.converterFactories
+    }
 
     /**
      * Executes the GET request with the provided configuration.
