@@ -46,6 +46,13 @@ open class MediaType(val id: String, val charset: Charset = Charsets.UTF_8) {
     class Json(charset: Charset = Charsets.UTF_8) : MediaType("application/json", charset)
 
     /**
+     * Represents the `application/x-www-form-urlencoded` content type.
+     *
+     * @param charset charset of the content. `utf-8` by default.
+     */
+    class FormUrlEncoded(charset: Charset = Charsets.UTF_8) : MediaType("application/x-www-form-urlencoded", charset)
+
+    /**
      * Formats the media type and charset to the `Content-Type` http header's value standards.
      *
      * @return http header valid representation of media type.
