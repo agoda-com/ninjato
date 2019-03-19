@@ -23,13 +23,13 @@ abstract class HttpClient(
         config: (HttpClient.() -> Unit) = {}
 ) : Commons {
 
-    override val headers = Headers()
-    override val parameters = Parameters()
-    override val interceptors = Interceptors()
-    override val converterFactories = ConverterFactories()
+    final override val headers = Headers()
+    final override val parameters = Parameters()
+    final override val interceptors = Interceptors()
+    final override val converterFactories = ConverterFactories()
 
-    override var retryPolicy: RetryPolicy? = null
-    override var fallbackPolicy: FallbackPolicy? = null
+    final override var retryPolicy: RetryPolicy? = null
+    final override var fallbackPolicy: FallbackPolicy? = null
 
     init { this.apply(config) }
 
