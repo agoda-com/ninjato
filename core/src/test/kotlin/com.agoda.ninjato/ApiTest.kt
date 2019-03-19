@@ -95,8 +95,16 @@ class ApiTest {
 
         // Act
         val response: TestResponse = api.post {
-            endpointUrl = "/getResponse"
+            endpointUrl = "/getResponse?a=b"
+            parameters += "b" to "c"
             body = TestRequest("testify_request")
+
+            interceptors {
+                request {
+                    assert(it.url == "http://127.0.0.1:8080/getResponse?a=b&b=c")
+                    it
+                }
+            }
         }
 
         // Assert
