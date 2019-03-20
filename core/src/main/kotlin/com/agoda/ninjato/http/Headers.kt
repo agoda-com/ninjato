@@ -1,5 +1,6 @@
 package com.agoda.ninjato.http
 
+import com.agoda.ninjato.dsl.NinjatoDslMarker
 import com.agoda.ninjato.misc.add
 import com.agoda.ninjato.misc.addAll
 
@@ -7,6 +8,7 @@ import com.agoda.ninjato.misc.addAll
  * DSL context for aggregating headers of [request][com.agoda.ninjato.http.Request].
  * Supports additions of single and iterable values of headers mapped to a key.
  */
+@NinjatoDslMarker
 class Headers {
     @PublishedApi
     internal var parent: Headers? = null

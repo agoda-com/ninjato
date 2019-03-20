@@ -1,5 +1,6 @@
 package com.agoda.ninjato.converter
 
+import com.agoda.ninjato.dsl.NinjatoDslMarker
 import java.util.*
 
 /**
@@ -10,6 +11,7 @@ import java.util.*
  * that factories that were defined on the lowest level will come first.
  * This is done to support overriding of converters.
  */
+@NinjatoDslMarker
 class ConverterFactories {
     @PublishedApi
     internal var parent: ConverterFactories? = null

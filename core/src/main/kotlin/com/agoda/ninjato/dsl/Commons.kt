@@ -22,6 +22,7 @@ import com.agoda.ninjato.http.Parameters
  *
  *  This makes the DSL cascade: all the values are aggregated across all three levels to form the final values.
  */
+@NinjatoDslMarker
 interface Commons {
     val headers: Headers
     val parameters: Parameters

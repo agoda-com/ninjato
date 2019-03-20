@@ -1,9 +1,12 @@
 package com.agoda.ninjato.http
 
+import com.agoda.ninjato.dsl.NinjatoDslMarker
+
 /**
  * DSL context for aggregating query parameters of [request][com.agoda.ninjato.http.Request].
  * Supports additions of single value of parameter mapped to a key.
  */
+@NinjatoDslMarker
 class Parameters {
     @PublishedApi
     internal var parent: Parameters? = null
