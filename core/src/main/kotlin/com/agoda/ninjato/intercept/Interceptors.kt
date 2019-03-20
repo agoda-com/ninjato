@@ -1,5 +1,6 @@
 package com.agoda.ninjato.intercept
 
+import com.agoda.ninjato.dsl.NinjatoDslMarker
 import com.agoda.ninjato.http.Request
 import com.agoda.ninjato.http.Response
 import java.util.*
@@ -11,6 +12,7 @@ import java.util.*
  * When resolving all the aggregations across the DSL cascade, keep in mind,
  * that interceptors that were defined on the lowest level will come first.
  */
+@NinjatoDslMarker
 class Interceptors {
     @PublishedApi
     internal var parent: Interceptors? = null

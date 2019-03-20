@@ -1,11 +1,13 @@
 package com.agoda.ninjato.http
 
+import com.agoda.ninjato.dsl.NinjatoDslMarker
 import com.agoda.ninjato.misc.toUTCDateTime
 
 /**
  * DSL context for adding cookies to the headers of [request][com.agoda.ninjato.http.Request].
  * Supports addition of a single cookie with it's parameters.
  */
+@NinjatoDslMarker
 class Cookies {
     private var cookie: Pair<String, String>? = null
 
