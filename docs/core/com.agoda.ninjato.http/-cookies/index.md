@@ -18,7 +18,7 @@ Supports addition of a single cookie with it's parameters.
 | Name | Summary |
 |---|---|
 | [domain](domain.md) | `var domain: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)<br>Domain limiter of the cookie. |
-| [expires](expires.md) | `var expires: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)<br>Expiration date of the cookie in seconds since epoch (UTC timezone). |
+| [expires](expires.md) | `var expires: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)<br>Expiration date of the cookie in seconds since epoch (GMT timezone). |
 | [isHttpOnly](is-http-only.md) | `var isHttpOnly: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>`HttpOnly` marker of the cookie. |
 | [isSecure](is-secure.md) | `var isSecure: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>`Secure` marker of the cookie. |
 | [maxAge](max-age.md) | `var maxAge: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)<br>Maximum age of the cookie in seconds. |

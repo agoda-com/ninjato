@@ -4,5 +4,5 @@
 
 `var expires: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)
 
-Expiration date of the cookie in seconds since epoch (UTC timezone).
+Expiration date of the cookie in seconds since epoch (GMT timezone).
 

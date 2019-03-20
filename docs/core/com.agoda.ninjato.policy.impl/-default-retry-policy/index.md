@@ -17,7 +17,7 @@ Keep note that this policy is `NOT` used by default and must be manually provide
 
 | Name | Summary |
 |---|---|
-| [&lt;init&gt;](-init-.md) | `DefaultRetryPolicy(retries: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, delay: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`)`<br>Default implementation of [retry policy](../../com.agoda.ninjato.policy/-retry-policy/index.md) bundled with the library. Keep note that this policy is `NOT` used by default and must be manually provided if needed. |
+| [&lt;init&gt;](-init-.md) | `DefaultRetryPolicy(retries: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)` = 3, delay: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)` = 1000L)`<br>Default implementation of [retry policy](../../com.agoda.ninjato.policy/-retry-policy/index.md) bundled with the library. Keep note that this policy is `NOT` used by default and must be manually provided if needed. |
 
 ### Functions
 

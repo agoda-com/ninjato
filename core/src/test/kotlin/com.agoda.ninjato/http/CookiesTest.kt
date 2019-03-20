@@ -57,7 +57,7 @@ class CookiesTest {
         }
 
         // Act
-        val result = cookies.resolve()
+        cookies.resolve()
     }
 
 }
