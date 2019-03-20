@@ -10,7 +10,7 @@ class Cookies {
     private var cookie: Pair<String, String>? = null
 
     /**
-     * Expiration date of the cookie in seconds since epoch (UTC timezone).
+     * Expiration date of the cookie in seconds since epoch (GMT timezone).
      */
     var expires: Long = 0L
 

@@ -195,10 +195,7 @@ abstract class Api(
 
                 val fallback = configurator.fallbackPolicy ?: fallbackPolicy ?: client.fallbackPolicy
 
-                if (fallback != null) {
-                    request = fallback.evaluate(request, throwable)
-                }
-
+                request = fallback?.evaluate(request, throwable) ?: request
                 request.retries++
             }
         }

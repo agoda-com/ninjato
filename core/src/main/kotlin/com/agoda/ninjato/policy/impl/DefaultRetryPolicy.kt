@@ -13,8 +13,8 @@ import com.agoda.ninjato.policy.RetryPolicy
  * @param delay amount of milliseconds that will be passed to `Thread.sleep()` to perform the delay.
  */
 class DefaultRetryPolicy(
-        private val retries: Int,
-        private val delay: Long
+        private val retries: Int = 3,
+        private val delay: Long = 1000L
 ) : RetryPolicy() {
     override fun evaluate(request: Request, throwable: Throwable) = if (request.retries < retries) {
         WithDelay { Thread.sleep(delay) }
