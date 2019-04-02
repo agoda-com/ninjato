@@ -62,10 +62,6 @@ class RxExtensionsTest {
                 .assertValue(response)
     }
 
-    fun search(query: String): Observable<Response> = api.observable {
-        get {}
-    }
-
     class TestApi(client: HttpClient, config: Api.() -> Unit = {}) : Api(client, config) {
         override val baseUrl = "http://127.0.0.1:8080"
     }
