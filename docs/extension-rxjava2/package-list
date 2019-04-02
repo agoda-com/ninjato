@@ -1,4 +1,7 @@
 $dokka.format:gfm
 $dokka.linkExtension:md
-
-com.agoda.ninjato.extensions.rxjava2
+$dokka.location:com.agoda.ninjato.extension.rxjava2$completable(com.agoda.ninjato.Api, kotlin.Function1((com.agoda.ninjato.extension.Wrapper((kotlin.Unit)), )))com.agoda.ninjato.extension.rxjava2/com.agoda.ninjato.-api/completable.md
+$dokka.location:com.agoda.ninjato.extension.rxjava2$flowable(com.agoda.ninjato.Api, kotlin.Function1((com.agoda.ninjato.extension.Wrapper((com.agoda.ninjato.extension.rxjava2.flowable.T)), )))com.agoda.ninjato.extension.rxjava2/com.agoda.ninjato.-api/flowable.md
+$dokka.location:com.agoda.ninjato.extension.rxjava2$observable(com.agoda.ninjato.Api, kotlin.Function1((com.agoda.ninjato.extension.Wrapper((com.agoda.ninjato.extension.rxjava2.observable.T)), )))com.agoda.ninjato.extension.rxjava2/com.agoda.ninjato.-api/observable.md
+$dokka.location:com.agoda.ninjato.extension.rxjava2$single(com.agoda.ninjato.Api, kotlin.Function1((com.agoda.ninjato.extension.Wrapper((com.agoda.ninjato.extension.rxjava2.single.T)), )))com.agoda.ninjato.extension.rxjava2/com.agoda.ninjato.-api/single.md
+com.agoda.ninjato.extension.rxjava2

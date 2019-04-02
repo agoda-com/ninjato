@@ -4,8 +4,8 @@
 
 | Name | Summary |
 |---|---|
-| [com.agoda.ninjato.extensions.rxjava](com.agoda.ninjato.extensions.rxjava/index.md) |  |
+| [com.agoda.ninjato.extension.rxjava](com.agoda.ninjato.extension.rxjava/index.md) |  |
 
 ### Index
 
-[All Types](alltypes.md)
+[All Types](alltypes/index.md)

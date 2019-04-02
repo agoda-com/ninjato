@@ -1,6 +1,6 @@
-[extension-rxjava](../index.md) / [com.agoda.ninjato.extensions.rxjava](./index.md)
+[extension-rxjava](../index.md) / [com.agoda.ninjato.extension.rxjava](./index.md)
 
-## Package com.agoda.ninjato.extensions.rxjava
+## Package com.agoda.ninjato.extension.rxjava
 
 ### Extensions for External Classes
 

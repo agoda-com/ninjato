@@ -1,4 +1,4 @@
-package com.agoda.ninjato.extensions.rxjava2
+package com.agoda.ninjato.extension.rxjava
 
 import com.agoda.ninjato.Api
 import com.agoda.ninjato.converter.BodyConverter
@@ -13,10 +13,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class ApisTest {
-    @Mock
-    private lateinit var response: Response
-
+class RxExtensionsTest {
     @Mock
     private lateinit var converterFactory: BodyConverter.Factory
 
@@ -25,9 +22,12 @@ class ApisTest {
 
     private lateinit var api: Api
 
+    private val response = Response().also { it.code = 200 }
+
     @Before
     fun setUp() {
         whenever(httpClient.execute(any())).thenReturn(response)
+
         api = TestApi(httpClient) {
             converterFactories += converterFactory
         }
@@ -35,30 +35,24 @@ class ApisTest {
 
     @Test
     fun testCompletable() {
-        api.completable { get<Response> { } }.test().assertComplete()
+        api.completable { get { } }
+                .test()
+                .assertCompleted()
     }
 
     @Test
     fun testSingle() {
-        api.single { get<Response> { } }
+        api.single<Response> { delete { } }
                 .test()
-                .assertComplete()
+                .assertCompleted()
                 .assertValue(response)
     }
 
     @Test
     fun testObservable() {
-        api.observable { get<Response> { } }
+        api.observable<Response> { head { } }
                 .test()
-                .assertComplete()
-                .assertValue(response)
-    }
-
-    @Test
-    fun testFlowable() {
-        api.flowable { get<Response> { } }
-                .test()
-                .assertComplete()
+                .assertCompleted()
                 .assertValue(response)
     }
 
