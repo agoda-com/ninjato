@@ -6,7 +6,6 @@ import com.agoda.ninjato.http.HttpClient
 import com.agoda.ninjato.http.Response
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Observable
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
