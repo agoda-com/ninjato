@@ -15,9 +15,6 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class RxExtensionsTest {
     @Mock
-    private lateinit var converterFactory: BodyConverter.Factory
-
-    @Mock
     private lateinit var httpClient: HttpClient
 
     private lateinit var api: Api
@@ -27,9 +24,7 @@ class RxExtensionsTest {
     @Before
     fun setUp() {
         whenever(httpClient.execute(any())).thenReturn(response)
-        api = TestApi(httpClient) {
-            converterFactories += converterFactory
-        }
+        api = TestApi(httpClient)
     }
 
     @Test
