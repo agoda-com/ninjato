@@ -30,3 +30,4 @@
 | [com.agoda.ninjato.intercept.ResponseInterceptor](../com.agoda.ninjato.intercept/-response-interceptor/index.md) | Base class for [response](../com.agoda.ninjato.http/-response/index.md) interceptors. |
 | [com.agoda.ninjato.policy.Retry](../com.agoda.ninjato.policy/-retry/index.md) | Resolutions of the [retry policies](../com.agoda.ninjato.policy/-retry-policy/index.md) |
 | [com.agoda.ninjato.policy.RetryPolicy](../com.agoda.ninjato.policy/-retry-policy/index.md) | Retry policy. This policy gets invoked when request has failed to complete successfully. |
+| [com.agoda.ninjato.extension.Wrapper](../com.agoda.ninjato.extension/-wrapper/index.md) | This class allows contributors to write wrapper-like extension functions. |

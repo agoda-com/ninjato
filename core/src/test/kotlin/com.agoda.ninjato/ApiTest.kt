@@ -53,7 +53,7 @@ class ApiTest {
 
             interceptors {
                 request {
-                    assert(endpointUrl == "/getResponse")
+                    assert(it.endpointUrl == "/getResponse")
                     it
                 }
             }
