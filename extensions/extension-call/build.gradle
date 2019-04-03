@@ -1,0 +1,24 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+apply from: "$rootDir/gradle/scripts/dependencies.gradle"
+
+sourceSets {
+    main.java.srcDirs += "src/main/kotlin"
+    test.java.srcDirs += "src/test/kotlin"
+}
+
+dependencies {
+    implementation libraries.kotlin
+
+    implementation project(':core')
+
+    testImplementation libraries.junit
+    testImplementation libraries.mockito
+    testImplementation libraries.mockitoKotlin
+    testImplementation libraries.kotlinTest
+}
+
+String art() { 'extension-call' }
+
+apply from: "$rootDir/gradle/scripts/publish-java.gradle"

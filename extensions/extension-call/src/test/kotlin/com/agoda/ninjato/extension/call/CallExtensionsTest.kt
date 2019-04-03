@@ -1,7 +1,7 @@
-package com.agoda.ninjato.extension.rxjava
+package com.agoda.ninjato.extension.call
 
 import com.agoda.ninjato.Api
-import com.agoda.ninjato.converter.BodyConverter
+import com.agoda.ninjato.exception.HttpException
 import com.agoda.ninjato.http.HttpClient
 import com.agoda.ninjato.http.Response
 import com.nhaarman.mockito_kotlin.any
@@ -13,7 +13,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class RxExtensionsTest {
+class CallExtensionsTest {
     @Mock
     private lateinit var httpClient: HttpClient
 
@@ -22,32 +22,43 @@ class RxExtensionsTest {
     private val response = Response().also { it.code = 200 }
 
     @Before
-    fun setUp() {
+    fun setup() {
         whenever(httpClient.execute(any())).thenReturn(response)
         api = TestApi(httpClient)
     }
 
     @Test
-    fun testCompletable() {
-        api.completable { get { } }
-                .test()
-                .assertCompleted()
+    fun testSuccess() {
+        val result = api.call<Response> {
+            get {}
+        }
+
+        assert(result is Call.Success)
+        assert((result as Call.Success).result == response)
     }
 
     @Test
-    fun testSingle() {
-        api.single<Response> { delete { } }
-                .test()
-                .assertCompleted()
-                .assertValue(response)
+    fun testFailure() {
+        response.code = 404
+
+        val result = api.call<String> {
+            get {}
+        }
+
+        assert(result is Call.Failure)
+        assert((result as Call.Failure).throwable is HttpException)
     }
 
     @Test
-    fun testObservable() {
-        api.observable<Response> { head { } }
-                .test()
-                .assertCompleted()
-                .assertValue(response)
+    fun testHttpExceptionIsNotThrownForResponse() {
+        response.code = 404
+
+        val result = api.call<Response> {
+            get {}
+        }
+
+        assert(result is Call.Success)
+        assert((result as Call.Success).result.code == 404)
     }
 
     class TestApi(client: HttpClient, config: Api.() -> Unit = {}) : Api(client, config) {
