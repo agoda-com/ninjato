@@ -251,7 +251,7 @@ val client = NinjatoOkHttpClient(okHttpClient, YourRequestFactory(), YourRespons
 ```
 
 #### Wrappers
-In case you prefer to use some sealed class type wrapper, of RxJava, for example, Ninjato has you covered as well.
+In case you prefer to use some sealed class type wrapper, or RxJava, for example, Ninjato has you covered as well.
 There are extension artifacts available that are providing extension wrapping functions for your `Api` classes.
 Here are few examples:
 
