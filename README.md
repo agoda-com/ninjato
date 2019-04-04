@@ -73,7 +73,7 @@ Ninjato is structured in a way that allows it's users to aggregate properties an
 remote calls through the DSL cascade. This means that all main entities of library: `HttpClient`, `Api` and `Request`
 have the same configuration interface where you can configure your headers, parameters, interceptors, etc.
 
-During the actual call configuration, all of these configurations will be aggregated from [b]bottom[/b] to [b]top[/b],
+During the actual call configuration, all of these configurations will be aggregated from **bottom** to **top**,
 or replaced, if only one value is allowed.
 
 #### Request body and return type inference
@@ -112,7 +112,7 @@ val result: SearchResult = api.get {
 }
 ```
 
-List of body converters provided via extension artifacts can be found in [b]Setup[/b] section.
+List of body converters provided via extension artifacts can be found in **Setup** section.
 
 #### Interceptors
 Interceptors are instances that are executed prior (`RequestInterceptor`) the request is served by
@@ -281,12 +281,12 @@ interface YourApi {
 }
 ```
 
-List of available extension artifacts can be found in [b]Setup[/b] section.
+List of available extension artifacts can be found in **Setup** section.
 
 #### More
 For any additional information please refer to library's documentation.
 
-#### Setup
+### Setup
 Maven
 ```xml
 <!-- Core library !-->
@@ -364,21 +364,22 @@ dependencies {
 }
 ```
 
-#### Contribution Policy
+### Contribution Policy
 
 Ninjato is an open source project, and depends on its users to improve it. We are more than happy
 to find you interested in taking the project forward.
 
 Kindly refer to the [Contribution Guidelines](https://github.com/agoda-com/ninjato/blob/master/CONTRIBUTING.md) for detailed information.
 
-#### Code of Conduct
+### Code of Conduct
 
 Please refer to [Code of Conduct](https://github.com/agoda-com/ninjato/blob/master/CODE_OF_CONDUCT.md) document.
 
-#### License
+### License
 
 Boots is available under the [Apache License, Version 2.0](https://github.com/agoda-com/ninjato/blob/master/LICENSE).
 
-#### Thanks to
+### Thanks to
 
 * [Unlimity](https://github.com/unlimity) - **Ilya Lim**
+* [Yundom](https://github.com/yundom) - **Dennis Hsieh**
