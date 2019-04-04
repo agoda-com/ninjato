@@ -52,8 +52,8 @@ publishing {
 
     repositories {
         maven {
-            def release = "https://nexus.default.svc.agoda.mobi/repository/maven-releases/"
-            def snapshot = "https://nexus.default.svc.agoda.mobi/repository/maven-snapshots/"
+            def release = "https://api.bintray.com/maven/agoda/maven/boots/;publish=1"
+            def snapshot = "http://oss.jfrog.org/artifactory/oss-snapshot-local/"
 
             url = ninjato.version.endsWith('SNAPSHOT') ? snapshot : release
 

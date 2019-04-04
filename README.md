@@ -1,380 +1,384 @@
-# ninjato
-Flexible inline HTTP client for Android and Kotlin
+# Ninjato
+[![Bintray version](https://api.bintray.com/packages/agoda/maven/ninjato/images/download.svg)](https://bintray.com/agoda/maven/ninjato)
+[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.3.21-blue.svg)](http://kotlinlang.org/)
+[![codecov](https://codecov.io/gh/agoda-com/ninjato/branch/master/graph/badge.svg)](https://codecov.io/gh/agoda-com/ninjato)
 
-## DSL contract
+Flexible and type-safe inline HTTP client for Android and Kotlin
 
-### Entities
+## What is Ninjato
+Ninjato is a library that lets you write simple yet powerful remote HTTP calls, whether it's RESTful services or any other.
+But at the same time the library gives you the complete control of the flow.
 
-#### Headers
-Headers class should be able to add, remove and override headers down the cascade of the DSL.
-This is how I imagine it should be:
+The library is written in Kotlin and tries to rely on reflection as low as possible. Most of the functionality
+is implemented with the help of inlining and reified types inference during compile time.
+
+## Why not Retrofit?
+Retrofit is a great library, and people at Square do amazing and very important stuff.
+But for us at Agoda, after a long time with Retrofit we started to feel limited with the way how
+the library gives us opportunities to customize, intercept and implement more flexible behavior.
+
+## How to use?
+
+### Basic syntax
+In a nutshell, Ninjato gives a possibility to execute any type of HTTP call through `Api` class.
+As such, you can have several approaches to define and use your remote services:
+
+Extend the `Api` class directly:
 ```kotlin
-class Headers {
-    val added: Map<String, String>
-    val removed: Map<String, String>
-    val overridden: Map<String, String>
+class YourApi(client: HttpClient, config: Api.() -> Unit) : Api(client, config) {
+    override val baseUrl = "https://yourApi.com"
+    
+    fun search(query: String): SearchResult = get {
+        endpointUrl = "/search"
+        parameters { "query" to query }
+    }
 }
 ```
-Usage in the DSL:
+Hide implementation behind the interface:
 ```kotlin
-headers += "A" to "B" // add
+interface YourApi {
+    fun updateArticle(article: Article)
+}
 
-headers -= "A" // will remove all headers with key A
-headers -= "A" to "B" // will remove header with key A and value B
-
-headers = mapOf( // will override values up the cascade with provided
-    "A" to "B",
-    "C" to "D"
-)
+class YourApiImpl(client: HttpClient, config: Api.() -> Unit) : Api(client, config), YourApi {
+    override val baseUrl = "https://yourApi.com"
+    
+    fun updateArticle(article: Article) = post {
+        endpointUrl = "/updateArticle"
+        body = article
+    }
+}
 ```
-This behaviour can be achieved using operator overriding and property delegate (for overriding setValue operator).
+Or implement your endpoints right in the interface:
+```kotlin
+interface YourApi {
+    val api: Api
+    
+    fun putListing(listing: Listing) = api.put {
+        endpointUrl = "/putListing"
+        body = listing
+    }
+}
+```
+
+There are a lot more ways how you can organize your remote services' code, but we're not going to cover it here.
+
+### Main features
+As you already understood from the examples below, Ninjato can infer the type of body and what is expected
+to be returned from the request. But there are a lot more features. All of them will be explained in the
+sections below with code examples.
+
+#### DSL cascade: `HttpClient`, `Api` and `Request`
+Ninjato is structured in a way that allows it's users to aggregate properties and/or behavior of their
+remote calls through the DSL cascade. This means that all main entities of library: `HttpClient`, `Api` and `Request`
+have the same configuration interface where you can configure your headers, parameters, interceptors, etc.
+
+During the actual call configuration, all of these configurations will be aggregated from [b]bottom[/b] to [b]top[/b],
+or replaced, if only one value is allowed.
+
+#### Request body and return type inference
+Thanks to Kotlin capabilities, Ninjato infers the type of body being set (if allowed) and expected return type.
+
+Default types of `body` property include:
+ - `Body`
+ - `String`
+ - `ByteArray`
+Default types of return value include:
+ - `Unit`
+ - `Response`
+ - `Body`
+ - `Stirng`
+ - `ByteArray`
+
+For all custom types library has support of `BodyConverter`.
+
+#### BodyConverter
+`BodyConverter` is a simple interface with a `convert` function from one to another.
+Library uses the provided `BodyConverter.Factory` instances to get the converter for a specific type.
+You can provide supplied or your own factory to any level of the DSL cascade:
+
+```kotlin
+val client = NinjatoOkHttpClient(okHttpClient) {
+    converterFactories += GsonConverterFactory(Gson())
+}
+
+val api = YourApi(client) {
+    converterFactories += MoshiConverterFactory()
+}
+
+val result: SearchResult = api.get {
+    endpointUrl = "/get"
+    converterFactories += JacksonConverterFactory()
+}
+```
+
+List of body converters provided via extension artifacts can be found in [b]Setup[/b] section.
 
 #### Interceptors
-Interceptors should be implemented as currently in v1, with fex additions. We still want to have an interface of
-interceptor to enable developers to write custom classes as interceptors, although to enable the DSL capabilities,
-we need to introduce several classes: `RequestInterceptor : Interceptor<Request>`, `ResponseInterceptor : Interceptor<Response>`
-and `Interceptors`.
-This is how I imagine it should be:
+Interceptors are instances that are executed prior (`RequestInterceptor`) the request is served by
+the HTTP client and after (`ResponseInterceptor`) the response was acquired. Interceptors have the ability
+to modify given instance of `Request`/`Response` or even provide completely another instances.
+
+Interceptors can be added to any level of the DSL cascade. The following code can be used also in `Api` classes
+and in any call configuration:
+
 ```kotlin
-class Interceptors {
-    val added: List<Interceptor<*>>
-    val removed: List<Interceptor<*>>
-    val overridden: List<Interceptor<*>>
+val client = NinjatoOkHttpClient(okHttpClient) {
+    interceptors += MyRequestInterceptor()
+    interceptors += MyResponseInterceptor()
+    
+    interceptors {
+        request { r ->
+            Log.d(r)
+            r
+        }
+        
+        response { r ->
+            Log.d(r)
+            r
+        }
+    }
 }
-```
-Usage in the DSL:
-```kotlin
-// add
-interceptors += RequestInterceptor() 
-interceptors += ResponseInterceptor()
-
-// remove
-interceptors -= RequestInterceptors()
-interceptors -= ResponseInterceptor()
-
-// override
-interceptors = RequestInterceptors()
-interceptors = listOf(RequestInterceptor(), ResponseInterceptor())
 ```
 
 #### RetryPolicy
-Current implementation is done in a way where you have to wrap your policy around the actual call, which is not the most
-optimized way. I suggest to simplify it to a small interface/function that simply takes a `Request` and `Throwable` in and
-returns `Pair<Boolean, Long>`. If `true`, the framework will retry to execute the call after given milliseconds or immediately
-if the second value is `0L`.
+Simply put, `RetryPolicy` is a class that can allow you to decide, whether or not given request should
+try again and be executed. You get the `Request` and `Throwable` as input and should return one of the
+`Retry` sealed class children: `DoNotRetry`, `WithoutDelay` or `WithDelay`.
+
+Retry policy can be added to any level of the DSL cascade. The following code can be used also in `Api` classes
+and in any call configuration:
+
 ```kotlin
-interface RetryPolicy {
-    fun retry(request: Request, throwable: Throwable): Pair<Boolean, Long>
+val client = NinjatoOkHttpClient(okHttpClient) {
+    retryPolicy = MyRetryPolicy()
+    
+    retryPolicy { request, throwable ->
+        if (request.retries > 3) Retry.DoNotRetry else Retry.WithoutDelay
+    }
 }
 ```
 
 #### FallbackPolicy
-Current implementation is done using the `Interceptor` interface, which means that fallback policy does not know why the
-request has failed and is very restricted in the behaviour. I suggest to introduce separate interface/function for the
-fallback policy that will be invoked if the request has failed and the retry policy has returned `true`.
+In case your `RetryPolicy` allowed a request to be retried, `FallbackPolicy` can help you with modifying
+you request before a retry attempt. For example, change the `baseUrl` of your request.
+
+Fallback policy can be added to any level of the DSL cascade. The following code can be used also in `Api` classes
+and in any call configuration:
+
 ```kotlin
-interface FallbackPolicy {
-    fun fallback(request: Request, throwable: Throwable): Request
-}
-```
-
-#### Default implementation of retries and fallback
-Framework should provide basic implementations of `RetryPolicy` and `FallbackPolicy`. I suggest the following: `NoRetryPolicy`
-which will always return `false to 0L` as default and `SimpleRetryPolicy(val retries: Int, val delay: Long)` as an option.
-As for fallbacks `NoFallbackPolicy` which will always forward the passed instance of request should do.
-
-#### Body
-For the request body, if we want to achieve support of auto-serializing and deserializing as well as support of different
-protocols, we should keep body aligned with the standard of HTTP clients:
-```kotlin
-class Body {
-    val mediaType: String
-    val contentLength: Long
-    val body: Array<Byte>
-}
-```
-
-#### Request
-Request entity can be pretty much reused as is in our v1 version with slight changes:
- - Remove `id` and `requestId` properties (`requestId` can be added in child class, `AgodaRequest` for example)
- - Remove url manipulation functions (url will be set in the DSL)
- - Make constructor empty
- - All properties should be `var`
- - Replace current `String` body with `Body` class
-
-#### Response
-Response entity can be pretty much reused as is in our v1 version with slights changes:
- - Make the class `open`
- - Make constructor empty
- - All properties should be `var`
- - Replace current `String` body with `Body` class
- 
-#### Request.Factory
-To add possibility to extend `Request` entity and enrich it with use-case specific properties and/or logic, framework
-needs a factory that will return instances of `Request` which can be manipulated further in interceptors:
-```kotlin
-open class Request {
-    open class Factory {
-        fun create(): Request = Request()
+val client = NinjatoOkHttpClient(okHttpClient) {
+    fallbackPolicy = MyFallbackPolicy()
+    
+    fallbackPolicy { request, throwable -> 
+        request.also { it.baseUrl = "https://anotherServer.com" }
     }
 }
+```
 
-// usage example
-class RequestInterceptor {
+#### Headers and query parameters
+Headers and url query parameters are also part of the DSL cascade.
+
+Fallback policy can be added to any level of the DSL cascade. The following code can be used also in 
+`HttpClient` and `Api` classes:
+
+```kotlin
+val result: SearchResult = get {
+    endpointUrl = "/search"
+    headers += "A" to "B"
+    
+    headers {
+        "B" to "C"
+        
+        cookie {
+            "C" to "D"
+            expires = 3600
+            isSecure = true      
+        }
+    }
+    
+    parameters {
+        "query" to query
+    }
+}
+```
+
+#### Request.Factory
+To add possibility to extend `Request` entity and enrich it with use-case specific properties and/or logic, Ninjato
+has a factory that will return instances of `Request` which can be manipulated further in interceptors:
+
+```kotlin
+class YourRequestFactory : Request.Factory() {
+    override fun create() = YourRequest()
+}
+
+class YourRequestInterceptor : RequestInterceptor() {
     fun intercept(request: Request): Request {
-        if (request is AgodaRequest) {
+        if (request is YourRequest) {
             request.headers["request_id"] = request.id
         }
     }
 }
+
+val client = NinjatoOkHttpClient(okHttpClient, YourRequestFactory()) {
+    interceptors += YourRequestInterceptor()
+}
 ```
 
 #### Response.Factory
-To add possibility to extend `Resposne` entity and enrich it with use-case specific properties and/or logic, framework
-needs a factory that will return instances of `Response` which can be manipulated further in interceptors:
+To add possibility to extend `Resposne` entity and enrich it with use-case specific properties and/or logic, Ninjato
+has a factory that will return instances of `Response` which can be manipulated further in interceptors:
+
 ```kotlin
-open class Response {
-    open class Factory {
-        fun create(): Response = Response()
-    }
+class YourResponseFactory : Response.Factory() {
+    override fun create() = YourResponse()
 }
 
 // usage example
-class ResponseInterceptor {
+class YourResponseInterceptor {
     fun intercept(response: Response): Response {
-        if (response is AgodaResponse) {
+        if (response is YourResponse) {
             response.token = response.headers["auth_token"]
         }
     }
 }
-```
 
-#### Commons (help with the naming)
-In order to reduce boilerplate code in the framework itself, there should be `Commons` interface with default implementations
-of functions and properties to grant the access to the common parts of the library's DSL to all cascade components: `HttpClient`, 
-`Api` and `Call`. In general it should just add properties of the entities that can be enriched or overridden in the cascade:
-```kotlin
-interface Commons {
-    val headers: Headers
-    val interceptors: Interceptors
-    var retryPolicy: RetryPolicy
-    var fallbackPolicy: FallbackPolicy
-    
-    fun requestInterceptor(lambda: (Request) -> Request) {}
-    fun responseInterceptor(lambda: (Response) -> Response) {}
+val client = NinjatoOkHttpClient(okHttpClient, YourRequestFactory(), YourResponseFactory()) {
+    interceptors += YourRequestFactory()
+    interceptors += YourResponseFactory()
 }
 ```
 
-#### HttpClient
-This entity should implement the `Commons` interface and provide a function to actually execute Http calls. Current version
-can be reused with simplifications:
+#### Wrappers
+In case you prefer to use some sealed class type wrapper, of RxJava, for example, Ninjato has you covered as well.
+There are extension artifacts available that are providing extension wrapping functions for your `Api` classes.
+Here are few examples:
+
 ```kotlin
-abstract class HttpClient : Commons {
-    internal var logger: Logger?
+interface YourApi {
+    val api: Api
     
-    abstract fun execute(request: Request): Response
-}
-
-// Builder pattern
-fun provideHttpClient(dependencies: ...): HttpClient {
-    return HttpClient.build(NinjatoOkHttpClient(okHttpClient)) {
-        logger = AndroidLogger()
-        requestFactory = AgodaRequestFactory()
-        responseFactory = AgodaResponseFactory()
-    }
-}
-```
-
-#### Api
-This entity is much more interesting. It should differ very much from the current implementation. First of all, empty constructor
-so that we don't have to expose any component outside of the DI function where instance is created through some sort of
-the builder pattern. Second, there is no need for any abstract properties you need to override except `baseUrl`:
-```kotlin
-abstract class Api : Commons {
-    abstract val baseUrl: String
-    
-    internal var serializer: Serializer?
-    internal var logger: Logger?
-    
-    inline fun get()
-    inline fun put()
-    inline fun post()
-    inline fun patch()
-    inline fun delete()
-    inline fun head()
-}
-
-fun provideApi(dependencies: ...): Api {
-    return Api.build(AgodaApi()) {
-        httpClient = providedClient
-        serializer = AgodaSerializer()
-        logger = AndroidLogger()
-    }
-}
-```
-
-#### Calls
-The main logic part. Call is an inline function which will do all the framework's logic of applying enrichments, removal and
-overridings of headers, interceptors, retry and fallback strategies, as well as requiring endpoint url and body (if possible):
-```kotlin
-private inline fun <reified T> call(method: Request.Method, builder: Request.Builder.() -> Unit): T
-
-// Usage in Api
-inline fun <reified T> get(builder: Request.Builder.() -> Unit): T = call(Request.Method.Get, builder)
-inline fun <reified T> post(builder: Request.BuilderWithBody.() -> Unit): T = call(Request.Method.Post, builder)
-```
-The call itself is basically a request builder with or without body that helps build the final `Request` entity:
-```kotlin
-open class Request {
-    open class Builder : Commons {
-        var endpointUrl: String? = null
-        var fullUrl: String? = null
-        
-        open fun build(): Request {}
-    }
-    
-    open class BuilderWithBody(serializer: Serializer) : Builder {
-        var body: Any? by BodyDelegate(serializer) // Delegate is used to override setValue operator with inline reified function
-        
-        override fun build(): Request {}
-    }
-}
-```
-
-#### Serializer
-TBD
-
-#### Summary
-```kotlin
-/// Dsl usage example
-class SearchApi(client: HttpClient) : Api(client) {
-    override val baseUrl = "https://search.api.com"
-    
-    init {
-        headers += "search_token" to "exampletoken"
-        
-        requestInterceptor {
-            if (it.url.contains("bangkok")) {
-                it.url.replace(baseUrl, "https://localsearch.api.com")
-            }
+    fun search(query: String): Call<SearchResult> = api.call {
+        get {
+            endpointUrl = "/serach"
+            params { "query" to query }
         }
     }
     
-    fun search(query: String): SearchResult = get {
-        endpointUrl = "/search?query=$query"
+    fun updateArticle(article: Article): Completable = api.completable {
+        post {
+            endpointUrl = "/articles"
+            body = article
+        }
     }
     
-    fun saveSearch(query: String): Unit = post {
-        endpointUrl = "/save"
-        body = SaveRequest(query)
-        
-        retryPolicy { request, throwable ->
-            if (throwable is ErrorCode) {
-                if (throwable.code == ErrorCode.NotAuthorized) {
-                    false to 0L            
-                }
-            }
-            
-            if (request.retry > 3) false to 0L else true to 500L
+    fun putListing(listing: Listing): Flowable<Response> = api.flowable {
+        put {
+            endpointUrl = "/listings"
+            body = listing
         }
     }
 }
 ```
 
-#### Full Spec
-```kotlin
-// HttpClient configuration
-AgodaOkHttpClient(requestFactory, responseFactory) {
-    //**********COMMONS START************//
-    headers += "A" to "B"
-    
-    headers {
-        "A" to "B"
-        "B" to arrayOf("C")
-        
-        cookie {
-            "A" to "B"
-            expires = Date().seconds
-            maxAge = 3600
-            path = "/hotels"
-            domain = "agoda.com"
-            isSecure = true
-            isHttpOnly = true
-        }
-    }
-    
-    parameters += "A" to "B" // Url encoded parameters
-    
-    parameters {
-        "A" to "B"
-        "B" to "C"
-    }
-    
-    interceptors += RequestInterceptor()
-    interceptors += ResponseInterceptor()
-    
-    interceptors += arrayOf(RequestInterceptor1(), RequestInterceptor2())
-    interceptors += arrayOf(ResponseInterceptor1(), ResponseInterceptor2())
-    
-    interceptors {
-        request { request -> // Generates RequestInterceptor from passed lambda with generated id
-            // Intercept here
-        }
-        
-        response { response -> // Generates ResponseInterceptor from passed lambda with generated id 
-            // Intercept here        
-        }
-    }
-    
-    converterFactories += AgodaGsonConverterFactory()
-    converterFactories += arrayOf(GsonConverterFactory())
-    
-    retryPolicy = AgodaRetryPolicy()
-    
-    retryPolicy { request, throwable ->
-        when (throwable) {
-            is IOException -> Retry.DoNotRetry
-            is TimeoutException -> Retry.WithoutDelay
-            is SocketException -> Retry.WithDelay(500L)
-        }
-    }
-    
-    fallbackPolicy = AgodaFallbackPolicy()
-    
-    fallbackPolicy { request, throwable ->
-        request.apply { baseUrl = BaseUrls[random()] }
-    }
-    //**********COMMONS END************//
+List of available extension artifacts can be found in [b]Setup[/b] section.
+
+#### More
+For any additional information please refer to library's documentation.
+
+#### Setup
+Maven
+```xml
+<!-- Core library !-->
+<dependency>
+  <groupId>com.agoda.ninjato</groupId>
+  <artifactId>core</artifactId>
+  <version>LATEST_VERSION</version>
+  <type>pom</type>
+</dependency>
+
+<!-- OkHttp 3 client !-->
+<dependency>
+  <groupId>com.agoda.ninjato</groupId>
+  <artifactId>client-okhttp</artifactId>
+  <version>LATEST_VERSION</version>
+  <type>pom</type>
+</dependency>
+
+<!-- Gson body converter !-->
+<dependency>
+  <groupId>com.agoda.ninjato</groupId>
+  <artifactId>converter-gson</artifactId>
+  <version>LATEST_VERSION</version>
+  <type>pom</type>
+</dependency>
+
+<!-- Call wrapper !-->
+<dependency>
+  <groupId>com.agoda.ninjato</groupId>
+  <artifactId>extension-call</artifactId>
+  <version>LATEST_VERSION</version>
+  <type>pom</type>
+</dependency>
+
+<!-- RxJava wrappers !-->
+<dependency>
+  <groupId>com.agoda.ninjato</groupId>
+  <artifactId>extension-rxjava</artifactId>
+  <version>LATEST_VERSION</version>
+  <type>pom</type>
+</dependency>
+
+<!-- RxJava2 wrappers !-->
+<dependency>
+  <groupId>com.agoda.ninjato</groupId>
+  <artifactId>extension-rxjava2</artifactId>
+  <version>LATEST_VERSION</version>
+  <type>pom</type>
+</dependency>
+```
+or Gradle:
+```groovy
+repositories {
+    jcenter()
 }
 
-// Api configuration
-FlightsSearchApi(client) {
-    //**********COMMONS************//
-}
+dependencies {
+    // Core library
+    implementation 'com.agoda.ninjato:core:LATEST_VERSION'
 
-// Api definition
-class FlightsSearchApi(client: HttpClient, config: Api.() -> Unit = {}) : Api(client, config) {
-    override val baseUrl: String
-        get() = baseUrlProvider.get()
-    // OR
-    override val baseUrl = "https://search.agoda.com/"
-}
+    // OkHttp 3 client
+    implementation 'com.agoda.ninjato:client-okhttp:LATEST_VERSION'
 
-// Call definition
-class FlightsSearchApi : Api {
-    fun search(query: String, context: SearchContext): SearchResult = post<NetworkSearchResult> {
-        endpointUrl = "v2/search?query=$query" // Everything specified in parameters across dsl cascade will be added to the url
-        // OR
-        fullUrl = "https://search2.agoda.com/search?query=$query"
-        
-        body = context
-        // OR
-        body = formUrlEncoded {
-            "A" to "B"
-            "B" to "C"
-        }
-        
-        //**********COMMONS************//
-    }.map { SearchResultMapper().map(it) }
+    // Gson body converter
+    implementation 'com.agoda.ninjato:converter-gson:LATEST_VERSION'
+
+    // Call wrapper
+    implementation 'com.agoda.ninjato:extension-call:LATEST_VERSION'
+
+    // RxJava wrappers
+    implementation 'com.agoda.ninjato:extension-rxjava:LATEST_VERSION'
+
+    // RxJava 2 wrappers
+    implementation 'com.agoda.ninjato:extension-rxjava2:LATEST_VERSION'
 }
 ```
+
+#### Contribution Policy
+
+Ninjato is an open source project, and depends on its users to improve it. We are more than happy
+to find you interested in taking the project forward.
+
+Kindly refer to the [Contribution Guidelines](https://github.com/agoda-com/ninjato/blob/master/CONTRIBUTING.md) for detailed information.
+
+#### Code of Conduct
+
+Please refer to [Code of Conduct](https://github.com/agoda-com/ninjato/blob/master/CODE_OF_CONDUCT.md) document.
+
+#### License
+
+Boots is available under the [Apache License, Version 2.0](https://github.com/agoda-com/ninjato/blob/master/LICENSE).
+
+#### Thanks to
+
+* [Unlimity](https://github.com/unlimity) - **Ilya Lim**
