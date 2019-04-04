@@ -15,7 +15,7 @@ Please read this document carefully before signing and keep a copy for your reco
 - GitHub ID:
 - Telephone:
 - E-Mail:
-- Open Source Project(s): [Boots](https://github.com/agoda-com/boots)
+- Open Source Project(s): [Ninjato](https://github.com/agoda-com/ninjato)
 
 You accept and agree to the following terms and conditions for Your past, present and future Contributions submitted to the Company.
 
