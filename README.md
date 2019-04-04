@@ -180,8 +180,8 @@ val client = NinjatoOkHttpClient(okHttpClient) {
 #### Headers and query parameters
 Headers and url query parameters are also part of the DSL cascade.
 
-Fallback policy can be added to any level of the DSL cascade. The following code can be used also in 
-`HttpClient` and `Api` classes:
+Headers and query parameters can be added to any level of the DSL cascade. 
+The following code can be used also in `HttpClient` and `Api` classes:
 
 ```kotlin
 val result: SearchResult = get {
