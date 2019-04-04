@@ -83,6 +83,7 @@ Default types of `body` property include:
  - `Body`
  - `String`
  - `ByteArray`
+
 Default types of return value include:
  - `Unit`
  - `Response`
