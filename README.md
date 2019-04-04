@@ -245,8 +245,8 @@ class YourResponseInterceptor {
 }
 
 val client = NinjatoOkHttpClient(okHttpClient, YourRequestFactory(), YourResponseFactory()) {
-    interceptors += YourRequestFactory()
-    interceptors += YourResponseFactory()
+    interceptors += YourRequestInterceptor()
+    interceptors += YourResponseInterceptor()
 }
 ```
 
