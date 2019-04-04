@@ -54,7 +54,7 @@ ext.libraries = [
 
 ext.ninjato = [
         name            : 'ninjato',
-        desc            : 'Flexible inline HTTP client for Android and Kotlin',
+        desc            : 'Flexible and type-safe inline HTTP client for Android and Kotlin',
         url             : 'https://github.com/agoda-com/ninjato',
         git             : 'https://github.com/agoda-com/ninjato.git',
         group           : 'com.agoda.ninjato',
