@@ -5,7 +5,7 @@
 
 Flexible and type-safe inline HTTP client for Android and Kotlin
 
-## What is Ninjato
+## What is Ninjato?
 Ninjato is a library that lets you write simple yet powerful remote HTTP calls, whether it's RESTful services or any other.
 But at the same time the library gives you the complete control of the flow.
 
