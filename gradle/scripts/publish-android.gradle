@@ -53,7 +53,7 @@ publishing {
 
     repositories {
         maven {
-            def release = "https://api.bintray.com/maven/agoda/maven/boots/;publish=1"
+            def release = "https://api.bintray.com/maven/agoda/maven/ninjato/;publish=1"
             def snapshot = "http://oss.jfrog.org/artifactory/oss-snapshot-local/"
 
             url = ninjato.version.endsWith('SNAPSHOT') ? snapshot : release
