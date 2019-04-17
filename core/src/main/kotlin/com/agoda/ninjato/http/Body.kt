@@ -3,7 +3,6 @@ package com.agoda.ninjato.http
 import com.agoda.ninjato.converter.BodyConverter
 import com.agoda.ninjato.converter.ConverterFactories
 import com.agoda.ninjato.exception.MissingConverterException
-import com.agoda.ninjato.reflect.TypeReference.Companion.reifiedType
 import java.io.InputStream
 import kotlin.reflect.KProperty
 
@@ -46,21 +45,21 @@ class Body(
         get() = body.inputStream()
 
     @Suppress("UNCHECKED_CAST")
-    internal class Delegate(val factories: ConverterFactories) {
+    internal class Delegate(private val factories: ConverterFactories) {
         var body: Body? = null
 
         operator fun getValue(thisRef: Any, property: KProperty<*>) = body
 
-        inline operator fun <reified T> setValue(thisRef: Any, property: KProperty<*>, value: T) {
+        operator fun setValue(thisRef: Any, property: KProperty<*>, value: Any?) {
             body = when (value) {
                 is Body -> value
                 is String -> Body(value)
                 is ByteArray -> Body(value)
-                else -> {
+                is Any -> {
                     var converted: Body? = null
 
                     for (factory in factories.resolve()) {
-                        val converter = factory.requestConverter(reifiedType<T>()) as? BodyConverter<T, Body>
+                        val converter = factory.requestConverter(value.javaClass) as? BodyConverter<Any, Body>
 
                         if (converter != null) {
                             converted = converter.convert(value)
@@ -71,9 +70,10 @@ class Body(
                     converted ?: throw MissingConverterException(
                             if (thisRef is Request.Configurator.WithBody) thisRef.fullUrl ?: thisRef.endpointUrl!!
                             else "unknown",
-                            T::class.java.simpleName
+                            value.javaClass.simpleName ?: ""
                     )
                 }
+                else -> null
             }
         }
     }
