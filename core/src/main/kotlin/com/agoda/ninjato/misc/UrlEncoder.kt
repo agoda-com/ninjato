@@ -3,6 +3,7 @@ package com.agoda.ninjato.misc
 import java.lang.StringBuilder
 import java.net.URLEncoder
 
+@PublishedApi
 internal fun Map<String, String>.toUrlEncoded(isSeparatorRequired: Boolean = false, isPrefixRequired: Boolean = false)
         = if (isEmpty()) "" else StringBuilder().apply {
     val map = this@toUrlEncoded

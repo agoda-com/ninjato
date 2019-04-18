@@ -1,6 +1,6 @@
 # Ninjato
 [![Bintray version](https://api.bintray.com/packages/agoda/maven/ninjato/images/download.svg)](https://bintray.com/agoda/maven/ninjato)
-[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.3.21-blue.svg)](http://kotlinlang.org/)
+[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.3.30-blue.svg)](http://kotlinlang.org/)
 [![codecov](https://codecov.io/gh/agoda-com/ninjato/branch/master/graph/badge.svg)](https://codecov.io/gh/agoda-com/ninjato)
 
 Flexible and type-safe inline HTTP client for Android and Kotlin
@@ -92,6 +92,26 @@ Default types of return value include:
  - `ByteArray`
 
 For all custom types library has support of `BodyConverter`.
+
+IMPORTANT NOTE: there is an issue with the Kotlin compiler and inlining of delegates with reified types
+is not working as expected. That means that current syntax of passing your body is inconsistent.
+Right now if you will pass an instance of generic class to a body property, type arguments will be lost:
+
+```kotlin
+fun foo(generic: Generic<String>) = post {
+    body = generic // It will capture only class of the generic via generic.javaClass
+}
+```
+
+That puts the responsibility of inferring the type arguments on your serializing library. Gson is doing this fine.
+If you want library to capture actual type and forward it to your `BodyConverter.Factory`, please consider using
+the newly introduced extension function:
+
+```kotlin
+fun foo(generic: Generic<Stirng>) = post {
+    body = convert(generic)
+}
+```
 
 #### BodyConverter
 `BodyConverter` is a simple interface with a `convert` function from one to another.

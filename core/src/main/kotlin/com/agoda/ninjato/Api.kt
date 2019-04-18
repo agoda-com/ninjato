@@ -186,9 +186,8 @@ abstract class Api(
                 }
 
                 val retry = configurator.retryPolicy ?: retryPolicy ?: client.retryPolicy ?: throw throwable
-                val evaluation = retry.evaluate(request, throwable)
 
-                when (evaluation) {
+                when (val evaluation = retry.evaluate(request, throwable)) {
                     is Retry.DoNotRetry -> throw throwable
                     is Retry.WithDelay -> evaluation.delay()
                 }

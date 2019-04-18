@@ -2,7 +2,6 @@ package com.agoda.ninjato.http
 
 import com.agoda.ninjato.converter.BodyConverter
 import com.agoda.ninjato.converter.ConverterFactories
-import com.agoda.ninjato.misc.formUrlEncoded
 import org.junit.Test
 import java.lang.reflect.Type
 
@@ -71,16 +70,6 @@ class BodyTest {
 
         // Assert
         assert((delegate as Body).asString == "testify_body")
-
-        // Act
-        delegate = formUrlEncoded {
-            "a" to "test param !"
-            "b" to "c"
-        }
-
-        // Assert
-        assert((delegate as Body).asString == "a=test+param+%21&b=c")
-        assert((delegate as Body).mediaType is MediaType.FormUrlEncoded)
     }
 
 }
