@@ -11,7 +11,7 @@ sourceSets {
 dependencies {
     implementation libraries.kotlin
 
-    implementation project(':core')
+    implementation project(':ninjato-core')
 
     testImplementation libraries.junit
     testImplementation libraries.mockito

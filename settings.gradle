@@ -1,6 +1,6 @@
 rootProject.name = 'ninjato'
 
-include ':core'
+include ':ninjato-core'
 include ':converters:converter-gson'
 include ':clients:client-okhttp'
 include ':extensions:extension-call'
