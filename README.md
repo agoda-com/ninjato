@@ -1,6 +1,6 @@
 # Ninjato
 [![Bintray version](https://api.bintray.com/packages/agoda/maven/ninjato/images/download.svg)](https://bintray.com/agoda/maven/ninjato)
-[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.3.30-blue.svg)](http://kotlinlang.org/)
+[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.3.31-blue.svg)](http://kotlinlang.org/)
 [![codecov](https://codecov.io/gh/agoda-com/ninjato/branch/master/graph/badge.svg)](https://codecov.io/gh/agoda-com/ninjato)
 
 Flexible and type-safe inline HTTP client for Android and Kotlin
@@ -313,7 +313,7 @@ Maven
 <!-- Core library !-->
 <dependency>
   <groupId>com.agoda.ninjato</groupId>
-  <artifactId>core</artifactId>
+  <artifactId>ninjato-core</artifactId>
   <version>LATEST_VERSION</version>
   <type>pom</type>
 </dependency>
@@ -366,7 +366,7 @@ repositories {
 
 dependencies {
     // Core library
-    implementation 'com.agoda.ninjato:core:LATEST_VERSION'
+    implementation 'com.agoda.ninjato:ninjato-core:LATEST_VERSION'
 
     // OkHttp 3 client
     implementation 'com.agoda.ninjato:client-okhttp:LATEST_VERSION'
