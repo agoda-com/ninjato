@@ -14,7 +14,7 @@ ext.versions = [
         mockitoKotlin   : '1.6.0',
         rxjava          : '1.3.8',
         rxjava2         : '2.2.7',
-        ninjato         : '0.2.2'
+        ninjato         : '0.2.3'
 ]
 
 ext.androidVersions = [
@@ -58,5 +58,5 @@ ext.ninjato = [
         url             : 'https://github.com/agoda-com/ninjato',
         git             : 'https://github.com/agoda-com/ninjato.git',
         group           : 'com.agoda.ninjato',
-        version         : '0.2.2'
+        version         : '0.2.3'
 ]

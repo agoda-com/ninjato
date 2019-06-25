@@ -56,8 +56,8 @@ class Headers {
     }
 
     @PublishedApi
-    internal fun resolve(): MutableMap<String, MutableList<String>>
-            = parent?.resolve()?.also { it.addAll(values) } ?: values
+    internal fun resolve(): Map<String, MutableList<String>>
+            = parent?.resolve()?.let { p -> p.toMutableMap().also { it.addAll(values) } } ?: values
 
     companion object {
         private const val COOKIE = "Cookie"
