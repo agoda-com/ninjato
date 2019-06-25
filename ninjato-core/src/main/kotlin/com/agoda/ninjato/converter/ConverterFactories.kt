@@ -16,7 +16,7 @@ class ConverterFactories {
     @PublishedApi
     internal var parent: ConverterFactories? = null
 
-    private val added: MutableList<BodyConverter.Factory> = LinkedList()
+    private val added = LinkedList<BodyConverter.Factory>()
 
     /**
      * Adds provided factory to the aggregation.
@@ -37,7 +37,6 @@ class ConverterFactories {
     }
 
     @PublishedApi
-    internal fun resolve(): MutableList<BodyConverter.Factory> {
-        return (parent?.resolve() ?: LinkedList()).apply { addAll(0, added) }
-    }
+    internal fun resolve(): List<BodyConverter.Factory>
+            = parent?.resolve()?.let { added.plus(it) } ?: added
 }

@@ -36,6 +36,6 @@ class Parameters {
     }
 
     @PublishedApi
-    internal fun resolve(): MutableMap<String, String>
-            = parent?.resolve()?.also { it.putAll(values) } ?: values
+    internal fun resolve(): Map<String, String>
+            = parent?.resolve()?.let { p -> p.toMutableMap().also { it.putAll(values) } } ?: values
 }

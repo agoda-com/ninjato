@@ -83,10 +83,10 @@ class Interceptors {
     }
 
     @PublishedApi
-    internal fun resolveRequest(): MutableList<RequestInterceptor>
-            = parent?.resolveRequest()?.also { it.addAll(0, request) } ?: request
+    internal fun resolveRequest(): List<RequestInterceptor>
+            = parent?.resolveRequest()?.let { request.plus(it) } ?: request
 
     @PublishedApi
-    internal fun resolveResponse(): MutableList<ResponseInterceptor>
-            = parent?.resolveResponse()?.also { it.addAll(0, response) } ?: response
+    internal fun resolveResponse(): List<ResponseInterceptor>
+            = parent?.resolveResponse()?.let { response.plus(it) } ?: response
 }
