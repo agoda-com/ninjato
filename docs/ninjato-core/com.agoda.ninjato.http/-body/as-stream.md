@@ -2,7 +2,7 @@
 
 # asStream
 
-`val asStream: `[`InputStream`](http://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html)
+`val asStream: `[`InputStream`](https://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html)
 
-Represents the body's value as [input stream](http://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html)
+Represents the body's value as [input stream](https://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html)
 

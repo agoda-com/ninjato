@@ -2,7 +2,7 @@
 
 # WithBody
 
-`open class WithBody : `[`Configurator`](../index.md)
+`open class WithBody : `[`Request.Configurator`](../index.md)
 
 DSL context for configuring the [Request](../../index.md) with [Body](../../../-body/index.md)
 
@@ -35,5 +35,5 @@ DSL context for configuring the [Request](../../index.md) with [Body](../../../-
 
 | Name | Summary |
 |---|---|
-| [convert](../../../../com.agoda.ninjato.misc/convert.md) | `fun <T> `[`WithBody`](./index.md)`.convert(body: `[`T`](../../../../com.agoda.ninjato.misc/convert.md#T)`): `[`Body`](../../../-body/index.md) |
-| [formUrlEncoded](../../../../com.agoda.ninjato.misc/form-url-encoded.md) | `fun `[`WithBody`](./index.md)`.formUrlEncoded(tail: `[`Parameters`](../../../-parameters/index.md)`.() -> `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)`): `[`Body`](../../../-body/index.md) |
+| [convert](../../../../com.agoda.ninjato.misc/convert.md) | `fun <T> `[`Request.Configurator.WithBody`](./index.md)`.convert(body: `[`T`](../../../../com.agoda.ninjato.misc/convert.md#T)`): `[`Body`](../../../-body/index.md) |
+| [formUrlEncoded](../../../../com.agoda.ninjato.misc/form-url-encoded.md) | `fun `[`Request.Configurator.WithBody`](./index.md)`.formUrlEncoded(tail: `[`Parameters`](../../../-parameters/index.md)`.() -> `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)`): `[`Body`](../../../-body/index.md) |

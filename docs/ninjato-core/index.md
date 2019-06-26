@@ -8,7 +8,6 @@
 | [com.agoda.ninjato.converter](com.agoda.ninjato.converter/index.md) |  |
 | [com.agoda.ninjato.dsl](com.agoda.ninjato.dsl/index.md) |  |
 | [com.agoda.ninjato.exception](com.agoda.ninjato.exception/index.md) |  |
-| [com.agoda.ninjato.extension](com.agoda.ninjato.extension/index.md) |  |
 | [com.agoda.ninjato.http](com.agoda.ninjato.http/index.md) |  |
 | [com.agoda.ninjato.intercept](com.agoda.ninjato.intercept/index.md) |  |
 | [com.agoda.ninjato.misc](com.agoda.ninjato.misc/index.md) |  |

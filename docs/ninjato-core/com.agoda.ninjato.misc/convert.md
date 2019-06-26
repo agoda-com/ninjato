@@ -2,4 +2,4 @@
 
 # convert
 
-`inline fun <reified T> `[`WithBody`](../com.agoda.ninjato.http/-request/-configurator/-with-body/index.md)`.convert(body: `[`T`](convert.md#T)`): `[`Body`](../com.agoda.ninjato.http/-body/index.md)
+`inline fun <reified T> `[`Request.Configurator.WithBody`](../com.agoda.ninjato.http/-request/-configurator/-with-body/index.md)`.convert(body: `[`T`](convert.md#T)`): `[`Body`](../com.agoda.ninjato.http/-body/index.md)

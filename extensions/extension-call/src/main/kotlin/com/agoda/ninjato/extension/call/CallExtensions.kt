@@ -1,7 +1,6 @@
 package com.agoda.ninjato.extension.call
 
 import com.agoda.ninjato.Api
-import com.agoda.ninjato.extension.Wrapper
 
 /**
  * Wraps the network call with [Call]. If no exceptions were thrown, the inferred return type will be
@@ -11,8 +10,8 @@ import com.agoda.ninjato.extension.Wrapper
  *
  * @param receiver tail lambda with the actual API call invocation.
  */
-inline fun <reified T> Api.call(crossinline receiver: Wrapper<T>.() -> T): Call<T> = try {
-    Call.Success(receiver(object : Wrapper<T>(this) {}))
+inline fun <reified T> Api.call(crossinline receiver: Api.() -> T): Call<T> = try {
+    Call.Success(receiver(this))
 } catch (throwable: Throwable) {
     Call.Failure(throwable)
 }

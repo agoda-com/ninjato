@@ -1,6 +1,6 @@
 $dokka.format:gfm
 $dokka.linkExtension:md
-$dokka.location:com.agoda.ninjato.extension.rxjava$completable(com.agoda.ninjato.Api, kotlin.Function1((com.agoda.ninjato.extension.Wrapper((kotlin.Unit)), )))com.agoda.ninjato.extension.rxjava/com.agoda.ninjato.-api/completable.md
-$dokka.location:com.agoda.ninjato.extension.rxjava$observable(com.agoda.ninjato.Api, kotlin.Function1((com.agoda.ninjato.extension.Wrapper((com.agoda.ninjato.extension.rxjava.observable.T)), )))com.agoda.ninjato.extension.rxjava/com.agoda.ninjato.-api/observable.md
-$dokka.location:com.agoda.ninjato.extension.rxjava$single(com.agoda.ninjato.Api, kotlin.Function1((com.agoda.ninjato.extension.Wrapper((com.agoda.ninjato.extension.rxjava.single.T)), )))com.agoda.ninjato.extension.rxjava/com.agoda.ninjato.-api/single.md
+$dokka.location:com.agoda.ninjato.extension.rxjava$completable(com.agoda.ninjato.Api, kotlin.Function1((com.agoda.ninjato.Api, kotlin.Unit)))com.agoda.ninjato.extension.rxjava/com.agoda.ninjato.-api/completable.md
+$dokka.location:com.agoda.ninjato.extension.rxjava$observable(com.agoda.ninjato.Api, kotlin.Function1((com.agoda.ninjato.Api, com.agoda.ninjato.extension.rxjava.observable.T)))com.agoda.ninjato.extension.rxjava/com.agoda.ninjato.-api/observable.md
+$dokka.location:com.agoda.ninjato.extension.rxjava$single(com.agoda.ninjato.Api, kotlin.Function1((com.agoda.ninjato.Api, com.agoda.ninjato.extension.rxjava.single.T)))com.agoda.ninjato.extension.rxjava/com.agoda.ninjato.-api/single.md
 com.agoda.ninjato.extension.rxjava

@@ -2,7 +2,7 @@
 
 # &lt;init&gt;
 
-`Json(charset: `[`Charset`](http://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html)` = Charsets.UTF_8)`
+`Json(charset: `[`Charset`](https://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html)` = Charsets.UTF_8)`
 
 Represents the `application/json` content type.
 

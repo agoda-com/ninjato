@@ -14,13 +14,13 @@ Represents the `application/json` content type.
 
 | Name | Summary |
 |---|---|
-| [&lt;init&gt;](-init-.md) | `Json(charset: `[`Charset`](http://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html)` = Charsets.UTF_8)`<br>Represents the `application/json` content type. |
+| [&lt;init&gt;](-init-.md) | `Json(charset: `[`Charset`](https://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html)` = Charsets.UTF_8)`<br>Represents the `application/json` content type. |
 
 ### Inherited Properties
 
 | Name | Summary |
 |---|---|
-| [charset](../charset.md) | `val charset: `[`Charset`](http://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html)<br>charset of the content. `utf-8` by default. |
+| [charset](../charset.md) | `val charset: `[`Charset`](https://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html)<br>charset of the content. `utf-8` by default. |
 | [id](../id.md) | `val id: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)<br>identifier of the content type. `application/json` as an example. |
 
 ### Inherited Functions

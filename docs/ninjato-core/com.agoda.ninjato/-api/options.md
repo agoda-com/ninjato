@@ -2,7 +2,7 @@
 
 # options
 
-`inline fun <reified T> options(configurator: `[`WithBody`](../../com.agoda.ninjato.http/-request/-configurator/-with-body/index.md)`.() -> `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)`): `[`T`](options.md#T)
+`inline fun <reified T> options(configurator: `[`Request.Configurator.WithBody`](../../com.agoda.ninjato.http/-request/-configurator/-with-body/index.md)`.() -> `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)`): `[`T`](options.md#T)
 
 Executes the OPTIONS request with the provided configuration.
 

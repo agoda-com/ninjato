@@ -2,7 +2,7 @@
 
 # requestFactory
 
-`protected var requestFactory: `[`Factory`](../-request/-factory/index.md)`?`
+`protected var requestFactory: `[`Request.Factory`](../-request/-factory/index.md)`?`
 
 factory for building [request](../-request/index.md) entities. `null` by default.
 
