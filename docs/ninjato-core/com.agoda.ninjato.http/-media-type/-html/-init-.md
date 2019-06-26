@@ -2,7 +2,7 @@
 
 # &lt;init&gt;
 
-`Html(charset: `[`Charset`](http://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html)` = Charsets.UTF_8)`
+`Html(charset: `[`Charset`](https://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html)` = Charsets.UTF_8)`
 
 Represents the `text/html` content type.
 

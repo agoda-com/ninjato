@@ -1,7 +1,6 @@
 package com.agoda.ninjato.extension.rxjava
 
 import com.agoda.ninjato.Api
-import com.agoda.ninjato.extension.Wrapper
 import rx.Completable
 import rx.Observable
 import rx.Single
@@ -12,8 +11,8 @@ import rx.Single
  *
  * @param receiver tail lambda with the actual API call invocation.
  */
-inline fun Api.completable(crossinline receiver: Wrapper<Unit>.() -> Unit): Completable = Completable.fromCallable {
-    receiver(object : Wrapper<Unit>(this) {})
+inline fun Api.completable(crossinline receiver: Api.() -> Unit): Completable = Completable.fromCallable {
+    receiver(this)
 }
 
 /**
@@ -22,8 +21,8 @@ inline fun Api.completable(crossinline receiver: Wrapper<Unit>.() -> Unit): Comp
  *
  * @param receiver tail lambda with the actual API call invocation.
  */
-inline fun <reified T> Api.single(crossinline receiver: Wrapper<T>.() -> T): Single<T> = Single.fromCallable {
-    receiver(object : Wrapper<T>(this) {})
+inline fun <reified T> Api.single(crossinline receiver: Api.() -> T): Single<T> = Single.fromCallable {
+    receiver(this)
 }
 
 /**
@@ -32,6 +31,6 @@ inline fun <reified T> Api.single(crossinline receiver: Wrapper<T>.() -> T): Sin
  *
  * @param receiver tail lambda with the actual API call invocation.
  */
-inline fun <reified T> Api.observable(crossinline receiver: Wrapper<T>.() -> T): Observable<T> = Observable.fromCallable {
-    receiver(object : Wrapper<T>(this) {})
+inline fun <reified T> Api.observable(crossinline receiver: Api.() -> T): Observable<T> = Observable.fromCallable {
+    receiver(this)
 }

@@ -2,7 +2,7 @@
 
 # charset
 
-`val charset: `[`Charset`](http://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html)
+`val charset: `[`Charset`](https://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html)
 
 charset of the content. `utf-8` by default.
 

@@ -2,7 +2,7 @@
 
 # &lt;init&gt;
 
-`HttpClient(requestFactory: `[`Factory`](../-request/-factory/index.md)`? = null, responseFactory: `[`Factory`](../-response/-factory/index.md)`? = null, config: `[`HttpClient`](index.md)`.() -> `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)` = {})`
+`HttpClient(requestFactory: `[`Request.Factory`](../-request/-factory/index.md)`? = null, responseFactory: `[`Response.Factory`](../-response/-factory/index.md)`? = null, config: `[`HttpClient`](index.md)`.() -> `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)` = {})`
 
 Abstraction of http client. Takes the top level in the cascade of
 [commons](../../com.agoda.ninjato.dsl/-commons/index.md) DSL features.

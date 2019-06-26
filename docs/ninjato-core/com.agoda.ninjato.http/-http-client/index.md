@@ -24,7 +24,7 @@ Executes generated requests[Request](../-request/index.md) and returns [response
 
 | Name | Summary |
 |---|---|
-| [&lt;init&gt;](-init-.md) | `HttpClient(requestFactory: `[`Factory`](../-request/-factory/index.md)`? = null, responseFactory: `[`Factory`](../-response/-factory/index.md)`? = null, config: `[`HttpClient`](./index.md)`.() -> `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)` = {})`<br>Abstraction of http client. Takes the top level in the cascade of [commons](../../com.agoda.ninjato.dsl/-commons/index.md) DSL features. Executes generated requests[Request](../-request/index.md) and returns [responses](../-response/index.md) in synchronous manner. |
+| [&lt;init&gt;](-init-.md) | `HttpClient(requestFactory: `[`Request.Factory`](../-request/-factory/index.md)`? = null, responseFactory: `[`Response.Factory`](../-response/-factory/index.md)`? = null, config: `[`HttpClient`](./index.md)`.() -> `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)` = {})`<br>Abstraction of http client. Takes the top level in the cascade of [commons](../../com.agoda.ninjato.dsl/-commons/index.md) DSL features. Executes generated requests[Request](../-request/index.md) and returns [responses](../-response/index.md) in synchronous manner. |
 
 ### Properties
 
@@ -35,8 +35,8 @@ Executes generated requests[Request](../-request/index.md) and returns [response
 | [headers](headers.md) | `val headers: `[`Headers`](../-headers/index.md) |
 | [interceptors](interceptors.md) | `val interceptors: `[`Interceptors`](../../com.agoda.ninjato.intercept/-interceptors/index.md) |
 | [parameters](parameters.md) | `val parameters: `[`Parameters`](../-parameters/index.md) |
-| [requestFactory](request-factory.md) | `var requestFactory: `[`Factory`](../-request/-factory/index.md)`?`<br>factory for building [request](../-request/index.md) entities. `null` by default. |
-| [responseFactory](response-factory.md) | `var responseFactory: `[`Factory`](../-response/-factory/index.md)`?`<br>factory for building [response](../-response/index.md) entities. `null` by default. |
+| [requestFactory](request-factory.md) | `var requestFactory: `[`Request.Factory`](../-request/-factory/index.md)`?`<br>factory for building [request](../-request/index.md) entities. `null` by default. |
+| [responseFactory](response-factory.md) | `var responseFactory: `[`Response.Factory`](../-response/-factory/index.md)`?`<br>factory for building [response](../-response/index.md) entities. `null` by default. |
 | [retryPolicy](retry-policy.md) | `var retryPolicy: `[`RetryPolicy`](../../com.agoda.ninjato.policy/-retry-policy/index.md)`?` |
 
 ### Functions

@@ -6,10 +6,10 @@
 
 Body entity of every [request](../-request/index.md) and [response](../-response/index.md).
 Stores the actual body value as [byte array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html) but can transform it to [string](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
-and [stream](http://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html)
+and [stream](https://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html)
 
 ### Parameters
 
 `body` - actual body value
 
-`mediaType` - type of the body value and it's [charset](http://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html)
+`mediaType` - type of the body value and it's [charset](https://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html)

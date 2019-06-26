@@ -10,7 +10,7 @@ DSL context for configuring the [Request](../index.md).
 
 | Name | Summary |
 |---|---|
-| [WithBody](-with-body/index.md) | `open class WithBody : `[`Configurator`](./index.md)<br>DSL context for configuring the [Request](../index.md) with [Body](../../-body/index.md) |
+| [WithBody](-with-body/index.md) | `open class WithBody : `[`Request.Configurator`](./index.md)<br>DSL context for configuring the [Request](../index.md) with [Body](../../-body/index.md) |
 
 ### Constructors
 
@@ -42,4 +42,4 @@ DSL context for configuring the [Request](../index.md).
 
 | Name | Summary |
 |---|---|
-| [WithBody](-with-body/index.md) | `open class WithBody : `[`Configurator`](./index.md)<br>DSL context for configuring the [Request](../index.md) with [Body](../../-body/index.md) |
+| [WithBody](-with-body/index.md) | `open class WithBody : `[`Request.Configurator`](./index.md)<br>DSL context for configuring the [Request](../index.md) with [Body](../../-body/index.md) |

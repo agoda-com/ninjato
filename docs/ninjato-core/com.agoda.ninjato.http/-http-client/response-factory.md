@@ -2,7 +2,7 @@
 
 # responseFactory
 
-`protected var responseFactory: `[`Factory`](../-response/-factory/index.md)`?`
+`protected var responseFactory: `[`Response.Factory`](../-response/-factory/index.md)`?`
 
 factory for building [response](../-response/index.md) entities. `null` by default.
 
