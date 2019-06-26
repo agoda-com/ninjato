@@ -58,5 +58,5 @@ ext.ninjato = [
         url             : 'https://github.com/agoda-com/ninjato',
         git             : 'https://github.com/agoda-com/ninjato.git',
         group           : 'com.agoda.ninjato',
-        version         : '0.2.3'
+        version         : '0.3.0'
 ]
