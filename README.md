@@ -1,6 +1,6 @@
 # Ninjato
 [![Bintray version](https://api.bintray.com/packages/agoda/maven/ninjato/images/download.svg)](https://bintray.com/agoda/maven/ninjato)
-[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.3.40-blue.svg)](http://kotlinlang.org/)
+[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.3.41-blue.svg)](http://kotlinlang.org/)
 [![codecov](https://codecov.io/gh/agoda-com/ninjato/branch/master/graph/badge.svg)](https://codecov.io/gh/agoda-com/ninjato)
 
 Flexible and type-safe inline HTTP client for Android and Kotlin
@@ -398,7 +398,7 @@ Please refer to [Code of Conduct](https://github.com/agoda-com/ninjato/blob/mast
 
 ### License
 
-Boots is available under the [Apache License, Version 2.0](https://github.com/agoda-com/ninjato/blob/master/LICENSE).
+Ninjato is available under the [Apache License, Version 2.0](https://github.com/agoda-com/ninjato/blob/master/LICENSE).
 
 ### Thanks to
 
