@@ -1,4 +1,4 @@
 $dokka.format:gfm
 $dokka.linkExtension:md
-$dokka.location:com.agoda.ninjato.extension.call$call(com.agoda.ninjato.Api, kotlin.Function1((com.agoda.ninjato.extension.Wrapper((com.agoda.ninjato.extension.call.call.T)), )))com.agoda.ninjato.extension.call/com.agoda.ninjato.-api/call.md
+$dokka.location:com.agoda.ninjato.extension.call$call(com.agoda.ninjato.Api, kotlin.Function1((com.agoda.ninjato.Api, com.agoda.ninjato.extension.call.call.T)))com.agoda.ninjato.extension.call/com.agoda.ninjato.-api/call.md
 com.agoda.ninjato.extension.call

@@ -14,5 +14,5 @@
 
 | Name | Summary |
 |---|---|
-| [requestConverter](request-converter.md) | `fun requestConverter(type: `[`Type`](http://docs.oracle.com/javase/6/docs/api/java/lang/reflect/Type.html)`): `[`GsonRequestBodyConverter`](../-gson-request-body-converter/index.md)`<out `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`>` |
-| [responseConverter](response-converter.md) | `fun responseConverter(type: `[`Type`](http://docs.oracle.com/javase/6/docs/api/java/lang/reflect/Type.html)`): `[`GsonResponseBodyConverter`](../-gson-response-body-converter/index.md)`<out `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`>` |
+| [requestConverter](request-converter.md) | `fun requestConverter(type: `[`Type`](https://docs.oracle.com/javase/6/docs/api/java/lang/reflect/Type.html)`): `[`GsonRequestBodyConverter`](../-gson-request-body-converter/index.md)`<out `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`!>` |
+| [responseConverter](response-converter.md) | `fun responseConverter(type: `[`Type`](https://docs.oracle.com/javase/6/docs/api/java/lang/reflect/Type.html)`): `[`GsonResponseBodyConverter`](../-gson-response-body-converter/index.md)`<out `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`!>` |

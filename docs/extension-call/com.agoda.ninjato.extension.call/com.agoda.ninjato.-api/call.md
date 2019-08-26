@@ -2,7 +2,7 @@
 
 # call
 
-`inline fun <reified T> Api.call(crossinline receiver: Wrapper<`[`T`](call.md#T)`>.() -> `[`T`](call.md#T)`): `[`Call`](../-call/index.md)`<`[`T`](call.md#T)`>`
+`inline fun <reified T> Api.call(crossinline receiver: Api.() -> `[`T`](call.md#T)`): `[`Call`](../-call/index.md)`<`[`T`](call.md#T)`>`
 
 Wraps the network call with [Call](../-call/index.md). If no exceptions were thrown, the inferred return type will be
 passed as the [result](../-call/-success/result.md) property of [Success](../-call/-success/index.md) wrapper.
