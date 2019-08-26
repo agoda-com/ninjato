@@ -7,9 +7,12 @@ import com.agoda.ninjato.http.MediaType
 import com.agoda.ninjato.http.Parameters
 import com.agoda.ninjato.http.Request.Configurator.WithBody
 import com.agoda.ninjato.reflect.TypeReference.Companion.reifiedType
+import java.io.File
 
 inline fun WithBody.formUrlEncoded(tail: Parameters.() -> Unit)
         = Body(Parameters().apply(tail).resolve().toUrlEncoded(), MediaType.FormUrlEncoded())
+
+fun WithBody.file(file: File, mediaType: MediaType) = Body(file.readBytes(), mediaType)
 
 inline fun <reified T> WithBody.convert(body: T): Body {
     var converted: Body? = null
