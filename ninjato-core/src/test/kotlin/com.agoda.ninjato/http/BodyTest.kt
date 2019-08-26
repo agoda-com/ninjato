@@ -72,26 +72,27 @@ class BodyTest {
 
         // Assert
         assert((delegate as Body).asString == "testify_body")
+    }
 
-        // Act
-        delegate = formUrlEncoded {
+    @Test
+    fun testExtension() {
+        val config = Request.Configurator.WithBody()
+
+        //FormUrlEncoded Extension
+        val formUrlEncodedBody = config.formUrlEncoded {
             "a" to "test param !"
             "b" to "c"
         }
 
-        // Assert
-        assert((delegate as Body).asString == "a=test+param+%21&b=c")
-        assert((delegate as Body).mediaType is MediaType.FormUrlEncoded)
+        assert(formUrlEncodedBody.asString == "a=test+param+%21&b=c")
+        assert(formUrlEncodedBody.mediaType is MediaType.FormUrlEncoded)
 
-        // Act
+        //File Extension
         val temp = createTempFile()
         temp.writeBytes(byteArrayOf(0, 1, 2, 3, 4, 5))
-        delegate = file(temp, MediaType.Gif())
 
-        // Assert
-        assert((delegate as Body).asByteArray.contentEquals(byteArrayOf(0, 1, 2, 3, 4, 5)))
-        assert((delegate as Body).mediaType is MediaType.Gif)
-
+        val fileBody = config.file(temp, MediaType.Gif())
+        assert(fileBody.asByteArray.contentEquals(byteArrayOf(0, 1, 2, 3, 4, 5)))
+        assert(fileBody.mediaType is MediaType.Gif)
     }
-
 }
