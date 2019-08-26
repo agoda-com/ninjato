@@ -2,6 +2,7 @@ package com.agoda.ninjato.http
 
 import com.agoda.ninjato.converter.BodyConverter
 import com.agoda.ninjato.converter.ConverterFactories
+import com.agoda.ninjato.misc.file
 import com.agoda.ninjato.misc.formUrlEncoded
 import org.junit.Test
 import java.lang.reflect.Type
@@ -81,6 +82,16 @@ class BodyTest {
         // Assert
         assert((delegate as Body).asString == "a=test+param+%21&b=c")
         assert((delegate as Body).mediaType is MediaType.FormUrlEncoded)
+
+        // Act
+        val temp = createTempFile()
+        temp.writeBytes(byteArrayOf(0, 1, 2, 3, 4, 5))
+        delegate = file(temp, MediaType.Gif())
+
+        // Assert
+        assert((delegate as Body).asByteArray.contentEquals(byteArrayOf(0, 1, 2, 3, 4, 5)))
+        assert((delegate as Body).mediaType is MediaType.Gif)
+
     }
 
 }
