@@ -46,6 +46,27 @@ open class MediaType(val id: String, val charset: Charset = Charsets.UTF_8) {
     class Json(charset: Charset = Charsets.UTF_8) : MediaType("application/json", charset)
 
     /**
+     * Represents the `image/gif` content type.
+     *
+     * @param charset charset of the content. `utf-8` by default.
+     */
+    class Gif(charset: Charset = Charsets.UTF_8) : MediaType("image/gif", charset)
+
+    /**
+     * Represents the `image/jpeg` content type.
+     *
+     * @param charset charset of the content. `utf-8` by default.
+     */
+    class Jpeg(charset: Charset = Charsets.UTF_8) : MediaType("image/jpeg", charset)
+
+    /**
+     * Represents the `image/png` content type.
+     *
+     * @param charset charset of the content. `utf-8` by default.
+     */
+    class Png(charset: Charset = Charsets.UTF_8) : MediaType("image/png", charset)
+
+    /**
      * Represents the `application/x-www-form-urlencoded` content type.
      *
      * @param charset charset of the content. `utf-8` by default.
