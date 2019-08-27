@@ -2,6 +2,8 @@ package com.agoda.ninjato.http
 
 import com.agoda.ninjato.converter.BodyConverter
 import com.agoda.ninjato.converter.ConverterFactories
+import com.agoda.ninjato.misc.file
+import com.agoda.ninjato.misc.formUrlEncoded
 import org.junit.Test
 import java.lang.reflect.Type
 
@@ -72,4 +74,25 @@ class BodyTest {
         assert((delegate as Body).asString == "testify_body")
     }
 
+    @Test
+    fun testExtension() {
+        val config = Request.Configurator.WithBody()
+
+        //FormUrlEncoded Extension
+        val formUrlEncodedBody = config.formUrlEncoded {
+            "a" to "test param !"
+            "b" to "c"
+        }
+
+        assert(formUrlEncodedBody.asString == "a=test+param+%21&b=c")
+        assert(formUrlEncodedBody.mediaType is MediaType.FormUrlEncoded)
+
+        //File Extension
+        val temp = createTempFile()
+        temp.writeBytes(byteArrayOf(0, 1, 2, 3, 4, 5))
+
+        val fileBody = config.file(temp, MediaType.Gif())
+        assert(fileBody.asByteArray.contentEquals(byteArrayOf(0, 1, 2, 3, 4, 5)))
+        assert(fileBody.mediaType is MediaType.Gif)
+    }
 }
