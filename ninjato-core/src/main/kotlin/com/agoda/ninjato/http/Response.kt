@@ -12,7 +12,7 @@ open class Response {
     var body: Body? = null
 
     val isSuccess: Boolean
-        get() = code == 200
+        get() = code in 200..299
 
     /**
      * Factory class for creating instances of request.
