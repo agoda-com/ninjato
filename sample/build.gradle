@@ -38,6 +38,7 @@ dependencies {
     implementation project(':ninjato-core')
     implementation project(':clients:client-okhttp')
     implementation project(':converters:converter-gson')
+    implementation project(':extensions:extension-call')
 
     androidTestImplementation libraries.junit
     androidTestImplementation libraries.androidRunner
