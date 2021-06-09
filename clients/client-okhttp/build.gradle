@@ -11,6 +11,7 @@ sourceSets {
 dependencies {
     implementation libraries.kotlin
     api libraries.okhttp3
+    implementation libraries.coroutineCore
 
     implementation project(':ninjato-core')
 
