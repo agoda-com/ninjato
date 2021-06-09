@@ -23,3 +23,8 @@ dependencies {
 String art() { 'converter-gson' }
 
 apply from: "$rootDir/gradle/scripts/publish-java.gradle"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
