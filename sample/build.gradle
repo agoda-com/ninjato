@@ -45,6 +45,7 @@ dependencies {
     implementation libraries.coroutineCore
     implementation libraries.coroutineAndroid
     implementation libraries.recycler
+    implementation libraries.constraintLayout
 
     implementation project(':ninjato-core')
     implementation project(':clients:client-okhttp')
