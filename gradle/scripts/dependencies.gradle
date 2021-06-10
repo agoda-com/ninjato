@@ -19,9 +19,9 @@ ext.versions = [
 ]
 
 ext.androidVersions = [
-        compileSdk      : 30,
+        compileSdk      : 28,
         minSdk          : 1,
-        targetSdk       : 30,
+        targetSdk       : 28,
         ninjato         : 1
 ]
 
