@@ -16,6 +16,7 @@ dependencies {
     testImplementation libraries.mockito
     testImplementation libraries.mockitoKotlin
     testImplementation libraries.kotlinTest
+    testImplementation libraries.coroutineTest
 }
 
 jacocoTestReport {

@@ -1,10 +1,13 @@
-package com.agoda.ninjato.extension.call
+package com.agoda.ninjato.extension.call.coroutine
 
-import com.agoda.ninjato.Api
+import com.agoda.ninjato.coroutine.Api
+import com.agoda.ninjato.coroutine.HttpClient
 import com.agoda.ninjato.exception.HttpException
-import com.agoda.ninjato.http.HttpClient
+import com.agoda.ninjato.extension.call.Call
 import com.agoda.ninjato.http.Response
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -13,7 +16,12 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 
 @RunWith(MockitoJUnitRunner::class)
+@ExperimentalCoroutinesApi
 class CallExtensionsTest {
+
+    @get:Rule
+    val coroutineTestRule: CoroutineTestRule = CoroutineTestRule()
+
     @Mock
     private lateinit var httpClient: HttpClient
 
@@ -22,13 +30,13 @@ class CallExtensionsTest {
     private val response = Response().also { it.code = 200 }
 
     @Before
-    fun setup() {
+    fun setup() = coroutineTestRule.runBlockingTest {
         whenever(httpClient.execute(any())).thenReturn(response)
         api = TestApi(httpClient)
     }
 
     @Test
-    fun testSuccess() {
+    fun testSuccess() = coroutineTestRule.runBlockingTest {
         val result = api.call<Response> {
             get {}
         }
@@ -38,7 +46,7 @@ class CallExtensionsTest {
     }
 
     @Test
-    fun testFailure() {
+    fun testFailure() = coroutineTestRule.runBlockingTest {
         response.code = 404
 
         val result = api.call<String> {
@@ -50,7 +58,7 @@ class CallExtensionsTest {
     }
 
     @Test
-    fun testHttpExceptionIsNotThrownForResponse() {
+    fun testHttpExceptionIsNotThrownForResponse() = coroutineTestRule.runBlockingTest {
         response.code = 404
 
         val result = api.call<Response> {

@@ -1,14 +1,15 @@
-package com.agoda.ninjato
+package com.agoda.ninjato.coroutine
 
 import com.agoda.ninjato.converter.BodyConverter
 import com.agoda.ninjato.exception.HttpException
 import com.agoda.ninjato.exception.MissingBodyException
 import com.agoda.ninjato.exception.MissingConverterException
 import com.agoda.ninjato.http.Body
-import com.agoda.ninjato.http.HttpClient
 import com.agoda.ninjato.http.Response
 import com.agoda.ninjato.policy.Retry
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -19,8 +20,12 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.lang.reflect.Type
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ApiTest {
+
+    @get:Rule
+    val coroutineTestRule: CoroutineTestRule = CoroutineTestRule()
 
     @Mock
     lateinit var client: HttpClient
@@ -33,7 +38,7 @@ class ApiTest {
     }
 
     @Test
-    fun testGet() {
+    fun testGet() = coroutineTestRule.runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 200 })
 
@@ -75,7 +80,7 @@ class ApiTest {
     }
 
     @Test
-    fun testHead() {
+    fun testHead() = coroutineTestRule.runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 200 })
 
@@ -84,7 +89,7 @@ class ApiTest {
     }
 
     @Test
-    fun testPost() {
+    fun testPost() = coroutineTestRule.runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also {
             it.code = 200
@@ -112,7 +117,7 @@ class ApiTest {
     }
 
     @Test
-    fun testPut() {
+    fun testPut() = coroutineTestRule.runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also {
             it.code = 200
@@ -132,7 +137,7 @@ class ApiTest {
     }
 
     @Test
-    fun testDelete() {
+    fun testDelete() = coroutineTestRule.runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also {
             it.code = 200
@@ -152,7 +157,7 @@ class ApiTest {
     }
 
     @Test
-    fun testOptions() {
+    fun testOptions() = coroutineTestRule.runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also {
             it.code = 200
@@ -169,7 +174,7 @@ class ApiTest {
     }
 
     @Test
-    fun testPatch() {
+    fun testPatch() = coroutineTestRule.runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also {
             it.code = 200
@@ -189,19 +194,19 @@ class ApiTest {
     }
 
     @Test
-    fun testRetryPolicy() {
+    fun testRetryPolicy() = coroutineTestRule.runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 404 })
 
         api {
             retryPolicy { _, throwable ->
                 assert(throwable is HttpException)
-
-                whenever(client.execute(any())).thenReturn(Response().also {
-                    it.code = 200
-                    it.body = Body("testify_response")
-                })
-
+                coroutineTestRule.runBlockingTest {
+                    whenever(client.execute(any())).thenReturn(Response().also {
+                        it.code = 200
+                        it.body = Body("testify_response")
+                    })
+                }
                 Retry.WithoutDelay
             }
         }
@@ -214,7 +219,7 @@ class ApiTest {
     }
 
     @Test(expected = HttpException::class)
-    fun testRetryPolicyDoNotRetry() {
+    fun testRetryPolicyDoNotRetry() = coroutineTestRule.runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 404 })
 
@@ -230,7 +235,7 @@ class ApiTest {
     }
 
     @Test
-    fun testRetryPolicyWithDelay() {
+    fun testRetryPolicyWithDelay() = coroutineTestRule.runBlockingTest {
         // Arrange
         val delay = mock<(() -> Unit)> {}
 
@@ -239,12 +244,12 @@ class ApiTest {
         api {
             retryPolicy { _, throwable ->
                 assert(throwable is HttpException)
-
-                whenever(client.execute(any())).thenReturn(Response().also {
-                    it.code = 200
-                    it.body = Body(byteArrayOf(1, 2, 3, 4, 5))
-                })
-
+                coroutineTestRule.runBlockingTest {
+                    whenever(client.execute(any())).thenReturn(Response().also {
+                        it.code = 200
+                        it.body = Body(byteArrayOf(1, 2, 3, 4, 5))
+                    })
+                }
                 Retry.WithDelay(delay)
             }
         }
@@ -258,7 +263,7 @@ class ApiTest {
     }
 
     @Test
-    fun testFallbackPolicy() {
+    fun testFallbackPolicy() = coroutineTestRule.runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 404 })
 
@@ -270,12 +275,12 @@ class ApiTest {
 
             fallbackPolicy { request, throwable ->
                 assert(throwable is HttpException)
-
-                whenever(client.execute(any())).thenReturn(Response().also {
-                    it.code = 200
-                    it.body = Body("testify_response")
-                })
-
+                coroutineTestRule.runBlockingTest {
+                    whenever(client.execute(any())).thenReturn(Response().also {
+                        it.code = 200
+                        it.body = Body("testify_response")
+                    })
+                }
                 request.also { it.endpointUrl = "/fallbackedGetResponse" }
             }
         }
@@ -288,7 +293,7 @@ class ApiTest {
     }
 
     @Test(expected = MissingBodyException::class)
-    fun testMissingBodyException() {
+    fun testMissingBodyException() = coroutineTestRule.runBlockingTest {
         // Act
         api.post<TestResponse> {
             endpointUrl = "/getResponse"
@@ -296,7 +301,7 @@ class ApiTest {
     }
 
     @Test(expected = MissingConverterException::class)
-    fun testMissingConverterException() {
+    fun testMissingConverterException() = coroutineTestRule.runBlockingTest {
         // Act
         api.post<TestResponse> {
             endpointUrl = "/getResponse"
@@ -305,7 +310,7 @@ class ApiTest {
     }
 
     @Test(expected = HttpException::class)
-    fun testHttpException() {
+    fun testHttpException() = coroutineTestRule.runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 404 })
 
@@ -314,7 +319,7 @@ class ApiTest {
     }
 
     @Test
-    fun testHttpExceptionNotThrown() {
+    fun testHttpExceptionNotThrown() = coroutineTestRule.runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 404 })
 
@@ -342,5 +347,4 @@ class ApiTest {
             }
         }
     }
-
 }
