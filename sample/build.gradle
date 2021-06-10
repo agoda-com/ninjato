@@ -5,12 +5,12 @@ apply plugin: 'kotlin-android-extensions'
 apply from: "$rootDir/gradle/scripts/dependencies.gradle"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.agoda.ninjato.sample"
         minSdkVersion 14
-        targetSdkVersion 30
+        targetSdkVersion 28
         versionCode 1
         versionName "0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
