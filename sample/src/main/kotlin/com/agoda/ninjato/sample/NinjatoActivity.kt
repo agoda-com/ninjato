@@ -92,7 +92,7 @@ class NinjatoActivity : Activity() {
 
     override fun onStop() {
         super.onStop()
-        job.cancel()
+        scope.cancel()
     }
 
     class ForecastAdapter(private val items: List<Forecast>) : RecyclerView.Adapter<ForecastViewHolder>() {
