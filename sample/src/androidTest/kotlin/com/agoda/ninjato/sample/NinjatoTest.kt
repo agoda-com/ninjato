@@ -10,6 +10,7 @@ import com.agoda.ninjato.sample.repeat.Repeat
 import com.agoda.ninjato.sample.repeat.RepeatRule
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.After
 import org.junit.Before
@@ -49,4 +50,10 @@ class NinjatoTest {
         assert(result.response.size == 9)
     }
 
+    @Test
+    @Repeat(100)
+    fun testPostAsync() {
+        val result = runBlocking { api.getForecastAsync(ForecastRequest(100, 200, listOf(City("Bangkok")))) }
+        assert(result.response.size == 9)
+    }
 }

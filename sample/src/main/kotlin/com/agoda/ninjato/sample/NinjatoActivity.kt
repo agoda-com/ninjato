@@ -19,6 +19,7 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
+import java.lang.RuntimeException
 
 class NinjatoActivity : Activity() {
     private val recycler by lazy { findViewById<RecyclerView>(R.id.recycler) }
@@ -44,8 +45,19 @@ class NinjatoActivity : Activity() {
         super.onStart()
 
         scope.launch {
-            val forecast = async(Dispatchers.IO) { api.getForecast(ForecastRequest(100, 200, listOf(City("Bangkok")))) }
-            recycler.adapter = ForecastAdapter(forecast.await().response)
+            val forecast = async(Dispatchers.IO) { 
+                api.getForecast(ForecastRequest(100, 200, listOf(City("Bangkok"))))
+            }.await().response
+            
+            val forecastAsync = async(Dispatchers.IO) {
+                api.getForecastAsync(ForecastRequest(100, 200, listOf(City("Bangkok"))))
+            }.await().response
+            
+            if (forecast != forecastAsync) {
+                throw RuntimeException("Async and blocking APIs behaving differently!")
+            }
+            
+            recycler.adapter = ForecastAdapter(forecast)
         }
     }
 

@@ -8,17 +8,20 @@ import com.agoda.ninjato.http.Body
 import com.agoda.ninjato.http.HttpClient
 import com.agoda.ninjato.http.Response
 import com.agoda.ninjato.policy.Retry
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.lang.reflect.Type
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ApiTest {
 
@@ -75,12 +78,63 @@ class ApiTest {
     }
 
     @Test
+    fun testGetAsync() = runBlockingTest {
+        // Arrange
+        whenever(client.executeAsync(any())).thenReturn(Response().also { it.code = 200 })
+
+        // Act
+        val response: Response = api.getAsync {
+            endpointUrl = "/getResponse"
+
+            headers {
+                "A" to "B"
+            }
+
+            parameters += "a" to "test param"
+
+            parameters {
+                "b" to "c"
+            }
+
+            interceptors {
+                request {
+                    assert(it.endpointUrl == "/getResponse")
+                    it
+                }
+            }
+
+            interceptors {
+                response {
+                    assert(it.code == 200)
+                    it
+                }
+            }
+        }
+
+        // Assert
+        assert(response.request.endpointUrl == "/getResponse")
+        assert(response.request.url == "http://127.0.0.1:8080/getResponse?a=test+param&b=c")
+        assert(response.code == 200)
+        assert(response.request.headers["A"] == listOf("B"))
+        assert(response.isSuccess)
+    }
+
+    @Test
     fun testHead() {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 200 })
 
         // Act
         api.head<Unit> { endpointUrl = "/getResponse" }
+    }
+
+    @Test
+    fun testHeadAsync() = runBlockingTest {
+        // Arrange
+        whenever(client.executeAsync(any())).thenReturn(Response().also { it.code = 200 })
+
+        // Act
+        api.headAsync<Unit> { endpointUrl = "/getResponse" }
     }
 
     @Test
@@ -95,6 +149,34 @@ class ApiTest {
 
         // Act
         val response: TestResponse = api.post {
+            endpointUrl = "/getResponse?a=b"
+            parameters += "b" to "c"
+            body = TestRequest("testify_request")
+
+            interceptors {
+                request {
+                    assert(it.url == "http://127.0.0.1:8080/getResponse?a=b&b=c")
+                    it
+                }
+            }
+        }
+
+        // Assert
+        assert(response.prop == "testify_response")
+    }
+
+    @Test
+    fun testPostAsync() = runBlockingTest {
+        // Arrange
+        whenever(client.executeAsync(any())).thenReturn(Response().also {
+            it.code = 200
+            it.body = Body("testify_response")
+        })
+
+        api { converterFactories += TestConverterFactory() }
+
+        // Act
+        val response: TestResponse = api.postAsync {
             endpointUrl = "/getResponse?a=b"
             parameters += "b" to "c"
             body = TestRequest("testify_request")
@@ -132,6 +214,26 @@ class ApiTest {
     }
 
     @Test
+    fun testPutAsync() = runBlockingTest{
+        // Arrange
+        whenever(client.executeAsync(any())).thenReturn(Response().also {
+            it.code = 200
+            it.body = Body("testify_response")
+        })
+
+        api { converterFactories += TestConverterFactory() }
+
+        // Act
+        val response: TestResponse = api.putAsync {
+            endpointUrl = "/getResponse"
+            body = TestRequest("testify_request")
+        }
+
+        // Assert
+        assert(response.prop == "testify_response")
+    }
+
+    @Test
     fun testDelete() {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also {
@@ -143,6 +245,26 @@ class ApiTest {
 
         // Act
         val response: TestResponse = api.delete {
+            endpointUrl = "/getResponse"
+            body = TestRequest("testify_request")
+        }
+
+        // Assert
+        assert(response.prop == "testify_response")
+    }
+
+    @Test
+    fun testDeleteAsync() = runBlockingTest {
+        // Arrange
+        whenever(client.executeAsync(any())).thenReturn(Response().also {
+            it.code = 200
+            it.body = Body("testify_response")
+        })
+
+        api { converterFactories += TestConverterFactory() }
+
+        // Act
+        val response: TestResponse = api.deleteAsync {
             endpointUrl = "/getResponse"
             body = TestRequest("testify_request")
         }
@@ -169,6 +291,23 @@ class ApiTest {
     }
 
     @Test
+    fun testOptionsAsync() = runBlockingTest {
+        // Arrange
+        whenever(client.executeAsync(any())).thenReturn(Response().also {
+            it.code = 200
+            it.body = Body("testify_response")
+        })
+
+        api { converterFactories += TestConverterFactory() }
+
+        // Act
+        val response: TestResponse = api.optionsAsync { endpointUrl = "/getResponse" }
+
+        // Assert
+        assert(response.prop == "testify_response")
+    }
+
+    @Test
     fun testPatch() {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also {
@@ -180,6 +319,26 @@ class ApiTest {
 
         // Act
         val response: TestResponse = api.patch {
+            endpointUrl = "/getResponse"
+            body = TestRequest("testify_request")
+        }
+
+        // Assert
+        assert(response.prop == "testify_response")
+    }
+
+    @Test
+    fun testPatchAsync() = runBlockingTest {
+        // Arrange
+        whenever(client.executeAsync(any())).thenReturn(Response().also {
+            it.code = 200
+            it.body = Body("testify_response")
+        })
+
+        api { converterFactories += TestConverterFactory() }
+
+        // Act
+        val response: TestResponse = api.patchAsync {
             endpointUrl = "/getResponse"
             body = TestRequest("testify_request")
         }
