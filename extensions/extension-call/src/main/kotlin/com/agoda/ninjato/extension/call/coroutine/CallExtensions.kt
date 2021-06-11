@@ -1,6 +1,6 @@
 package com.agoda.ninjato.extension.call.coroutine
 
-import com.agoda.ninjato.coroutine.Api
+import com.agoda.ninjato.coroutine.CancellableApi
 import com.agoda.ninjato.extension.call.Call
 
 
@@ -12,7 +12,7 @@ import com.agoda.ninjato.extension.call.Call
  *
  * @param receiver tail lambda with the actual API call invocation.
  */
-suspend inline fun <reified T> Api.call(crossinline receiver: suspend Api.() -> T): Call<T> = try {
+suspend inline fun <reified T> CancellableApi.call(crossinline receiver: suspend CancellableApi.() -> T): Call<T> = try {
     Call.Success(receiver(this))
 } catch (throwable: Throwable) {
     Call.Failure(throwable)

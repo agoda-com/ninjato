@@ -4,6 +4,7 @@ import com.agoda.ninjato.Api
 import com.agoda.ninjato.exception.HttpException
 import com.agoda.ninjato.http.HttpClient
 import com.agoda.ninjato.http.Response
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,7 +23,7 @@ class CallExtensionsTest {
     private val response = Response().also { it.code = 200 }
 
     @Before
-    fun setup() {
+    fun setup() = runBlockingTest {
         whenever(httpClient.execute(any())).thenReturn(response)
         api = TestApi(httpClient)
     }

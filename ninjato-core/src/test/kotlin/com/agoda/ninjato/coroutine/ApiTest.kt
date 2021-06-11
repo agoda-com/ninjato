@@ -5,6 +5,7 @@ import com.agoda.ninjato.exception.HttpException
 import com.agoda.ninjato.exception.MissingBodyException
 import com.agoda.ninjato.exception.MissingConverterException
 import com.agoda.ninjato.http.Body
+import com.agoda.ninjato.http.HttpClient
 import com.agoda.ninjato.http.Response
 import com.agoda.ninjato.policy.Retry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,11 +31,11 @@ class ApiTest {
     @Mock
     lateinit var client: HttpClient
 
-    private lateinit var api: Api
+    private lateinit var api: CancellableApi
 
     @Before
     fun setup() {
-        api = object : Api(client) { override val baseUrl = "http://127.0.0.1:8080" }
+        api = object : CancellableApi(client) { override val baseUrl = "http://127.0.0.1:8080" }
     }
 
     @Test

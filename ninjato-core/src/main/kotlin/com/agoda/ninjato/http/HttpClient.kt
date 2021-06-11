@@ -40,7 +40,7 @@ abstract class HttpClient(
      * @param request library's request entity
      * @return library's response entity
      */
-    abstract fun execute(request: Request): Response
+    abstract suspend fun execute(request: Request): Response
 
     @PublishedApi
     internal fun request() = requestFactory?.create() ?: Request()

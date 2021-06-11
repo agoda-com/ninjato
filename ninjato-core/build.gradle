@@ -11,6 +11,7 @@ sourceSets {
 
 dependencies {
     implementation libraries.kotlin
+    implementation libraries.coroutineCore
 
     testImplementation libraries.junit
     testImplementation libraries.mockito

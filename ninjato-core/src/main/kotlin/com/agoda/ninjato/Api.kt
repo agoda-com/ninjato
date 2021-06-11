@@ -12,6 +12,7 @@ import com.agoda.ninjato.exception.MissingBodyException
 import com.agoda.ninjato.exception.HttpException
 import com.agoda.ninjato.exception.MissingConverterException
 import com.agoda.ninjato.http.*
+import kotlinx.coroutines.runBlocking
 
 /**
  * Main class of the library.
@@ -48,52 +49,66 @@ abstract class Api(
      *
      * @param configurator the configuration of a [Request]
      */
-    inline fun <reified T> get(configurator: Request.Configurator.() -> Unit): T = prepare(Method.Get, configurator)
+    inline fun <reified T> get(crossinline configurator: Request.Configurator.() -> Unit): T = runBlocking {
+        prepare(Method.Get, configurator)
+    }
 
     /**
      * Executes the HEAD request with the provided configuration.
      *
      * @param configurator the configuration of a [Request]
      */
-    inline fun <reified T> head(configurator: Request.Configurator.() -> Unit): T = prepare(Method.Head, configurator)
+    inline fun <reified T> head(crossinline configurator: Request.Configurator.() -> Unit): T = runBlocking {
+        prepare(Method.Head, configurator)
+    }
 
     /**
      * Executes the POST request with the provided configuration.
      *
      * @param configurator the configuration of a [Request]
      */
-    inline fun <reified T> post(configurator: Request.Configurator.WithBody.() -> Unit): T = prepareWithBody(Method.Post, configurator)
+    inline fun <reified T> post(crossinline configurator: Request.Configurator.WithBody.() -> Unit): T = runBlocking {
+        prepareWithBody(Method.Post, configurator)
+    }
 
     /**
      * Executes the PUT request with the provided configuration.
      *
      * @param configurator the configuration of a [Request]
      */
-    inline fun <reified T> put(configurator: Request.Configurator.WithBody.() -> Unit): T = prepareWithBody(Method.Put, configurator)
+    inline fun <reified T> put(crossinline configurator: Request.Configurator.WithBody.() -> Unit): T = runBlocking {
+        prepareWithBody(Method.Put, configurator)
+    }
 
     /**
      * Executes the DELETE request with the provided configuration.
      *
      * @param configurator the configuration of a [Request]
      */
-    inline fun <reified T> delete(configurator: Request.Configurator.WithBody.() -> Unit): T = prepareWithBody(Method.Delete, configurator)
+    inline fun <reified T> delete(crossinline configurator: Request.Configurator.WithBody.() -> Unit): T = runBlocking {
+        prepareWithBody(Method.Delete, configurator)
+    }
 
     /**
      * Executes the OPTIONS request with the provided configuration.
      *
      * @param configurator the configuration of a [Request]
      */
-    inline fun <reified T> options(configurator: Request.Configurator.WithBody.() -> Unit): T = prepareWithBody(Method.Options, configurator)
+    inline fun <reified T> options(crossinline configurator: Request.Configurator.WithBody.() -> Unit): T = runBlocking {
+        prepareWithBody(Method.Options, configurator)
+    }
 
     /**
      * Executes the PATCH request with the provided configuration.
      *
      * @param configurator the configuration of a [Request]
      */
-    inline fun <reified T> patch(configurator: Request.Configurator.WithBody.() -> Unit): T = prepareWithBody(Method.Patch, configurator)
+    inline fun <reified T> patch(crossinline configurator: Request.Configurator.WithBody.() -> Unit): T = runBlocking {
+        prepareWithBody(Method.Patch, configurator)
+    }
 
     @PublishedApi
-    internal inline fun <reified T> prepare(method: Method, configurator: Request.Configurator.() -> Unit): T {
+    internal suspend inline fun <reified T> prepare(method: Method, configurator: Request.Configurator.() -> Unit): T {
         val config = Request.Configurator()
 
         config.let {
@@ -107,7 +122,7 @@ abstract class Api(
     }
 
     @PublishedApi
-    internal inline fun <reified T> prepareWithBody(method: Method, configurator: Request.Configurator.WithBody.() -> Unit): T {
+    internal suspend inline fun <reified T> prepareWithBody(method: Method, configurator: Request.Configurator.WithBody.() -> Unit): T {
         val config = Request.Configurator.WithBody()
 
         config.let {
@@ -122,7 +137,7 @@ abstract class Api(
 
     @PublishedApi
     @Suppress("UNCHECKED_CAST")
-    internal inline fun <reified T> call(method: Method, configurator: Request.Configurator): T {
+    internal suspend inline fun <reified T> call(method: Method, configurator: Request.Configurator): T {
         var request = client.request()
 
         request.method = method

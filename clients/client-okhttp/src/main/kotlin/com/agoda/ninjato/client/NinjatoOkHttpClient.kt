@@ -4,9 +4,12 @@ import com.agoda.ninjato.http.Body
 import com.agoda.ninjato.http.HttpClient
 import com.agoda.ninjato.http.Request
 import com.agoda.ninjato.http.Response
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.RequestBody
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.suspendCancellableCoroutine
+import okhttp3.*
+import java.io.IOException
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class NinjatoOkHttpClient(
         private val client: OkHttpClient,
@@ -14,25 +17,56 @@ class NinjatoOkHttpClient(
         responseFactory: Response.Factory? = null,
         config: HttpClient.() -> Unit = {}
 ) : HttpClient(requestFactory, responseFactory, config) {
-    override fun execute(request: Request): Response {
+
+    override suspend fun execute(
+        request: Request
+    ): Response = suspendCancellableCoroutine { cont ->
+        val call = client.newCall(buildRequest(request)).also {
+            it.enqueue(callback(request, cont))
+        }
+        cont.invokeOnCancellation {
+            call.cancel()
+        }
+    }
+
+    private fun buildRequest(request: Request): okhttp3.Request {
         val builder = okhttp3.Request.Builder()
-                .url(request.url)
-                .method(request.method.name, request.body?.let { RequestBody.create(MediaType.parse(it.mediaType.toString()), it.asByteArray) })
+            .url(request.url)
+            .method(request.method.name, request.body?.let {
+                RequestBody.create(MediaType.parse(it.mediaType.toString()), it.asByteArray)
+            })
 
         for((key, value) in request.headers) {
             for (it in value) builder.addHeader(key, it)
         }
+        return builder.build()
+    }
 
-        client.newCall(builder.build()).execute().use {
+    private fun callback(
+        request: Request,
+        continuation: CancellableContinuation<Response>
+    ) = object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            continuation.resumeWithException(e)
+        }
+
+        override fun onResponse(call: Call, response: okhttp3.Response) {
+            continuation.resume(handleResponse(request, responseFactory, response))
+        }
+    }
+
+    private fun handleResponse(
+        request: Request, responseFactory: Response.Factory?,
+        response: okhttp3.Response
+    ): Response {
+        response.use {
             val entity = responseFactory?.create() ?: Response()
 
             entity.request = request
             entity.code = it.code()
             entity.headers.putAll(it.headers().toMultimap())
-
-            if (it.body() != null) {
-                val body = it.body()!!
-
+            val body = it.body()
+            if (body != null) {
                 val bytes = body.bytes()
                 val contentType = body.contentType()
 
@@ -43,7 +77,6 @@ class NinjatoOkHttpClient(
 
                 entity.body = Body(bytes, mediaType)
             }
-
             return entity
         }
     }

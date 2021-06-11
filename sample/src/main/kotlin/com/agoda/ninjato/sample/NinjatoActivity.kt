@@ -25,13 +25,13 @@ import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import com.agoda.ninjato.sample.api.coroutine.ForecastApi as CoroutineApi
 import com.agoda.ninjato.sample.api.coroutine.ForecastApiImpl as CoroutineApiImpl
-import com.agoda.ninjato.client.coroutine.NinjatoOkHttpClient as NinjatoCoroutineClient
 
 class NinjatoActivity : Activity() {
     private val recycler by lazy { findViewById<RecyclerView>(R.id.recycler) }
     private val btnCoroutine by lazy { findViewById<Button>(R.id.btn_coroutine) }
 
-    private val api: ForecastApi = ForecastApiImpl(NinjatoOkHttpClient(OkHttpClient())) {
+    private val ninjatoOkHttpClient = NinjatoOkHttpClient(OkHttpClient())
+    private val api: ForecastApi = ForecastApiImpl(ninjatoOkHttpClient) {
         converterFactories += GsonBodyConverterFactory(
                 GsonBuilder()
                         .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -39,7 +39,7 @@ class NinjatoActivity : Activity() {
         )
     }
 
-    private val coroutineApi: CoroutineApi = CoroutineApiImpl(NinjatoCoroutineClient(OkHttpClient())) {
+    private val coroutineApi: CoroutineApi = CoroutineApiImpl(ninjatoOkHttpClient) {
         converterFactories += GsonBodyConverterFactory(
             GsonBuilder()
                 .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -95,7 +95,7 @@ class NinjatoActivity : Activity() {
         scope.cancel()
     }
 
-    class ForecastAdapter(private val items: List<Forecast>) : RecyclerView.Adapter<ForecastViewHolder>() {
+    class ForecastAdapter(items: List<Forecast>) : RecyclerView.Adapter<ForecastViewHolder>() {
         private var mData: List<Forecast> = items
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
                 = ForecastViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_forecast, parent, false))

@@ -1,9 +1,10 @@
 package com.agoda.ninjato.extension.call.coroutine
 
-import com.agoda.ninjato.coroutine.Api
-import com.agoda.ninjato.coroutine.HttpClient
+import com.agoda.ninjato.Api
+import com.agoda.ninjato.coroutine.CancellableApi
 import com.agoda.ninjato.exception.HttpException
 import com.agoda.ninjato.extension.call.Call
+import com.agoda.ninjato.http.HttpClient
 import com.agoda.ninjato.http.Response
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -25,7 +26,7 @@ class CallExtensionsTest {
     @Mock
     private lateinit var httpClient: HttpClient
 
-    private lateinit var api: Api
+    private lateinit var api: CancellableApi
 
     private val response = Response().also { it.code = 200 }
 
@@ -69,7 +70,7 @@ class CallExtensionsTest {
         assert((result as Call.Success).result.code == 404)
     }
 
-    class TestApi(client: HttpClient, config: Api.() -> Unit = {}) : Api(client, config) {
+    class TestApi(client: HttpClient, config: Api.() -> Unit = {}) : CancellableApi(client, config) {
         override val baseUrl = "http://127.0.0.1:8080"
     }
 }

@@ -8,6 +8,7 @@ import com.agoda.ninjato.http.Body
 import com.agoda.ninjato.http.HttpClient
 import com.agoda.ninjato.http.Response
 import com.agoda.ninjato.policy.Retry
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,7 +34,7 @@ class ApiTest {
     }
 
     @Test
-    fun testGet() {
+    fun testGet() = runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 200 })
 
@@ -75,7 +76,7 @@ class ApiTest {
     }
 
     @Test
-    fun testHead() {
+    fun testHead() = runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 200 })
 
@@ -84,7 +85,7 @@ class ApiTest {
     }
 
     @Test
-    fun testPost() {
+    fun testPost() = runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also {
             it.code = 200
@@ -112,7 +113,7 @@ class ApiTest {
     }
 
     @Test
-    fun testPut() {
+    fun testPut() = runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also {
             it.code = 200
@@ -132,7 +133,7 @@ class ApiTest {
     }
 
     @Test
-    fun testDelete() {
+    fun testDelete() = runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also {
             it.code = 200
@@ -152,7 +153,7 @@ class ApiTest {
     }
 
     @Test
-    fun testOptions() {
+    fun testOptions() = runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also {
             it.code = 200
@@ -169,7 +170,7 @@ class ApiTest {
     }
 
     @Test
-    fun testPatch() {
+    fun testPatch() = runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also {
             it.code = 200
@@ -189,18 +190,19 @@ class ApiTest {
     }
 
     @Test
-    fun testRetryPolicy() {
+    fun testRetryPolicy() = runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 404 })
 
         api {
             retryPolicy { _, throwable ->
                 assert(throwable is HttpException)
-
-                whenever(client.execute(any())).thenReturn(Response().also {
-                    it.code = 200
-                    it.body = Body("testify_response")
-                })
+                runBlockingTest {
+                    whenever(client.execute(any())).thenReturn(Response().also {
+                        it.code = 200
+                        it.body = Body("testify_response")
+                    })
+                }
 
                 Retry.WithoutDelay
             }
@@ -214,7 +216,7 @@ class ApiTest {
     }
 
     @Test(expected = HttpException::class)
-    fun testRetryPolicyDoNotRetry() {
+    fun testRetryPolicyDoNotRetry() = runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 404 })
 
@@ -230,7 +232,7 @@ class ApiTest {
     }
 
     @Test
-    fun testRetryPolicyWithDelay() {
+    fun testRetryPolicyWithDelay() = runBlockingTest {
         // Arrange
         val delay = mock<(() -> Unit)> {}
 
@@ -239,12 +241,12 @@ class ApiTest {
         api {
             retryPolicy { _, throwable ->
                 assert(throwable is HttpException)
-
-                whenever(client.execute(any())).thenReturn(Response().also {
-                    it.code = 200
-                    it.body = Body(byteArrayOf(1, 2, 3, 4, 5))
-                })
-
+                runBlockingTest {
+                    whenever(client.execute(any())).thenReturn(Response().also {
+                        it.code = 200
+                        it.body = Body(byteArrayOf(1, 2, 3, 4, 5))
+                    })
+                }
                 Retry.WithDelay(delay)
             }
         }
@@ -258,7 +260,7 @@ class ApiTest {
     }
 
     @Test
-    fun testFallbackPolicy() {
+    fun testFallbackPolicy() = runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 404 })
 
@@ -270,11 +272,12 @@ class ApiTest {
 
             fallbackPolicy { request, throwable ->
                 assert(throwable is HttpException)
-
-                whenever(client.execute(any())).thenReturn(Response().also {
-                    it.code = 200
-                    it.body = Body("testify_response")
-                })
+                runBlockingTest {
+                    whenever(client.execute(any())).thenReturn(Response().also {
+                        it.code = 200
+                        it.body = Body("testify_response")
+                    })
+                }
 
                 request.also { it.endpointUrl = "/fallbackedGetResponse" }
             }
@@ -305,7 +308,7 @@ class ApiTest {
     }
 
     @Test(expected = HttpException::class)
-    fun testHttpException() {
+    fun testHttpException() = runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 404 })
 
@@ -314,7 +317,7 @@ class ApiTest {
     }
 
     @Test
-    fun testHttpExceptionNotThrown() {
+    fun testHttpExceptionNotThrown() = runBlockingTest {
         // Arrange
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 404 })
 
