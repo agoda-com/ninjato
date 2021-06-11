@@ -31,7 +31,7 @@ jobs:
   deploy-job:
       working_directory: ~/code
       docker:
-        - image: circleci/android:api-25-alpha
+        - image: circleci/android:api-26
       environment:
         JVM_OPTS: -Xmx3200m
       steps:
@@ -60,7 +60,7 @@ jobs:
   automation-tests-job:
       working_directory: ~/code
       docker:
-        - image: circleci/android:api-25-alpha
+        - image: circleci/android:api-26
       environment:
                 JVM_OPTS: -Xmx3200m
       steps:
