@@ -1,16 +1,15 @@
 package com.agoda.ninjato.extension.rxjava2
 
 import com.agoda.ninjato.Api
-import com.agoda.ninjato.converter.BodyConverter
 import com.agoda.ninjato.http.HttpClient
 import com.agoda.ninjato.http.Response
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
 
 @RunWith(MockitoJUnitRunner::class)
 class RxExtensionsTest {
