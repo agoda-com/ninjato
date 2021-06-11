@@ -3,6 +3,8 @@ package com.agoda.ninjato.extension.rxjava2
 import com.agoda.ninjato.Api
 import com.agoda.ninjato.http.HttpClient
 import com.agoda.ninjato.http.Response
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,7 +24,9 @@ class RxExtensionsTest {
 
     @Before
     fun setUp() {
-        whenever(httpClient.execute(any())).thenReturn(response)
+        runBlockingTest {
+            whenever(httpClient.execute(any())).thenReturn(response)
+        }
         api = TestApi(httpClient)
     }
 
