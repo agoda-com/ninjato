@@ -73,8 +73,8 @@ class CallExtensionsTest {
     fun testAsyncFailure() = runBlockingTest(dispatcher) {
         response.code = 404
 
-        val result = api.call<String> {
-            get {}
+        val result = api.callAsync<String> {
+            getAsync {}
         }
 
         assert(result is Call.Failure)
