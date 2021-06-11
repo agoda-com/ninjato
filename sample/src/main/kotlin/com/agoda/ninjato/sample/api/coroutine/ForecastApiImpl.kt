@@ -13,7 +13,7 @@ class ForecastApiImpl(client: HttpClient, config: Api.() -> Unit = {}) : Cancell
     override val baseUrl = "https://ninjato.free.beeceptor.com"
 
     override suspend fun getForecast(request: ForecastRequest): Call<ForecastResponse> = call {
-        post {
+        Post {
             endpointUrl = "/forecast"
             body = request
         }

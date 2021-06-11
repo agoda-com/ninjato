@@ -1,7 +1,7 @@
 package com.agoda.ninjato.sample.coroutine
 
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import com.agoda.ninjato.client.coroutine.NinjatoOkHttpClient
+import com.agoda.ninjato.client.NinjatoOkHttpClient
 import com.agoda.ninjato.converter.GsonBodyConverterFactory
 import com.agoda.ninjato.extension.call.Call
 import com.agoda.ninjato.sample.Server

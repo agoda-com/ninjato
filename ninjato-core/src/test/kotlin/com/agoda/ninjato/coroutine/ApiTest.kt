@@ -44,7 +44,7 @@ class ApiTest {
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 200 })
 
         // Act
-        val response: Response = api.get {
+        val response: Response = api.Get {
             endpointUrl = "/getResponse"
 
             headers {
@@ -86,7 +86,7 @@ class ApiTest {
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 200 })
 
         // Act
-        api.head<Unit> { endpointUrl = "/getResponse" }
+        api.Head<Unit> { endpointUrl = "/getResponse" }
     }
 
     @Test
@@ -100,7 +100,7 @@ class ApiTest {
         api { converterFactories += TestConverterFactory() }
 
         // Act
-        val response: TestResponse = api.post {
+        val response: TestResponse = api.Post {
             endpointUrl = "/getResponse?a=b"
             parameters += "b" to "c"
             body = TestRequest("testify_request")
@@ -128,7 +128,7 @@ class ApiTest {
         api { converterFactories += TestConverterFactory() }
 
         // Act
-        val response: TestResponse = api.put {
+        val response: TestResponse = api.Put {
             endpointUrl = "/getResponse"
             body = TestRequest("testify_request")
         }
@@ -148,7 +148,7 @@ class ApiTest {
         api { converterFactories += TestConverterFactory() }
 
         // Act
-        val response: TestResponse = api.delete {
+        val response: TestResponse = api.Delete {
             endpointUrl = "/getResponse"
             body = TestRequest("testify_request")
         }
@@ -168,7 +168,7 @@ class ApiTest {
         api { converterFactories += TestConverterFactory() }
 
         // Act
-        val response: TestResponse = api.options { endpointUrl = "/getResponse" }
+        val response: TestResponse = api.Options { endpointUrl = "/getResponse" }
 
         // Assert
         assert(response.prop == "testify_response")
@@ -185,7 +185,7 @@ class ApiTest {
         api { converterFactories += TestConverterFactory() }
 
         // Act
-        val response: TestResponse = api.patch {
+        val response: TestResponse = api.Patch {
             endpointUrl = "/getResponse"
             body = TestRequest("testify_request")
         }
@@ -213,7 +213,7 @@ class ApiTest {
         }
 
         // Act
-        val response: String = api.get { endpointUrl = "/getResponse" }
+        val response: String = api.Get { endpointUrl = "/getResponse" }
 
         // Assert
         assert(response == "testify_response")
@@ -232,7 +232,7 @@ class ApiTest {
         }
 
         // Act
-        api.get<Unit> { endpointUrl = "/getResponse" }
+        api.Get<Unit> { endpointUrl = "/getResponse" }
     }
 
     @Test
@@ -256,7 +256,7 @@ class ApiTest {
         }
 
         // Act
-        val response = api.get<ByteArray> { endpointUrl = "/getResponse" }
+        val response = api.Get<ByteArray> { endpointUrl = "/getResponse" }
 
         // Assert
         assert(response.contentEquals(byteArrayOf(1, 2, 3, 4, 5)))
@@ -287,7 +287,7 @@ class ApiTest {
         }
 
         // Act
-        val response: Body = api.get { endpointUrl = "/getResponse" }
+        val response: Body = api.Get { endpointUrl = "/getResponse" }
 
         // Assert
         assert(response.asString == "testify_response")
@@ -296,7 +296,7 @@ class ApiTest {
     @Test(expected = MissingBodyException::class)
     fun testMissingBodyException() = coroutineTestRule.runBlockingTest {
         // Act
-        api.post<TestResponse> {
+        api.Post<TestResponse> {
             endpointUrl = "/getResponse"
         }
     }
@@ -304,7 +304,7 @@ class ApiTest {
     @Test(expected = MissingConverterException::class)
     fun testMissingConverterException() = coroutineTestRule.runBlockingTest {
         // Act
-        api.post<TestResponse> {
+        api.Post<TestResponse> {
             endpointUrl = "/getResponse"
             body = TestRequest("testify_request")
         }
@@ -316,7 +316,7 @@ class ApiTest {
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 404 })
 
         // Act
-        api.get<Unit> { endpointUrl = "/getResponse" }
+        api.Get<Unit> { endpointUrl = "/getResponse" }
     }
 
     @Test
@@ -325,7 +325,7 @@ class ApiTest {
         whenever(client.execute(any())).thenReturn(Response().also { it.code = 404 })
 
         // Act
-        val response: Response = api.get { endpointUrl = "/getResponse" }
+        val response: Response = api.Get { endpointUrl = "/getResponse" }
 
         // Assert
         assert(response.code == 404)
