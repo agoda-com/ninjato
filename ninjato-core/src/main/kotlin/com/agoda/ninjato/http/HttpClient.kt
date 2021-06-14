@@ -42,6 +42,15 @@ abstract class HttpClient(
      */
     abstract fun execute(request: Request): Response
 
+    /**
+     * Executes generated requests[Request] and returns [responses][Response] in asynchronous manner.
+     * All thrown exceptions from this function will trigger [retry][RetryPolicy] and [fallback][FallbackPolicy] policies.
+     *
+     * @param request library's request entity
+     * @return library's response entity
+     */
+    abstract suspend fun executeAsync(request: Request): Response
+
     @PublishedApi
     internal fun request() = requestFactory?.create() ?: Request()
 

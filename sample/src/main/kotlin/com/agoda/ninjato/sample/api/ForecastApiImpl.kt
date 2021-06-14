@@ -12,4 +12,9 @@ class ForecastApiImpl(client: HttpClient, config: Api.() -> Unit = {}) : Api(cli
         endpointUrl = "/forecast"
         body = request
     }
+
+    override suspend fun getForecastAsync(request: ForecastRequest): ForecastResponse = postAsync {
+        endpointUrl = "/forecast"
+        body = request
+    }
 }

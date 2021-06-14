@@ -16,4 +16,9 @@ class NinjatoApi(client: HttpClient, config: Api.() -> Unit = {}) : Api(client, 
         endpointUrl = "/forecast"
         body = request
     }
+
+    override suspend fun getForecastAsync(request: ForecastRequest): ForecastResponse = postAsync {
+        endpointUrl = "/forecast"
+        body = request
+    }
 }
