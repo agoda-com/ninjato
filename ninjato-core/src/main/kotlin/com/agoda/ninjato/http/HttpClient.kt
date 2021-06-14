@@ -5,7 +5,6 @@ import com.agoda.ninjato.intercept.Interceptors
 import com.agoda.ninjato.policy.FallbackPolicy
 import com.agoda.ninjato.policy.RetryPolicy
 import com.agoda.ninjato.converter.ConverterFactories
-import kotlinx.coroutines.Deferred
 
 /**
  * Abstraction of http client. Takes the top level in the cascade of
